@@ -190,12 +190,13 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.Eimeria_Maxima_Micro_Array.add(Eimeria_Maxima_Micro)
         self.Eimeria_Tenella_Gross_Array.add(Eimeria_Tenella_Gross)
         
-        if isFarmSelected! {
-        if (Eimeria_Maxima_Gross > 0) || (Eimeria_Maxima_Micro > 0) || (Eimeria_Tenella_Gross > 0) || (Eimeria_Acervulina_Gross > 0) {
+        if isFarmSelected! &&
+           ((Eimeria_Maxima_Gross > 0) || (Eimeria_Maxima_Micro > 0) || (Eimeria_Tenella_Gross > 0) || (Eimeria_Acervulina_Gross > 0)) {
             verticalValuesForWeek.append(verticalValues[maxFarmCount-1])
             indexValueArray.append(maxFarmCount-1)
         }
-        }
+
+        
     }
     
     func didFinishWithParsingWithEimeriaAcervulinaGross (_ finishedArray : NSArray){
@@ -542,8 +543,8 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             barData  = (self.preparedArray[0] as? ChartDataSet)!
             barData.colors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
             
-            let chartData = BarChartData(dataSets: [barData])
-            barChartView.data = chartData
+            let summaryChartData = BarChartData(dataSets: [barData])
+            barChartView.data = summaryChartData
         }
         if barData.yMax == 0.0 {
             barChartView.clear()
@@ -607,6 +608,102 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         }
     }
     
+    fileprivate func toggleBtnIsSelected(_ sender: UIButton) {
+        for gestture in self.lineChartView.gestureRecognizers! {
+            if gestture.isKind(of: UIGestureRecognizer.self) {
+                self.lineChartView.removeGestureRecognizer(gestture)
+            }
+        }
+        
+        moveFrame(true)
+        maxFarmCount = 0
+        isMove = false
+        for btn in self.view.subviews {
+            if btn.isKind(of: UIButton.self) {
+                let bt = btn as! UIButton
+                if bt == sender {
+                    bt.isSelected = true
+                } else{
+                    bt.isSelected = false
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleBtnByWeekPressedValidation3543(_ age: Int32, _ totalBirdsWeek6: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week6FarmDataArray: NSMutableArray) {
+        if age > 35 && age < 43 {
+            
+            totalBirdsWeek6 = totalBirdsWeek6+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week6FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleBtnByWeekPressedValidation4250(_ age: Int32, _ totalBirdsWeek7: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week7FarmDataArray: NSMutableArray) {
+        if age > 42 && age < 50 {
+            
+            totalBirdsWeek7 = totalBirdsWeek7+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week7FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleBtnByWeekPressedValidation4957(_ age: Int32, _ totalBirdsWeek8: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week8FarmDataArray: NSMutableArray) {
+        if age > 49 && age < 57 {
+            
+            totalBirdsWeek8 = totalBirdsWeek8+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week8FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleBtnByWeekPressedValidation5664(_ age: Int32, _ totalBirdsWeek9: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week9FarmDataArray: NSMutableArray) {
+        if age > 56 && age < 64 {
+            
+            totalBirdsWeek9 = totalBirdsWeek9+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week9FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleBtnByWeekPressedValidation63(_ age: Int32, _ totalBirdsWeek10: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week10FarmDataArray: NSMutableArray) {
+        if age > 63 {
+            
+            totalBirdsWeek10 = totalBirdsWeek10+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week10FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleEmeriaAcerValidation() {
+        if self.Eimeria_Acervulina_Gross_Array.count > 0 {
+            
+            preparedArray.removeAllObjects()
+            
+            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable: NSLocalizedString(eimeriaStr, comment: "") as NSString)!
+            self.preparedArray.add(chartDataSet)
+            
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
+            self.preparedArray.add(chartDataSet)
+            
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaMaxStr, comment: "") as NSString)!
+            self.preparedArray.add(chartDataSet)
+            
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaTenStr, comment: "") as NSString)!
+            self.preparedArray.add(chartDataSet)
+        }
+    }
+    
     @IBAction func BtnByWeekPressed(_ sender: UIButton) {
         isByWeeakChart = true
         isFarmSelected = true
@@ -654,25 +751,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         lineChartView.rightAxis.enabled = false
         lineChartView.isHidden = false
         self.barChartView.isHidden = true
-        for gestture in self.lineChartView.gestureRecognizers! {
-            if gestture.isKind(of: UIGestureRecognizer.self) {
-                self.lineChartView.removeGestureRecognizer(gestture)
-            }
-        }
-        
-        moveFrame(true)
-        maxFarmCount = 0
-        isMove = false
-        for btn in self.view.subviews {
-            if btn.isKind(of: UIButton.self) {
-                let bt = btn as! UIButton
-                if bt == sender {
-                    bt.isSelected = true
-                } else{
-                    bt.isSelected = false
-                }
-            }
-        }
+        toggleBtnIsSelected(sender)
         self.subjectString = NSLocalizedString("Coccidiosis by week", comment: "") as NSString
         chartNameLable.text = self.subjectString as String
         self.btnHistorical.isHidden = true
@@ -681,13 +760,20 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.farmNames.removeAllObjects()
         index = 0
         self.total_birds = 0.0
-        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
+        let arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
         
-     //   arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
-      
-        let objectArray1 =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
+        let objectArray1 = CoreDataHandler().fetchAllPostingSession(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
         sessionDate = (objectArray1.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
         dateLable.text = NSString(format: "%@",UtilityClass.convertDateFormater(sessionDate as String)) as String
+        let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
+        
+        if lastSessionDataArray.count == 0 {
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
+            self.lineChartView.clear()
+            return
+        }
+        let modalObj = GI_Tract_Modal()
+        modalObj.delegate = self
         
         let week1FarmDataArray = NSMutableArray()
         let week2FarmDataArray = NSMutableArray()
@@ -710,19 +796,6 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         var totalBirdsWeek8 : Float = 0
         var totalBirdsWeek9 : Float = 0
         var totalBirdsWeek10 : Float = 0
-        
-        let modalObj = GI_Tract_Modal()
-        
-        modalObj.delegate = self
-        
-        let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
-        
-        if lastSessionDataArray.count == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-            self.lineChartView.clear()
-            return
-        }
-        
         for j in 0..<lastSessionDataArray.count {
             
             let age = ((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as! NSString).intValue
@@ -738,46 +811,11 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             handleFunctionGreaterThan14LessThan5(age, &totalBirdsWeek3, numberOfBirds, farmName, necID, week3FarmDataArray)
             handleAgeGreaterThan22LessThan29(age, &totalBirdsWeek4, numberOfBirds, farmName, necID, week4FarmDataArray)
             handleAgeGreaterThan28LessThan36(age, &totalBirdsWeek5, numberOfBirds, farmName, necID, week5FarmDataArray)
-            if age > 35 && age < 43 {
-                
-                totalBirdsWeek6 = totalBirdsWeek6+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week6FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 42 && age < 50 {
-                
-                totalBirdsWeek7 = totalBirdsWeek7+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week7FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 49 && age < 57 {
-                
-                totalBirdsWeek8 = totalBirdsWeek8+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week8FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 56 && age < 64 {
-                
-                totalBirdsWeek9 = totalBirdsWeek9+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week9FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 63 {
-                
-                totalBirdsWeek10 = totalBirdsWeek10+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week10FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
+            handleBtnByWeekPressedValidation3543(age, &totalBirdsWeek6, numberOfBirds, farmName, necID, week6FarmDataArray)
+            handleBtnByWeekPressedValidation4250(age, &totalBirdsWeek7, numberOfBirds, farmName, necID, week7FarmDataArray)
+            handleBtnByWeekPressedValidation4957(age, &totalBirdsWeek8, numberOfBirds, farmName, necID, week8FarmDataArray)
+            handleBtnByWeekPressedValidation5664(age, &totalBirdsWeek9, numberOfBirds, farmName, necID, week9FarmDataArray)
+            handleBtnByWeekPressedValidation63(age, &totalBirdsWeek10, numberOfBirds, farmName, necID, week10FarmDataArray)
         }
         
         self.total_birds = totalBirdsWeek1
@@ -810,22 +848,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.total_birds = totalBirdsWeek10
         modalObj.setupCocciDataByFarm(week10FarmDataArray,birdsCount: totalBirdsWeek10 , catName: "Coccidiosis")
         
-        if self.Eimeria_Acervulina_Gross_Array.count > 0 {
-            
-            preparedArray.removeAllObjects()
-            
-            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable: NSLocalizedString(eimeriaStr, comment: "") as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaMaxStr, comment: "") as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaTenStr, comment: "") as NSString)!
-            self.preparedArray.add(chartDataSet)
-        }
+        handleEmeriaAcerValidation()
         
         if self.preparedArray.count < 3 {
             
@@ -943,11 +966,8 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         let sortDescriptor = [NSSortDescriptor(key: "age" ,ascending: true , selector: #selector(NSString.localizedStandardCompare(_:)))]
         lastSessionDataArray = lastSessionDataArray.sortedArray(using: sortDescriptor) as NSArray
         for f in 0..<lastSessionDataArray.count {
-            
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
-            
-            
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(getFormattedString(lastSessionDataArray: lastSessionDataArray, farmName: farmName, f: f))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1104,10 +1124,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         for f in 0..<lastSessionDataArray.count {
 
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
-            
-            
-            
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(getFormattedString(lastSessionDataArray: lastSessionDataArray, farmName: farmName, f: f))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1139,8 +1156,8 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         }
       
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:farmNames1 as! [String])
-        let chartData = BarChartData(dataSets: [dataSet])
-        self.barChartView.data = chartData
+        let AcreChartData = BarChartData(dataSets: [dataSet])
+        self.barChartView.data = AcreChartData
         barChartView.setVisibleXRangeMaximum(10)
         if dataSet.yMax <= 0 {
            // self.moreLable.isHidden  = true
@@ -1217,7 +1234,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
             
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(getFormattedString(lastSessionDataArray: lastSessionDataArray, farmName: farmName, f: f))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1244,9 +1261,9 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         }
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:farmNames1 as! [String])
         self.barChartView.xAxis.labelCount = dataSet.entryCount
-        let chartData = BarChartData(dataSets: [dataSet])
+        let maximaChartData = BarChartData(dataSets: [dataSet])
         
-        self.barChartView.data = chartData
+        self.barChartView.data = maximaChartData
         barChartView.setVisibleXRangeMaximum(10)
         
         self.rightArrow.isHidden = farmNames1.count > 10 ? false : true
@@ -1261,6 +1278,11 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             dateLable.isHidden = true
         }
     }
+    
+    private func getFormattedString(lastSessionDataArray: NSArray, farmName:NSString,f: Int) -> NSString {
+        return NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString)
+    }
+    
     @IBAction func BtnMaximaMicroPressed(_ sender: UIButton) {
         
         barChartView.moveViewToX(-50)
@@ -1329,7 +1351,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
             
             
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(getFormattedString(lastSessionDataArray: lastSessionDataArray, farmName: farmName, f: f))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1344,7 +1366,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         let dataSet = BarChartDataSet(entries: self.entries_Array as NSArray as? [ChartDataEntry], label: "")
         dataSet.stackLabels = ["E. maxima micro 0","E. maxima micro 1","E. maxima micro 2","E. maxima micro 3","E. maxima micro 4"]
         dataSet.colors = [ UIColor.green,UIColor.yellow,UIColor.orange,UIColor.red,UIColor.blue]
-        let chartData = BarChartData(dataSet: dataSet)
+        let maxiMicroData = BarChartData(dataSet: dataSet)
         let farmNames1 = NSMutableArray()
         for frNme in self.farmNames{
             var frNme1 = frNme as! String
@@ -1355,7 +1377,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         }
         self.barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:farmNames1 as! [String])
         self.barChartView.xAxis.labelCount = dataSet.entryCount
-        self.barChartView.data = chartData
+        self.barChartView.data = maxiMicroData
         barChartView.setVisibleXRangeMaximum(10)
         if farmNames1.count < 11 {
             barChartView.viewPortHandler.resetBarChart(chart: barChartView)
@@ -1441,7 +1463,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
             
             
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(getFormattedString(lastSessionDataArray: lastSessionDataArray, farmName: farmName, f: f))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1469,9 +1491,9 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:farmNames1 as! [String])
         self.barChartView.xAxis.labelCount = dataSet.entryCount
         
-        let chartData = BarChartData(dataSets: [dataSet])
+        let tenellaChartData = BarChartData(dataSets: [dataSet])
         
-        self.barChartView.data = chartData
+        self.barChartView.data = tenellaChartData
         barChartView.setVisibleXRangeMaximum(10)
         if farmNames1.count < 11 {
             barChartView.viewPortHandler.resetBarChart(chart: barChartView)

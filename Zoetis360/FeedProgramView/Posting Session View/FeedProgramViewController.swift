@@ -912,6 +912,35 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         }
     }
     
+    fileprivate func handleMyCoxinBinderArrayValidations(_ molecules: [String], _ dosages: [String], _ fromDays: [String], _ toDays: [String]) {
+        let mycotoxinMoleculeFields = [moleculeFeedType1MyCoxtin, moleculeFeedType2MyCoxtin, moleculeFeedType3MyCoxtin,
+                                       moleculeFeedType4MyCoxtin, moleculeFeedType5MyCoxtin, moleculeFeedType6MyCoxtin]
+        
+        let mycotoxinDosageFields = [myCoxtinStarterDosage, myCoxtinGrowerDosage, myCoxtinFinisherDosge,
+                                     myCoxtinWDDosage, myCoxtin5DosageTextField, myCoxtin6DosageTextField]
+        
+        let mycotoxinFromDurationFields = [myFromFirstTextField, myFromSecondTextField, myFromThirdTextField,
+                                           myFromFourTextField, from5TextFieldMycoxtin, from6TextFieldMycoxtin]
+        
+        let mycotoxinToDurationFields = [myToFirstTextField, myToSecondTextField, myToThirdTextField,
+                                         myToFourTextField, to5TextFieldMycoxtin, to6TextFieldMycoxtin]
+        
+        for i in 0..<min(MyCoxtinBindersArray.count, 6) {
+            if let molecule = molecules[safe: i] {
+                mycotoxinMoleculeFields[i]?.text = molecule
+            }
+            if let dosage = dosages[safe: i] {
+                mycotoxinDosageFields[i]?.text = dosage
+            }
+            if let fromDay = fromDays[safe: i] {
+                mycotoxinFromDurationFields[i]?.text = fromDay
+            }
+            if let toDay = toDays[safe: i] {
+                mycotoxinToDurationFields[i]?.text = toDay
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         spacingInTxtField()
         self.printSyncLblCount()
@@ -948,35 +977,8 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                   let toDays = MyCoxtinBindersArray.value(forKey: "toDays") as? [String],
                   let feedPrograms = MyCoxtinBindersArray.value(forKey: "feedProgram") as? [String] else { return }
             
-            let mycotoxinMoleculeFields = [moleculeFeedType1MyCoxtin, moleculeFeedType2MyCoxtin, moleculeFeedType3MyCoxtin,
-                                           moleculeFeedType4MyCoxtin, moleculeFeedType5MyCoxtin, moleculeFeedType6MyCoxtin]
-            
-            let mycotoxinDosageFields = [myCoxtinStarterDosage, myCoxtinGrowerDosage, myCoxtinFinisherDosge,
-                                         myCoxtinWDDosage, myCoxtin5DosageTextField, myCoxtin6DosageTextField]
-            
-            let mycotoxinFromDurationFields = [myFromFirstTextField, myFromSecondTextField, myFromThirdTextField,
-                                               myFromFourTextField, from5TextFieldMycoxtin, from6TextFieldMycoxtin]
-            
-            let mycotoxinToDurationFields = [myToFirstTextField, myToSecondTextField, myToThirdTextField,
-                                             myToFourTextField, to5TextFieldMycoxtin, to6TextFieldMycoxtin]
-            
-            for i in 0..<min(MyCoxtinBindersArray.count, 6) {
-                if let molecule = molecules[safe: i] {
-                    mycotoxinMoleculeFields[i]?.text = molecule
-                }
-                if let dosage = dosages[safe: i] {
-                    mycotoxinDosageFields[i]?.text = dosage
-                }
-                if let fromDay = fromDays[safe: i] {
-                    mycotoxinFromDurationFields[i]?.text = fromDay
-                }
-                if let toDay = toDays[safe: i] {
-                    mycotoxinToDurationFields[i]?.text = toDay
-                }
-            }
-            
+            handleMyCoxinBinderArrayValidations(molecules, dosages, fromDays, toDays)
             feedProgramTextField.text = feedPrograms.first
-            
         }
         
         handleViewWillAppearRefactor3()
@@ -1038,15 +1040,12 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         sixthMolID = moleculeIDs[5] ?? 0
     }
     
-    
-    
     // MARK: - Set Corner Radius , color & Border Width of button's
     func styleButton(_ button: UIButton, cornerRadius: CGFloat, borderColor: UIColor, borderWidth: CGFloat) {
         button.layer.cornerRadius = cornerRadius
         button.layer.borderColor = borderColor.cgColor
         button.layer.borderWidth = borderWidth
     }
-    
     
     // MARK: - METHODS AND FUNCTIONS
     func hideTextField(hide: Bool){
@@ -2646,7 +2645,19 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if feedProgramArray.count == 0 {
             
             
-            CoreDataHandler().SaveFeedProgram(postingId as NSNumber, sessionId: 1, feedProgrameName:  feedProgramTextField.text!, feedId: feedId as NSNumber, dbArray: feedProgramArray, index: 0,formName: addFarmSelectLbl.text! ,isSync: true,lngId:languageId as NSNumber)
+            
+            let feedData = chickenCoreDataHandlerModels.saveChickenFeedProgramData(postingId: postingId as NSNumber,
+                                           sessionId: 1,
+                                           feedProgrameName: feedProgramTextField.text!,
+                                           feedId: feedId as NSNumber,
+                                           dbArray: feedProgramArray,
+                                           index: 0,
+                                           formName: addFarmSelectLbl.text!,
+                                           isSync: true,
+                                           lngId: languageId as NSNumber)
+            
+            CoreDataHandler().SaveFeedProgram(feedData)
+            
             
             CoreDataHandler().updateisSyncTrueOnPostingSession(postingId as NSNumber)
         }
@@ -2664,8 +2675,19 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 if   feedProgadd == "ExtingFeeed"{
                     
                     feedProgramArray.removeAllObjects()
+                                        
+                    let feedData = chickenCoreDataHandlerModels.saveChickenFeedProgramData(postingId: postingId as NSNumber,
+                                                                                           sessionId: 1,
+                                                                                           feedProgrameName: feedProgramTextField.text!,
+                                                                                           feedId: feedId as NSNumber,
+                                                                                           dbArray: feedProgramArray,
+                                                                                           index: feedId,
+                                                                                           formName: addFarmSelectLbl.text!,
+                                                                                           isSync: true,
+                                                                                           lngId: languageId as NSNumber)
                     
-                    CoreDataHandler().SaveFeedProgram(postingId as NSNumber, sessionId: 1, feedProgrameName:  feedProgramTextField.text!, feedId: feedId as NSNumber, dbArray: feedProgramArray, index: feedId,formName: addFarmSelectLbl.text!,isSync :true,lngId:languageId as NSNumber)
+                    CoreDataHandler().SaveFeedProgram(feedData)
+                    
                     
                     
                     CoreDataHandler().updateisSyncTrueOnPostingSession(postingId as NSNumber)
@@ -2684,8 +2706,19 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             else{
                 
                 feedProgramArray.removeAllObjects()
-                
-                CoreDataHandler().SaveFeedProgram(postingId as NSNumber, sessionId: 1, feedProgrameName:  feedProgramTextField.text!, feedId: feedId as NSNumber, dbArray: feedProgramArray, index: feedId,formName: addFarmSelectLbl.text!,isSync :true,lngId:languageId as NSNumber)
+                                        
+                let feedData = chickenCoreDataHandlerModels.saveChickenFeedProgramData( postingId: postingId as NSNumber,
+                                                                                                sessionId: 1,
+                                                                                                feedProgrameName: feedProgramTextField.text!,
+                                                                                                feedId: feedId as NSNumber,
+                                                                                                dbArray: feedProgramArray,
+                                                                                                index: feedId,
+                                                                                                formName: addFarmSelectLbl.text!,
+                                                                                                isSync: true,
+                                                                                                lngId: languageId as NSNumber
+                                                                                               )
+                        
+                        CoreDataHandler().SaveFeedProgram(feedData)
                 
                 
                 CoreDataHandler().updateisSyncTrueOnPostingSession(postingId as NSNumber)
@@ -2789,26 +2822,151 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         for i in 0..<6 {
             
             if i == 0 {
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType1.text ?? "", dosage:antiDosageFirstTextField.text ?? "", fromDays: antiFromDurationFirstTextField.text ?? "", toDays: antiToDurationFirstTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeOne,cocoVacId: CocoiVacId, lngId: languageId as NSNumber, lblDate: lblDate.text ?? "" )
-            } else if i == 1 {
                 
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType2.text ?? "", dosage:antiDosageSecondTextField.text ?? "", fromDays: antiFromDurationSecondTextField.text ?? "", toDays: antiToDurationSecondTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeTwo,cocoVacId: CocoiVacId,lngId: languageId as NSNumber, lblDate: lblDate.text ?? "" )
+                // Create an instance of AntibioticFeedData
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                       loginSessionId: 1,
+                       postingId: postingId as NSNumber,
+                       molecule: antiMoleculeFeedType1.text ?? "",
+                       dosage: antiDosageFirstTextField.text ?? "",
+                       fromDays: antiFromDurationFirstTextField.text ?? "",
+                       toDays: antiToDurationFirstTextField.text ?? "",
+                       index: i,
+                       dbArray: AntiboticArray,
+                       feedId: feedId as NSNumber,
+                       feedProgram: feedProgramTextField.text ?? "",
+                       formName: addFarmSelectLbl.text ?? "",
+                       isSync: true,
+                       feedType: feedTypeOne,
+                       cocoVacId: CocoiVacId,
+                       lngId: languageId as NSNumber,
+                       lblDate: lblDate.text ?? ""
+                )
+
+                // Call the refactored function with the AntibioticFeedData instance
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
+
+                
+                
+                
+            } else if i == 1 {
+                                
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                        loginSessionId: 1,
+                        postingId: postingId as NSNumber,
+                        molecule: antiMoleculeFeedType2.text ?? "",
+                        dosage: antiDosageSecondTextField.text ?? "",
+                        fromDays: antiFromDurationSecondTextField.text ?? "",
+                        toDays: antiToDurationSecondTextField.text ?? "",
+                        index: i,
+                        dbArray: AntiboticArray,
+                        feedId: feedId as NSNumber,
+                        feedProgram: feedProgramTextField.text ?? "",
+                        formName: addFarmSelectLbl.text ?? "",
+                        isSync: true,
+                        feedType: feedTypeTwo,
+                        cocoVacId: CocoiVacId,
+                        lngId: languageId as NSNumber,
+                        lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
                 
             } else if i == 2 {
                 
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType3.text ?? "", dosage:antiDosageThirdTextField.text ?? "", fromDays: antiFromDurationThirdTextField.text ?? "", toDays: antiToDurationThirdTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeThree,cocoVacId: CocoiVacId,lngId: languageId as NSNumber, lblDate: lblDate.text ?? "" )
+                
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                     loginSessionId: 1,
+                     postingId: postingId as NSNumber,
+                     molecule: antiMoleculeFeedType3.text ?? "",
+                     dosage: antiDosageThirdTextField.text ?? "",
+                     fromDays: antiFromDurationThirdTextField.text ?? "",
+                     toDays: antiToDurationThirdTextField.text ?? "",
+                     index: i,
+                     dbArray: AntiboticArray,
+                     feedId: feedId as NSNumber,
+                     feedProgram: feedProgramTextField.text ?? "",
+                     formName: addFarmSelectLbl.text ?? "",
+                     isSync: true,
+                     feedType: feedTypeThree,
+                     cocoVacId: CocoiVacId,
+                     lngId: languageId as NSNumber,
+                     lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
+                
                 
             } else if i == 3 {
                 
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType4.text ?? "", dosage:antiDosageFourTextField.text ?? "", fromDays: antiFromDurationFourTextField.text ?? "", toDays: antiToDurationFourTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFour,cocoVacId: CocoiVacId,lngId: languageId as NSNumber, lblDate: lblDate.text ?? "")
+                
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                        loginSessionId: 1,
+                        postingId: postingId as NSNumber,
+                        molecule: antiMoleculeFeedType4.text ?? "",
+                        dosage: antiDosageFourTextField.text ?? "",
+                        fromDays: antiFromDurationFourTextField.text ?? "",
+                        toDays: antiToDurationFourTextField.text ?? "",
+                        index: i,
+                        dbArray: AntiboticArray,
+                        feedId: feedId as NSNumber,
+                        feedProgram: feedProgramTextField.text ?? "",
+                        formName: addFarmSelectLbl.text ?? "",
+                        isSync: true,
+                        feedType: feedTypeFour,
+                        cocoVacId: CocoiVacId,
+                        lngId: languageId as NSNumber,
+                        lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
+                
             } else if i == 4 {
                 
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType5.text ?? "", dosage:antiDosageFivthTextField
-                    .text ?? "", fromDays: antiFromFivthTextField.text ?? "", toDays: antiToDurationfivthTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFive,cocoVacId: CocoiVacId ,lngId: languageId as NSNumber, lblDate: lblDate.text ?? "")
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                       loginSessionId: 1,
+                       postingId: postingId as NSNumber,
+                       molecule: antiMoleculeFeedType5.text ?? "",
+                       dosage: antiDosageFivthTextField.text ?? "",
+                       fromDays: antiFromFivthTextField.text ?? "",
+                       toDays: antiToDurationfivthTextField.text ?? "",
+                       index: i,
+                       dbArray: AntiboticArray,
+                       feedId: feedId as NSNumber,
+                       feedProgram: feedProgramTextField.text ?? "",
+                       formName: addFarmSelectLbl.text ?? "",
+                       isSync: true,
+                       feedType: feedTypeFive,
+                       cocoVacId: CocoiVacId,
+                       lngId: languageId as NSNumber,
+                       lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
+                
                 
             } else if i == 5 {
-                
-                CoreDataHandler().saveAntiboticDatabase(1, postingId: postingId as NSNumber, molecule: antiMoleculeFeedType6.text ?? "", dosage:antiDosageSixTextField.text ?? "", fromDays: antiFromSixthTextField.text ?? "", toDays: antiToDurationSixTextField.text ?? "", index: i, dbArray: AntiboticArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeSix ,cocoVacId: CocoiVacId,lngId: languageId as NSNumber, lblDate: lblDate.text ?? "")
+                                
+                let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: antiMoleculeFeedType6.text ?? "",
+                    dosage: antiDosageSixTextField.text ?? "",
+                    fromDays: antiFromSixthTextField.text ?? "",
+                    toDays: antiToDurationSixTextField.text ?? "",
+                    index: i,
+                    dbArray: AntiboticArray,
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeSix,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
             }
         }
         completion (true)

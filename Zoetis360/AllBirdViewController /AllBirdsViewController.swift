@@ -573,9 +573,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
             noofBirdArrOnObs.add(i+1)
         }
         let captureNec :  CaptureNecropsyViewData = (d.object(forKey: noofBirdArrOnObs.object(at: cell.incrementBtnOutlet.tag - 1)) as? CaptureNecropsyViewData)!
-        let fethchArr = CoreDataHandler().fecthFrmWithBirdAndObservation(noOfBird! as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
        
-        
         CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnActual(formName , formName: formNameValue, birdNo: noOfBird! as NSNumber, obsId: captureNec.obsID!, actualName: textField.text!, necId: necId as NSNumber)
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{

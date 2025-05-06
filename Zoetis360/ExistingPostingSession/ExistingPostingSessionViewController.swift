@@ -377,7 +377,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
                 self.navigationController?.pushViewController(postingSessionDetails!, animated: true)
             }
             else{
-                let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
+                 lngId = UserDefaults.standard.integer(forKey: "lngId")
                 if lngId == 1{
                    
                     Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session", comment: ""))

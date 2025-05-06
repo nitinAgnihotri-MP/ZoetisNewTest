@@ -49,6 +49,7 @@ final  public class SubmittedCertificationsService{
                     VaccinationDashboardDAO.sharedInstance.updateSubmittedDate(userId:userId,  certificationId: certObj?.certificationId ?? "", status: status,certCategoryId:certObj?.certificationCategoryId ?? "", certObj: certObj!,submittedDate: certObj?.submittedDate )
                     
                     if let employeeArr = certificationObj.operatorInfo {
+                        debugPrint("Employee count: \(employeeArr.count)")
                         let employeeArrIs = certificationObj.operatorInfo
                         var i:Int32 = 1
                         for employee in employeeArrIs!{

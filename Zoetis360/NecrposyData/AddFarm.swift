@@ -342,9 +342,32 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
        
         
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementId")
-        
-        CoreDataHandler().SaveNecropsystep1(necId as NSNumber, age: self.lblAge
-            .text!, farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text!, flockId: flockIdTextField.text!, houseNo: houseNoTextFld.text!, noOfBirds: noOfBirdsLbl.text!, sick: asb as NSNumber,necId: necId as NSNumber,compexName:complexName! ,complexDate:complexDate! ,complexId:complexId as NSNumber,custmerId:custMid as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStamp1,actualTimeStamp:timeStamp1 ,lngId:1, farmId: countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId), count: count as NSNumber)
+
+        let necropsyData = chickenCoreDataHandlerModels.saveNecropsyStep1Data(
+            postingId: necId as NSNumber,
+               age: self.lblAge.text!,
+               farmName: appendfeedProgramwithCount,
+               feedProgram: feedProgramDisplayLabel.text!,
+               flockId: flockIdTextField.text!,
+               houseNo: houseNoTextFld.text!,
+               noOfBirds: noOfBirdsLbl.text!,
+               sick: asb as NSNumber,
+               necId: necId as NSNumber,
+               compexName: complexName!,
+               complexDate: complexDate!,
+               complexId: complexId as NSNumber,
+               custmerId: custMid as NSNumber,
+               feedId: feedId as NSNumber,
+               isSync: true,
+               timeStamp: timeStamp1,
+               actualTimeStamp: timeStamp1,
+               lngId: 1,
+               farmId: countFarmId as NSNumber,
+               imageId: NSNumber(value: imageAutoIncrementId),
+               count: count as NSNumber
+        )
+
+        CoreDataHandler().SaveNecropsystep1(data: necropsyData)
         
         let numberofbirds = Int(noOfBirdsLbl.text!)
         

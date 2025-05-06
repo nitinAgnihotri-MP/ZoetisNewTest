@@ -2022,16 +2022,14 @@ extension PEStartNewAssessmentINT {
     }
     
     fileprivate func extractedFunc(_ object: PECategory, _ peCategoryFilteredArray: inout [PECategory]) {
-        if(regionID == 3),peNewAssessment.evaluationID == object.evaluationID {
-            if object.id != 36 {
-                peCategoryFilteredArray.append(object)
-            }
-        } else {
-            if object.id != 36 {
-                peCategoryFilteredArray.append(object)
-            }
+        let shouldAppend = (regionID != 3) || (peNewAssessment.evaluationID == object.evaluationID)
+        if shouldAppend && object.id != 36 {
+            peCategoryFilteredArray.append(object)
         }
+
     }
+
+    
     
     fileprivate func validateExtendedPESwitch() {
         if extendedPESwitch {

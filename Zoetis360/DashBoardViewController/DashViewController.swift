@@ -739,19 +739,98 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             }
             
             if  btnTag == 0 {
-                CoreDataHandler().saveSettingsSkeletaInDatabase(strObservationField,visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataSkeletaArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId:refId, quicklinkIndex: quickLinkIndex ?? 0 )
+                let settings = chickenCoreDataHandlerModels.saveSkeletaSettingsInDB(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataSkeletaArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandler().saveSettingsSkeletaInDatabase(settings)
             }
             else if btnTag == 1{
-                CoreDataHandler().saveSettingsCocoiiInDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataCocoiiArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let settingData = chickenCoreDataHandlerModels.saveCoccidiosisSettingDB(
+                    strObservationField: strObservationField,
+                    visibilityCheck: isVisibilityCheck,
+                    quicklinks: isQuicklinksCheck,
+                    strInformation: "xyz",
+                    index: i,
+                    dbArray: dataCocoiiArray,
+                    obsId: obsId,
+                    measure: measure,
+                    isSync: false,
+                    lngId: lngIdValue,
+                    refId: refId,
+                    quicklinkIndex: quickLinkIndex ?? 0
+                )
+
+                CoreDataHandler().saveSettingsCocoiiInDatabase(settingData)
+                
+                
             }
             else if btnTag == 2{
-                CoreDataHandler().saveSettingsGITractDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataGiTractArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId:refId,quicklinkIndex: quickLinkIndex ?? 0)
+                let settingData = chickenCoreDataHandlerModels.saveGITractSettingData(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataGiTractArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+
+                CoreDataHandler().saveSettingsGITractDatabase(settingData: settingData)
             }
             else if btnTag == 3{
-                CoreDataHandler().saveSettingsRespiratoryDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataRespiratoryArray,obsId:obsId,measure:measure,isSync:false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let settings = chickenCoreDataHandlerModels.saveRespiratorySettings(
+                    strObservationField: strObservationField,
+                       visibilityCheck: isVisibilityCheck,
+                       quicklinks: isQuicklinksCheck,
+                       strInformation: "xyz",
+                       index: i,
+                       dbArray: dataRespiratoryArray,
+                       obsId: obsId,
+                       measure: measure,
+                       isSync: false,
+                       lngId: lngIdValue,
+                       refId: refId,
+                       quicklinkIndex: quickLinkIndex ?? 0
+                )
+
+                CoreDataHandler().saveSettingsRespiratoryDatabase(settings: settings)
             }
             else{
-                CoreDataHandler().saveSettingsImmuneDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataImmuneArray,obsId:obsId,measure:measure,isSync:false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let settings = chickenCoreDataHandlerModels.saveImmuneSettings(
+                       strObservationField: strObservationField,
+                          visibilityCheck: isVisibilityCheck,
+                          quicklinks: isQuicklinksCheck,
+                          strInformation: "xyz",
+                          index: i,
+                          dbArray: dataImmuneArray,
+                          obsId: obsId,
+                          measure: measure,
+                          isSync: false,
+                          lngId: lngIdValue,
+                          refId: refId,
+                          quicklinkIndex: quickLinkIndex ?? 0
+                )
+
+                CoreDataHandler().saveSettingsImmuneDatabase(settings)
             }
         }
     }

@@ -860,9 +860,53 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         lblTimeStamp = self.timeStamp()
         ////check if posting id exist on posting session
         lngId = UserDefaults.standard.integer(forKey: "lngId")
-        
-        CoreDataHandlerTurkey().PostingSessionDbTurkey("", birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  lblDate.text!, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1, postingId:  self.postingId as NSNumber,mail: "",female: "",finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,birdType:"Aync",birdTypeId:2,birdbreedId:0,capNec:0 , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text!)
-        
+        let turkeyData = CoreDataHandlerTurkeyModels.PostingSessionTurkeyDBData(
+            antobotic: "",
+            birdBreesId: breedIdDb,
+            birdbreedName: "",
+            birdBreedType: "",
+            birdSize: "",
+            birdSizeId: birdSizeIdDb,
+            cocciProgramId: cocciProgramIdDb,
+            cociiProgramName: lblCocieeProgram.text ?? "",
+            complexId: complexIdDb,
+            complexName: lblComplex.text ?? "",
+            convential: "",
+            customerId: custmetIdDb,
+            customerName: lblCustmer.text ?? "",
+            customerRepId: cusmerRepIdDb,
+            customerRepName: CustRepTextField.text ?? "",
+            imperial: "",
+            metric: "",
+            notes: notesTextView.text ?? "",
+            salesRepId: salesRepIdDb,
+            salesRepName: lblSelesRep.text ?? "",
+            sessiondate: lblDate.text ?? "",
+            sessionTypeId: sessionTypeIdDb,
+            sessionTypeName: lblSessionType.text ?? "",
+            vetanatrionName: lblVeteration.text ?? "",
+            veterinarianId: veterinartionIdDb,
+            loginSessionId: 1,
+            postingId: self.postingId as NSNumber,
+            mail: "",
+            female: "",
+            finilize: 0,
+            isSync: true,
+            timeStamp: lblTimeStamp,
+            lngId: lngId as NSNumber,
+            birdType: "Aync",
+            birdTypeId: 2,
+            birdbreedId: 0,
+            capNec: 0,
+            avgAge: avgAgeTxtFld.text ?? "",
+            avgWeight: avgWeightTxtFld.text ?? "",
+            outTime: outTimeTxtFld.text ?? "",
+            FCR: fcrTxtFld.text ?? "",
+            Livability: txtFldLivability.text ?? "",
+               mortality: txtFldMortality.text ?? ""
+        )
+
+        CoreDataHandlerTurkey().PostingSessionDbTurkey(with: turkeyData)
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{
             CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId as NSNumber, finalizeNec: 1)
@@ -1077,7 +1121,55 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 cell.selectionStyle = UITableViewCell.SelectionStyle.none
                 cell.textLabel!.text = cocoii.complexName
                 
-                CoreDataHandlerTurkey().updatePostingSessionForNextButtonTurkey(postingId as NSNumber,antobotic: "", birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: cocoii.complexId!, complexName: cocoii.complexName!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  lblDate.text!, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1,mail: "",female: "",finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,birdType:"",birdTypeId:2 , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text!)
+                let updatedSessionData = CoreDataHandlerTurkeyModels.updatePostingSessionTurkeyDBData(
+                    postingId: postingId as NSNumber,
+                    antobotic: "",
+                    birdBreesId: breedIdDb,
+                    birdBreedName: "",
+                    birdBreedType: "",
+                    birdSize: "",
+                    birdSizeId: birdSizeIdDb,
+                    cocciProgramId: cocciProgramIdDb,
+                    cociiProgramName: lblCocieeProgram.text ?? "",
+                    complexId: cocoii.complexId ?? 0,
+                    complexName: cocoii.complexName ?? "",
+                    convential: "",
+                    customerId: custmetIdDb,
+                    customerName: lblCustmer.text ?? "",
+                    customerRepId: cusmerRepIdDb,
+                    customerRepName: CustRepTextField.text ?? "",
+                    imperial: "",
+                    metric: "",
+                    notes: notesTextView.text ?? "",
+                    salesRepId: salesRepIdDb,
+                    salesRepName: lblSelesRep.text ?? "",
+                    sessionDate: lblDate.text ?? "",
+                    sessionTypeId: sessionTypeIdDb,
+                    sessionTypeName: lblSessionType.text ?? "",
+                    vetanatrionName: lblVeteration.text ?? "",
+                    veterinarianId: veterinartionIdDb,
+                    loginSessionId: 1,
+                    mail: "",
+                    female: "",
+                    finalize: 0,
+                    isSync: true,
+                    timeStamp: lblTimeStamp,
+                    lngId: lngId as NSNumber,
+                    birdType: "",
+                    birdTypeId: 2,
+                    birdBreedId: 0,
+                    capNec: 0,
+                    avgAge: avgAgeTxtFld.text ?? "",
+                    avgWeight: avgWeightTxtFld.text ?? "",
+                    outTime: outTimeTxtFld.text ?? "",
+                    FCR: fcrTxtFld.text ?? "",
+                    livability: txtFldLivability.text ?? "",
+                    mortality: txtFldMortality.text ?? ""
+                )
+
+                CoreDataHandlerTurkey().updatePostingSessionForNextButtonTurkey(data: updatedSessionData)
+                
+     
                 
             } else if btnTag == 4{
                 
@@ -1429,7 +1521,55 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
             
         }  else  {
-            CoreDataHandlerTurkey().updatePostingSessionForNextButtonTurkey(postingId as NSNumber,antobotic: "", birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  lblDate.text!, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1,mail: "",female: "",finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,birdType:"",birdTypeId:2 , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text!)
+            
+            let updatedSessionData = CoreDataHandlerTurkeyModels.updatePostingSessionTurkeyDBData(
+                postingId: postingId as NSNumber,
+                antobotic: "",
+                  birdBreesId: breedIdDb,
+                  birdBreedName: "",
+                  birdBreedType: "",
+                  birdSize: "",
+                  birdSizeId: birdSizeIdDb,
+                  cocciProgramId: cocciProgramIdDb,
+                  cociiProgramName: lblCocieeProgram.text ?? "",
+                  complexId: complexIdDb,
+                  complexName: lblComplex.text ?? "",
+                  convential: "",
+                  customerId: custmetIdDb,
+                  customerName: lblCustmer.text ?? "",
+                  customerRepId: cusmerRepIdDb,
+                  customerRepName: CustRepTextField.text ?? "",
+                  imperial: "",
+                  metric: "",
+                  notes: notesTextView.text ?? "",
+                  salesRepId: salesRepIdDb,
+                  salesRepName: lblSelesRep.text ?? "",
+                  sessionDate: lblDate.text ?? "",
+                  sessionTypeId: sessionTypeIdDb,
+                  sessionTypeName: lblSessionType.text ?? "",
+                  vetanatrionName: lblVeteration.text ?? "",
+                  veterinarianId: veterinartionIdDb,
+                  loginSessionId: 1,
+                  mail: "",
+                  female: "",
+                  finalize: 0,
+                  isSync: true,
+                  timeStamp: lblTimeStamp,
+                  lngId: lngId as NSNumber,
+                  birdType: "",
+                  birdTypeId: 2,
+                  birdBreedId: 0,
+                  capNec: 0,
+                  avgAge: avgAgeTxtFld.text ?? "",
+                  avgWeight: avgWeightTxtFld.text ?? "",
+                  outTime: outTimeTxtFld.text ?? "",
+                  FCR: fcrTxtFld.text ?? "",
+                  livability: txtFldLivability.text ?? "",
+                  mortality: txtFldMortality.text ?? ""
+            )
+
+            CoreDataHandlerTurkey().updatePostingSessionForNextButtonTurkey(data: updatedSessionData)
+            
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "Step1Turkey") as? CaptureNecropsyStep1Turkey
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
         }
@@ -1585,11 +1725,12 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             }
             
             lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 1{
-                if lblDate.text != NSLocalizedString(selectDateText, comment: "") {
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
+          
+            if lngId == 1, lblDate.text != NSLocalizedString(selectDateText, comment: "") {
+                btnDate.layer.borderColor = UIColor.black.cgColor
             }
+
+           
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
             
@@ -1956,7 +2097,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
                 // Update posting session
                 feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
-                if feedProgramArray.count<0{
+                if feedProgramArray.count == 0 {
                     CoreDataHandlerTurkey().updatePostingSessionOndashBoardTurkey(self.postingId as NSNumber, vetanatrionName: "", veterinarianId: 0, captureNec: 2)
                     CoreDataHandlerTurkey().deletefieldVACDataWithPostingIdTurkey(self.postingId as NSNumber)
                     CoreDataHandlerTurkey().deleteDataWithPostingIdHatcheryTurkey(self.postingId as NSNumber)

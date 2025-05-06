@@ -124,7 +124,7 @@ protocol infoLinkkTurkey: class {
         }
         else
         {
-            if [1955, 2036, 1956, 1952].contains(obsData.obsID) {
+            if [1955, 2036, 1956, 1952 , 2037].contains(obsData.obsID) {
                 setIndexLblText(indexPath, cell)
             }
         }

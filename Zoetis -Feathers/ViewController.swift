@@ -18,9 +18,13 @@ import GigyaAuth
 import SwiftyJSON
 //import JNKeychain
 
+
+private struct FeedConstants {
+	static let deviceType = "iOS"
+	static let feedIdKey = "feedId"
+}
+
 class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, syncApiTurkey, syncApi {
-    
-    
     var delegate: SidePenalDelegate?
     let myBlueColor = (UIColor(red: 204.0, green: 227.0, blue: 255.0, alpha: 1.0))
     var loginArray = NSArray()
@@ -631,8 +635,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         UserDefaults.standard.synchronize()
 
         let Id = dict.value(forKey: "Id")! as AnyObject
-        let id = Id.integerValue
-        let FirstName = dict.value(forKey: "FirstName") as! String
 
         let terms = dict.value(forKey: "TermAccepted") as! String
         if terms == "true" {
@@ -1497,7 +1499,10 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
             let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
-            if chkKey3 == "NA" { break }
+            if chkKey3 == "NA"
+            {
+                break
+            }
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
             let catstr = mapCategoryName(catName)
@@ -1733,30 +1738,32 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let feedId = farmItem["FeedId"].intValue
         let farmId = farmItem["DeviceFarmId"].intValue
         let ImgId = farmItem["ImgId"].intValue
-
-        CoreDataHandler().SaveNecropsystep1(
-            sessionId as NSNumber,
-            age: age,
-            farmName: farmName,
-            feedProgram: feedProgram,
-            flockId: flockId,
-            houseNo: houseNo,
-            noOfBirds: birds,
-            sick: sick as NSNumber,
-            necId: sessionId as NSNumber,
-            compexName: complexName,
-            complexDate: seesDat,
-            complexId: complexId as NSNumber,
-            custmerId: custId as NSNumber,
-            feedId: feedId as NSNumber,
-            isSync: false,
-            timeStamp: devSessionId,
-            actualTimeStamp: devSessionId,
-            lngId: lngId,
-            farmId: farmId as NSNumber,
-            imageId: ImgId as NSNumber,
-            count: 0
+        
+        let necropsyData = chickenCoreDataHandlerModels.saveNecropsyStep1Data(
+            postingId: sessionId as NSNumber,
+               age: age,
+               farmName: farmName,
+               feedProgram: feedProgram,
+               flockId: flockId,
+               houseNo: houseNo,
+               noOfBirds: birds,
+               sick: sick as NSNumber,
+               necId: sessionId as NSNumber,
+               compexName: complexName,
+               complexDate: seesDat,
+               complexId: complexId as NSNumber,
+               custmerId: custId as NSNumber,
+               feedId: feedId as NSNumber,
+               isSync: false,
+               timeStamp: devSessionId,
+               actualTimeStamp: devSessionId,
+               lngId: lngId,
+               farmId: farmId as NSNumber,
+               imageId: ImgId as NSNumber,
+               count: 0
         )
+
+        CoreDataHandler().SaveNecropsystep1(data: necropsyData)
     }
 
     private func finalizePostingSessions() {
@@ -2072,35 +2079,38 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
               let sex = farmDict["Sex"] as? String,
               let nameGen = farmDict["GenerationName"] as? String,
               let idGen = farmDict["GenerationId"] as? Int else { return }
-        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(
-            sessionId as NSNumber,
-            age: String(age),
-            farmName: farmName,
-            feedProgram: feedProgram,
-            flockId: flockId,
-            houseNo: houseNo,
-            noOfBirds: String(birds),
-            sick: sick as NSNumber,
-            necId: sessionId as NSNumber,
-            compexName: complexName,
-            complexDate: seesDat,
-            complexId: complexId as NSNumber,
-            custmerId: custId as NSNumber,
-            feedId: feedId as NSNumber,
-            isSync: false,
-            timeStamp: devSessionId,
-            actualTimeStamp: devSessionId,
-            lngId: lngId,
-            farmWeight: String(farmWeight),
-            abf: abf,
-            breed: breed,
-            sex: sex,
-            farmId: farmId as NSNumber,
-            imageId: imgId as NSNumber,
-            count: 0,
-            genName: nameGen,
-            genId: idGen as NSNumber
+        
+        let necropsyData = CoreDataHandlerTurkeyModels.saveTurkeyNecropsyStep1Data(
+              postingId: sessionId as NSNumber,
+              age: String(age),
+                 farmName: farmName,
+                 feedProgram: feedProgram,
+                 flockId: flockId,
+                 houseNo: houseNo,
+                 noOfBirds: String(birds),
+                 sick: sick as NSNumber,
+                 necId: sessionId as NSNumber,
+                 compexName: complexName,
+                 complexDate: seesDat,
+                 complexId: complexId as NSNumber,
+                 customerId: custId as NSNumber,
+                 feedId: feedId as NSNumber,
+                 isSync: false,
+                 timeStamp: devSessionId,
+                 actualTimeStamp: devSessionId,
+                 lngId: lngId,
+                 farmWeight: String(farmWeight),
+                 abf: abf,
+                 breed: breed,
+                 sex: sex,
+                 farmId: farmId as NSNumber,
+                 imageId: imgId as NSNumber,
+                 count: 0,
+                 genName: nameGen,
+                 genId: idGen as NSNumber
         )
+
+        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necropsyData)
     }
 
     private func finalizeTurkeyPostingSessions() {
@@ -2212,27 +2222,33 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
             let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
-            if chkKey3 == "NA" { break }
+            if chkKey3 == "NA" {
+                break
+            }
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
             let catstr = mapTurkeyCategoryName(catName)
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(
-                catName: catstr,
-                obsName: obsName,
-                formName: farmName,
-                obsVisibility: chkKey!,
-                birdNo: (m+1) as NSNumber,
-                obsPoint: chkKey1!,
-                index: m,
-                obsId: obsId,
-                measure: measure,
-                quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
-                necId: sessionId as NSNumber,
-                isSync: false,
-                lngId: languageId,
-                refId: refId,
-                actualText: chkKey3
+          
+            let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                   catName: catstr,
+                   obsName: obsName,
+                   formName: farmName,
+                   obsVisibility: chkKey!,
+                   birdNo: (m + 1) as NSNumber,
+                   obsPoint: chkKey1!,
+                   index: m,
+                   obsId: obsId,
+                   measure: measure,
+                   quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
+                   necId: sessionId as NSNumber,
+                   isSync: false,
+                   lngId: languageId,
+                   refId: refId,
+                   actualText: chkKey3
             )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+            
         }
     }
 
@@ -2322,131 +2338,318 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     // MARK:  ********** Call Get Api For Feed Session  TURKEY **************************************/
-    func getPostingDataFromServerforFeedTurkey() {
-        self.deleteAllData("AlternativeFeedTurkey")
-        self.deleteAllData("AntiboticFeedTurkey")
-        self.deleteAllData("CoccidiosisControlFeedTurkey")
-        self.deleteAllData("MyCotoxinBindersFeedTurkey")
-        if WebClass.sharedInstance.connected() {
-       
-            
-            var id = UserDefaults.standard.value(forKey: "Id") as! Int
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-            print("AccessToken: ",accestoken)
-           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
-            let dev = "iOS"
-            // Old      let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
-                  let url = "PostingSession/TurkeyGetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
-            let urlString: String = WebClass.sharedInstance.webUrl + url
-            
-            sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
-                
-                let statusCode =  response.response?.statusCode
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408{
-                    self.alerView(statusCode:statusCode!)
-                    
-                }
-                switch response.result{
-                case let .success(value):
-                    DispatchQueue.main.async {
-                        
-                        
-                        if value != nil {
-                            if value is NSArray{
-                                let arr : NSArray = value as! NSArray
-                                
-                                if arr.count>0{
-                                    
-                                    for  t in 0..<arr.count {
-                                        
-                                        let posDict = arr.object(at: t)
-                                        let seesionId = (posDict as AnyObject).value(forKey: "sessionId") as! Int
-                                        let feedDictArr = (posDict as AnyObject).value(forKey: "Feeds")
-                                        
-                                        
-                                        for  i in 0..<(feedDictArr! as AnyObject).count {
-                                            let feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
-                                            let nsFeedid = UserDefaults.standard.integer(forKey: "feedId")
-                                            if feedId > nsFeedid{
-                                                UserDefaults.standard.set(feedId, forKey: "feedId")
-                                            }
-                                            let feedName = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"feedName")
-                                            let startDate  = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
-                                            DispatchQueue.main.async {
-                                                
-                                                self.handleGetFeedNameFromTurkey(seesionId: seesionId as NSNumber, feedsName: feedName as! String, feedId: feedId as NSNumber, startDate: startDate)
-                                                
-                                            }
-                                            let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
-                                            
-                                            
-                                            for  j in 0..<(feedDetailArr! as AnyObject).count{
-                                                let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
-                                                
-                                                if feedCatName == Constants.coccidioStr{
-                                                    let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                    for  m in 0..<(feedDetail! as AnyObject).count{
-                                                        let postDict = (feedDetail as AnyObject).object(at: m)
-                                                        
-                                                        CoreDataHandlerTurkey().getDataFromCocoiiControllTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName: feedName as! String,startDate: startDate as? String ?? "")
-                                                    }
-                                                }
-                                                
-                                                else if  feedCatName == "Antibiotic"{
-                                                    let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedDetails")
-                                                    for  a in 0..<(feedDetail! as AnyObject).count{
-                                                        let postDict = (feedDetail as AnyObject).object(at: a)
-                                                        CoreDataHandlerTurkey().getDataFromAntiboiticTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "" )
-                                                    }
-                                                }
-                                                else if feedCatName  == "Alternatives"{
-                                                    let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                    for  p in 0..<(feedDetail! as AnyObject).count{
-                                                        let postDict = (feedDetail as AnyObject).object(at: p)
-                                                        CoreDataHandlerTurkey().getDataFromAlterNativeTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "" )
-                                                    }
-                                                }
-                                                else if  feedCatName  == Constants.mytoxinStr{
-                                                    let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                    for  y in 0..<(feedDetail! as AnyObject).count{
-                                                        let postDict = (feedDetail as AnyObject).object(at: y)
-                                                        CoreDataHandlerTurkey().getDataFromMyCocotinBinderTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "")
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    self.getCNecStep1DataTurkey()
-                                }
-                                else{
-                                    self.getCNecStep1DataTurkey()
-                                }
-                            }
-                            
-                            else {
-                                self.getCNecStep1DataTurkey()
-                            }
-                        }
-                    }
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                        self.alerViewInternet()
-                        debugPrint(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        debugPrint (encodingError)
-                        debugPrint (responseString)
-                        self.alerViewInternet()
-                        
-                    }
-                }
-            }
-        } else{
-            
-        }
-    }
+	// MARK: - Feed Data Fetching
+	func getPostingDataFromServerforFeedTurkey() {
+		clearExistingFeedData()
+		guard WebClass.sharedInstance.connected() else {
+			// Handle no internet case if needed
+			return
+		}
+		fetchFeedDataFromServerTwo()
+	}
+	
+	private func clearExistingFeedData() {
+		let tables = ["AlternativeFeedTurkey", "AntiboticFeedTurkey",
+					  "CoccidiosisControlFeedTurkey", "MyCotoxinBindersFeedTurkey"]
+		tables.forEach { self.deleteAllData($0) }
+	}
+	
+	private func fetchFeedDataFromServerTwo() {
+		let userId = UserDefaults.standard.value(forKey: "Id") as! Int
+		guard let accessToken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken) else { return }
+		
+		let headerDict: HTTPHeaders = [Constants.authorization: accessToken]
+		let urlString = buildFeedDataURL(userId: userId)
+		
+		sessionManager.request(urlString, method: .get, headers: headerDict)
+			.responseJSON { [weak self] response in
+				guard let self = self else { return }
+				self.handleFeedDataResponse(response)
+			}
+	}
+	
+	private func buildFeedDataURL(userId: Int) -> String {
+		let baseUrl = WebClass.sharedInstance.webUrl
+		let endpoint = "PostingSession/TurkeyGetFeedListByUser"
+		return "\(baseUrl)\(endpoint)?UserId=\(userId)&DeviceType=\(FeedConstants.deviceType)"
+	}
+	
+	private func handleFeedDataResponse(_ response: AFDataResponse<Any>) {
+		if let statusCode = response.response?.statusCode {
+			guard !handleErrorStatusCode(statusCode) else { return }
+		}
+		
+		switch response.result {
+			case .success(let value):
+				handleSuccessResponse(value)
+			case .failure(let error):
+				handleFailureResponse(error, response: response)
+		}
+	}
+	
+	private func handleErrorStatusCode(_ statusCode: Int) -> Bool {
+		let errorCodes = [400, 401, 403, 408, 500, 501, 502, 503, 504]
+		if errorCodes.contains(statusCode) {
+			DispatchQueue.main.async { [weak self] in
+				self?.alerView(statusCode: statusCode)
+			}
+			return true
+		}
+		return false
+	}
+	
+	private func handleSuccessResponse(_ value: Any) {
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			guard let feedArray = value as? NSArray else {
+				self.getCNecStep1DataTurkey()
+				return
+			}
+			
+			if feedArray.count > 0 {
+				self.processFeedArray(feedArray)
+			}
+			self.getCNecStep1DataTurkey()
+		}
+	}
+	
+	private func processFeedArray(_ feedArray: NSArray) {
+		for feedData in feedArray {
+			guard let postDict = feedData as? [String: Any],
+				  let sessionId = postDict["sessionId"] as? Int,
+				  let feedDictArr = postDict["Feeds"] as? [[String: Any]] else { continue }
+			
+			processFeedDetails(feedDictArr: feedDictArr, sessionId: sessionId)
+		}
+	}
+	
+	private func processFeedDetails(feedDictArr: [[String: Any]], sessionId: Int) {
+		for feedDict in feedDictArr {
+			guard let feedId = feedDict["feedId"] as? Int,
+				  let feedName = feedDict["feedName"] as? String else { continue }
+			
+			updateFeedId(feedId)
+			let startDate = feedDict["startDate"] as? String
+			
+			DispatchQueue.main.async { [weak self] in
+				self?.handleGetFeedNameFromTurkey(
+					seesionId: NSNumber(value: sessionId),
+					feedsName: feedName,
+					feedId: NSNumber(value: feedId),
+					startDate: startDate
+				)
+			}
+			
+			if let feedDetails = feedDict["feedCategoryDetails"] as? [[String: Any]] {
+				processFeedCategories(
+					feedDetails: feedDetails,
+					feedId: feedId,
+					sessionId: sessionId,
+					feedName: feedName,
+					startDate: startDate ?? ""
+				)
+			}
+		}
+	}
+	
+	private func updateFeedId(_ newFeedId: Int) {
+		let currentFeedId = UserDefaults.standard.integer(forKey: FeedConstants.feedIdKey)
+		if newFeedId > currentFeedId {
+			UserDefaults.standard.set(newFeedId, forKey: FeedConstants.feedIdKey)
+		}
+	}
+	
+	private func processFeedCategories(feedDetails: [[String: Any]], feedId: Int, sessionId: Int, feedName: String, startDate: String) {
+		for category in feedDetails {
+			guard let categoryName = category["feedProgramCategory"] as? String,
+				  let details = category["feedDetails"] as? [[String: Any]] else { continue }
+			
+			let feedIdNumber = NSNumber(value: feedId)
+			let sessionIdNumber = NSNumber(value: sessionId)
+			
+			switch categoryName {
+				case Constants.coccidioStr:
+					details.forEach { detail in
+						CoreDataHandlerTurkey().getDataFromCocoiiControllTurkey(
+							detail as NSDictionary,
+							feedId: feedIdNumber,
+							postingId: sessionIdNumber,
+							feedProgramName: feedName,
+							startDate: startDate
+						)
+					}
+				case "Antibiotic":
+					details.forEach { detail in
+						CoreDataHandlerTurkey().getDataFromAntiboiticTurkey(
+							detail as NSDictionary,
+							feedId: feedIdNumber,
+							postingId: sessionIdNumber,
+							feedProgramName: feedName,
+							startDate: startDate
+						)
+					}
+				case "Alternatives":
+					details.forEach { detail in
+						CoreDataHandlerTurkey().getDataFromAlterNativeTurkey(
+							detail as NSDictionary,
+							feedId: feedIdNumber,
+							postingId: sessionIdNumber,
+							feedProgramName: feedName,
+							startDate: startDate
+						)
+					}
+				case Constants.mytoxinStr:
+					details.forEach { detail in
+						CoreDataHandlerTurkey().getDataFromMyCocotinBinderTurkey(
+							detail as NSDictionary,
+							feedId: feedIdNumber,
+							postingId: sessionIdNumber,
+							feedProgramName: feedName,
+							startDate: startDate
+						)
+					}
+				default:
+					break
+			}
+		}
+	}
+	
+	private func handleFailureResponse(_ error: Error, response: AFDataResponse<Any>) {
+		if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
+			DispatchQueue.main.async { [weak self] in
+				self?.alerViewInternet()
+			}
+			debugPrint(urlError)
+		} else if let data = response.data,
+				  let responseString = String(data: data, encoding: .utf8) {
+			debugPrint(error)
+			debugPrint(responseString)
+			DispatchQueue.main.async { [weak self] in
+				self?.alerViewInternet()
+			}
+		}
+	}
+	
+	// ... existing code ...
+	
+//	func getPostingDataFromServerforFeedTurkey() {
+//		self.deleteAllData("AlternativeFeedTurkey")
+//		self.deleteAllData("AntiboticFeedTurkey")
+//		self.deleteAllData("CoccidiosisControlFeedTurkey")
+//		self.deleteAllData("MyCotoxinBindersFeedTurkey")
+//		
+//		if WebClass.sharedInstance.connected() {
+//			var id = UserDefaults.standard.value(forKey: "Id") as! Int
+//			accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+//			print("AccessToken: ",accestoken)
+//			// accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+//			let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
+//			let dev = "iOS"
+//			// Old      let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
+//			let url = "PostingSession/TurkeyGetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
+//			let urlString: String = WebClass.sharedInstance.webUrl + url
+//			
+//			sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
+//				
+//				let statusCode =  response.response?.statusCode
+//				if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408{
+//					self.alerView(statusCode:statusCode!)
+//					
+//				}
+//				switch response.result {
+//					case let .success(value):
+//						DispatchQueue.main.async {
+//							if value != nil {
+//								if value is NSArray{
+//									let arr : NSArray = value as! NSArray
+//									
+//									if arr.count>0 {
+//										
+//										for t in 0..<arr.count {
+//											
+//											let posDict = arr.object(at: t)
+//											let seesionId = (posDict as AnyObject).value(forKey: "sessionId") as! Int
+//											let feedDictArr = (posDict as AnyObject).value(forKey: "Feeds")
+//											
+//											
+//											for i in 0..<(feedDictArr! as AnyObject).count {
+//												let feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
+//												let nsFeedid = UserDefaults.standard.integer(forKey: "feedId")
+//												if feedId > nsFeedid{
+//													UserDefaults.standard.set(feedId, forKey: "feedId")
+//												}
+//												let feedName = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"feedName")
+//												let startDate  = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
+//												DispatchQueue.main.async {
+//													
+//													self.handleGetFeedNameFromTurkey(seesionId: seesionId as NSNumber, feedsName: feedName as! String, feedId: feedId as NSNumber, startDate: startDate)
+//													
+//												}
+//												let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
+//												
+//												
+//												for  j in 0..<(feedDetailArr! as AnyObject).count{
+//													let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
+//													
+//													if feedCatName == Constants.coccidioStr{
+//														let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+//														for  m in 0..<(feedDetail! as AnyObject).count{
+//															let postDict = (feedDetail as AnyObject).object(at: m)
+//															
+//															CoreDataHandlerTurkey().getDataFromCocoiiControllTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName: feedName as! String,startDate: startDate as? String ?? "")
+//														}
+//													}
+//													
+//													else if  feedCatName == "Antibiotic"{
+//														let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedDetails")
+//														for  a in 0..<(feedDetail! as AnyObject).count{
+//															let postDict = (feedDetail as AnyObject).object(at: a)
+//															CoreDataHandlerTurkey().getDataFromAntiboiticTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "" )
+//														}
+//													}
+//													else if feedCatName  == "Alternatives"{
+//														let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+//														for  p in 0..<(feedDetail! as AnyObject).count{
+//															let postDict = (feedDetail as AnyObject).object(at: p)
+//															CoreDataHandlerTurkey().getDataFromAlterNativeTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "" )
+//														}
+//													} else if  feedCatName  == Constants.mytoxinStr {
+//														let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+//														for  y in 0..<(feedDetail! as AnyObject).count{
+//															let postDict = (feedDetail as AnyObject).object(at: y)
+//															CoreDataHandlerTurkey().getDataFromMyCocotinBinderTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "")
+//														}
+//													}
+//												}
+//											}
+//										}
+//										self.getCNecStep1DataTurkey()
+//									} else {
+//										self.getCNecStep1DataTurkey()
+//									}
+//								} else {
+//									self.getCNecStep1DataTurkey()
+//								}
+//							}
+//						}
+//					case .failure(let encodingError):
+//						
+//						if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+//							
+//							self.alerViewInternet()
+//							debugPrint(err)
+//						} else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+//							debugPrint (encodingError)
+//							debugPrint (responseString)
+//							self.alerViewInternet()
+//							
+//						}
+//				}
+//			}
+//		} else{
+//			
+//		}
+//	}
     
     
     func handleGetFeedNameFromTurkey(seesionId: NSNumber, feedsName: String, feedId: NSNumber, startDate: Any?) {
@@ -2611,473 +2814,699 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
 // MARK:  Side Pannel Delegates Method
 extension ViewController:SidePanelViewControllerDelegate {
     
-    func didSelectLeftPenal(_ selectedRow: Int, selectedDetails: [String : String]) {
-        
-        let userType =   UserDefaults.standard.string(forKey:"userType")
-        self.navigationItem.setHidesBackButton(true, animated: true)
-        if userType == "PE" {
-            if selectedRow == 0 {
-                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            }
-            else if selectedRow == 1 {
-                Constants.isDashboard = true
-                Constants.isDataLoaded = true
-                UserDefaults.standard.set(true, forKey: "PEDashboard")
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboard"),object: nil))
-                self.navigationController?.popToViewController(ofClass: PEDashboardViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            }
-            
-            else if selectedRow == 2 {
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToViewAssessment"),object: nil))
-                delegate?.collapseSidePanels?()
-                return
-            }
-            else if selectedRow == 3 {
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "NavigateToScheduledAssesments"),object: nil))
-                delegate?.collapseSidePanels?()
-                return
-            }
-            else if selectedRow == 4 {
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToOpenPlacards"),object: nil))
-                delegate?.collapseSidePanels?()
-                return
-            }
-         
-            else if selectedRow == 5 {
-                logoutBtnAction()
-            }
-            
-            else if selectedRow == 7 {
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToOpenPlacards"),object: nil))
-            }
-        }
-        
-        else  if userType == "PVE" {
-            if selectedRow == 0 {
-                self.navigationController?.popToViewController(ofClass: PulletSelectionViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            }
-            if selectedRow == 3{
-                
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: PVESessionViewController.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                        delegate?.collapseSidePanels?()
-                        return
-                    }
-                }
-                
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: PVESessionViewController.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                    }
-                }
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PVEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "PVESessionViewController") as! PVESessionViewController
-                navigationController?.pushViewController(vc, animated: false) //navigationController?.popViewController(animated: true)
-            }
-            if selectedRow == 1 {
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: PVEDashboardViewController.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                    }
-                }
-            }
-            if selectedRow == 2 {
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: PVEStartNewAssessment.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                        delegate?.collapseSidePanels?()
-                        return
-                    }
-                }
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PVEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "PVEStartNewAssessment") as! PVEStartNewAssessment
-                navigationController?.pushViewController(vc, animated: false)
-            }
-            if selectedRow == 5 {
-                logoutBtnAction()
-            }
-            delegate?.collapseSidePanels?()
-        }
-        
-        
-        //************************** Is Microbial *****************************
-        
-        else  if userType == "Microbial" {//
-            
-            if selectedRow == 0 {
-                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            }
-            
-            if selectedRow == 1 {
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: MicrobialViewController.self) {
-                        (controller as? MicrobialViewController)?.isNewRquisitionSelected = false
-                        self.navigationController!.popToViewController(controller, animated: true)
-                        delegate?.collapseSidePanels?()
-                        return
-                    }
-                }
-            }
-            
-            if selectedRow == 2 {
-                
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: MicrobialViewController.self) {
-                        if self.navigationController?.viewControllers.last == controller{
-                            NotificationCenter.default.post(name: Notification.Name("openStartRequisition"), object: nil, userInfo: [:])
-                        }else{
-                            (controller as? MicrobialViewController)?.isNewRquisitionSelected = true
-                            self.navigationController!.popToViewController(controller, animated: true)
-                        }
-                        delegate?.collapseSidePanels?()
-                        return
-                    }
-                }
-            }
-            
-            if selectedRow == 3 {
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: ViewRequisitionViewController.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                        delegate?.collapseSidePanels?()
-                        return
-                    }
-                }
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "ViewRequisition", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewRequisitionViewController") as! ViewRequisitionViewController
-                navigationController?.pushViewController(vc, animated: false)
-            }
-            
-            if selectedRow == 5 {
-                logoutBtnAction()
-            }
-        }
-        else if userType == "FlockHealth"{
-            switch selectedRow {
-            case 0:
-                self.navigationController?.popToViewController(ofClass: GrownoutSelectionViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            case 1:
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "LanguageViewController") as! LanguageViewController
-                navigationController?.pushViewController(vc, animated: false)
-                
-                
-            case 2:
-                
-                UserDefaults.standard.set(0, forKey: "postingId")
-                UserDefaults.standard.set(0, forKey: "necUnLinked")
-                
-                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                UserDefaults.standard.set(false, forKey: "Unlinked")
-                UserDefaults.standard.set(true, forKey: "nec")
-                UserDefaults.standard.set(false, forKey: "backFromStep1")
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val  ==  4  {
-                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: "DashView_Controller") as! DashViewController
-                    navigationController?.pushViewController(vc, animated: false)
-                    
-                } else {
-                    
-                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: "DashViewControllerTurkey") as! DashViewControllerTurkey
-                    navigationController?.pushViewController(vc, animated: false)
-                }
-                
-            case 3:
-                if UserDefaults.standard.integer(forKey: "Role") == 1 {
-                    
-                    UserDefaults.standard.set(false, forKey: "Unlinked")
-                    UserDefaults.standard.set(true, forKey: "nec")
-                    UserDefaults.standard.set(false, forKey: "backFromStep1")
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(0, forKey: "necUnLinked")
-                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                    UserDefaults.standard.removeObject(forKey: "count")
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(1, forKey: "sessionId")
-                    UserDefaults.standard.set(0, forKey: "isBackWithoutFedd")
-                    appDelegate.sendFeedVariable = ""
-                    let val = UserDefaults.standard.integer(forKey: "chick")
-                    if val  ==  4 {
-                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil)
-                        
-                    } else {
-                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
-                    }
-                }
-            case 4:
-                
-                if UserDefaults.standard.integer(forKey: "Role") == 1{
-                    
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(0, forKey: "necUnLinked")
-                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                    
-                    UserDefaults.standard.set(false, forKey: "Unlinked")
-                    UserDefaults.standard.set(true, forKey: "nec")
-                    UserDefaults.standard.set(false, forKey: "backFromStep1")
-                    let val = UserDefaults.standard.integer(forKey: "chick")
-                    if val ==  4  {
-                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                        let vc = storyBoard.instantiateViewController(withIdentifier: "Existing") as! ExistingPostingSessionViewController
-                        navigationController?.pushViewController(vc, animated: false)
-                        
-                    } else {
-                        
-                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                        let vc = storyBoard.instantiateViewController(withIdentifier: "ExistingTurkey") as! ExistingPostingSessionTurkey
-                        navigationController?.pushViewController(vc, animated: false)
-                    }
-                }
-            case 5:
-                
-                UserDefaults.standard.set(0, forKey: "postingId")
-                UserDefaults.standard.set(0, forKey: "necUnLinked")
-                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "TrainingNew") as! TrainingViewController
-                navigationController?.pushViewController(vc, animated: false)
-                
-                
-            case 6:
-                
-                if UserDefaults.standard.integer(forKey: "Role") == 1 {
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(0, forKey: "necUnLinked")
-                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                    
-                    UserDefaults.standard.set(false, forKey: "Unlinked")
-                    UserDefaults.standard.set(true, forKey: "nec")
-                    UserDefaults.standard.set(false, forKey: "backFromStep1")
-                    let val = UserDefaults.standard.integer(forKey: "chick")
-                    if val  ==  4 {
-                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                        let vc = storyBoard.instantiateViewController(withIdentifier: "Report") as! Report_MainVCViewController
-                        navigationController?.pushViewController(vc, animated: false)
-                        
-                    } else {
-                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                        let vc = storyBoard.instantiateViewController(withIdentifier: "ReportTurkey") as! ReportDashboardTurkey
-                        navigationController?.pushViewController(vc, animated: false)
-                    }
-                }
-                
-            case 7:
-                
-                UserDefaults.standard.set(0, forKey: "postingId")
-                UserDefaults.standard.set(0, forKey: "necUnLinked")
-                
-                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                UserDefaults.standard.set(false, forKey: "Unlinked")
-                UserDefaults.standard.set(true, forKey: "nec")
-                UserDefaults.standard.set(false, forKey: "backFromStep1")
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val  ==  4 {
-                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "helpView") as? HelpViewController
-                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                } else {
-                    
-                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "HelpScreenVcTurkey") as? HelpScreenVcTurkey
-                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                }
-                
-            case 8:
-                
-                if UserDefaults.standard.integer(forKey: "Role") == 1 {
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(0, forKey: "necUnLinked")
-                    
-                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                    UserDefaults.standard.set(false, forKey: "Unlinked")
-                    UserDefaults.standard.set(true, forKey: "nec")
-                    UserDefaults.standard.set(false, forKey: "backFromStep1")
-                    
-                    let val = UserDefaults.standard.integer(forKey: "chick")
-                    if val  ==  4 {
-                        let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "setting") as? SettingsViewController
-                        self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                    }
-                    else{
-                        
-                        let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "settingTurkey") as? SettingControllerTurkey
-                        self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                    }
-                }
-                
-            default:
-                let birdTypeId = UserDefaults.standard.integer(forKey: "switchBird")
-                let vlue = UserDefaults.standard.bool(forKey: "turkey")
-                let vlue1 = UserDefaults.standard.bool(forKey: "Chicken")
-                
-                if birdTypeId ==  3 {
-                    if ConnectionManager.shared.hasConnectivity() {
-                        
-                        UserDefaults.standard.set(0, forKey: "postingId")
-                        UserDefaults.standard.set(0, forKey: "necUnLinked")
-                        UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                        UserDefaults.standard.set(false, forKey: "Unlinked")
-                        UserDefaults.standard.set(true, forKey: "nec")
-                        UserDefaults.standard.set(false, forKey: "backFromStep1")
-                        if vlue == true{
-                            objApiSyncTurkey.delegeteSyncApiTurkey = self
-                            if self.allSessionArrTurkey().count > 0 {
-                                if WebClass.sharedInstance.connected() == true{
-                                    Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
-                                    self.callSyncApiTurkey()
-                                } else {
-                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
-                                }
-                            } else {
-                                
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                                
-                            }
-                        }
-                        else if vlue1 == true{
-                            objApiSync.delegeteSyncApi = self
-                            if self.allSessionArr().count > 0 {
-                                if WebClass.sharedInstance.connected() == true{
-                                    Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
-                                    self.callSyncApi()
-                                } else {
-                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
-                                }
-                            }
-                            else {
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                            }
-                        }
-                        else {
-                            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                        }
-                    } else {
-                        
-                        if vlue == true{
-                            let custArr = CoreDataHandler().fetchCustomer()
-                            if(custArr.count == 0){
-                                let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
-                                
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                            }
-                            else{
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                            }
-                        }
-                        else if vlue1 == true{
-                            let custArr = CoreDataHandlerTurkey().fetchCustomerTurkey()
-                            if(custArr.count == 0){
-                                let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                            }  else {
-                                
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                            }
-                        }
-                        else {
-                            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
-                            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                        }
-                    }
-                }
-            }
-            
-            
-            if selectedRow == 0 {
-                self.navigationController?.popToViewController(ofClass: GlobalDashboardViewController.self)
-            }
-         
-        }
-        
-        //************************** Is Vaccination *****************************
-        if userType == "Vaccination" {
-            switch selectedRow{
-            case 0:
-                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            case 1:
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: VaccinationDashboardVC.self) {
-                        self.navigationController!.popToViewController(controller, animated: true)
-                    }
-                }
-            case 2:
-                
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: ViewCertificationsVC.self) {
-                        let userDefaults = UserDefaults.standard
-                        if userDefaults.value(forKey: "ViewCertificationsVC") != nil{
-                            let val = userDefaults.value(forKey: "ViewCertificationsVC") as? String
-                            if val == VaccinationCertificationStatus.submitted.rawValue{
-                                delegate?.collapseSidePanels?()
-                                return
-                            }
-                        }
-                    }
-                }
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Certification", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewCertificationsVC") as! ViewCertificationsVC //PVESessionViewController
-                vc.status = VaccinationCertificationStatus.submitted
-                navigationController?.pushViewController(vc, animated: true)
-                
-            case 3:
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: ViewCertificationsVC.self) {
-                        let userDefaults = UserDefaults.standard
-                        if userDefaults.value(forKey: "ViewCertificationsVC") != nil{
-                            let val = userDefaults.value(forKey: "ViewCertificationsVC") as? String
-                            if val == VaccinationCertificationStatus.draft.rawValue{
-                                delegate?.collapseSidePanels?()
-                                return
-                            }
-                        }
-                    }
-                }
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Certification", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewCertificationsVC") as! ViewCertificationsVC
-                vc.status = VaccinationCertificationStatus.draft
-                navigationController?.pushViewController(vc, animated: true)
-                
-            case 4:
-                logoutBtnAction()
-                delegate?.collapseSidePanels?()
-                
-            default:
-                delegate?.collapseSidePanels?()
-                break;
-            }
-        }
-        
-        delegate?.collapseSidePanels?()
-    }
+	// MARK: - Left Panel Navigation Constants
+	private struct LeftPanelConstants {
+		static let userTypeKey = "userType"
+		static let dashboardKey = "PEDashboard"
+		static let postingIdKey = "postingId"
+		static let necUnLinkedKey = "necUnLinked"
+		static let isPostingIdIncreaseKey = "ispostingIdIncrease"
+		static let unlinkedKey = "Unlinked"
+		static let necKey = "nec"
+		static let backFromStep1Key = "backFromStep1"
+		static let chickKey = "chick"
+		static let roleKey = "Role"
+		static let countKey = "count"
+		static let sessionIdKey = "sessionId"
+		static let isBackWithoutFeedKey = "isBackWithoutFedd"
+	}
+	
+	// MARK: - Left Panel Navigation
+	func didSelectLeftPenal(_ selectedRow: Int, selectedDetails: [String: String]) {
+		guard let userType = UserDefaults.standard.string(forKey: LeftPanelConstants.userTypeKey) else { return }
+		
+		self.navigationItem.setHidesBackButton(true, animated: true)
+		
+		switch userType {
+			case "PE":
+				handlePENavigation(selectedRow)
+			case "PVE":
+				handlePVENavigation(selectedRow)
+			case "Microbial":
+				handleMicrobialNavigation(selectedRow)
+			case "FlockHealth":
+				handleFlockHealthNavigation(selectedRow)
+			default:
+				break
+		}
+	}
+	
+	// MARK: - PE Navigation
+	private func handlePENavigation(_ selectedRow: Int) {
+		switch selectedRow {
+			case 0:
+				navigateToViewController(ofClass: HatcherySelectionViewController.self)
+			case 1:
+				handlePEDashboardNavigation()
+			case 2:
+				postNotification("MoveToViewAssessment")
+			case 3:
+				postNotification("NavigateToScheduledAssesments")
+			case 4, 7:
+				postNotification("MoveToOpenPlacards")
+			case 5:
+				logoutBtnAction()
+			default:
+				break
+		}
+	}
+	
+	private func handlePEDashboardNavigation() {
+		Constants.isDashboard = true
+		Constants.isDataLoaded = true
+		UserDefaults.standard.set(true, forKey: LeftPanelConstants.dashboardKey)
+		postNotification("UpdateComplexOnDashboard")
+		navigateToViewController(ofClass: PEDashboardViewController.self)
+	}
+	
+	// MARK: - PVE Navigation
+	private func handlePVENavigation(_ selectedRow: Int) {
+		switch selectedRow {
+			case 0:
+				navigateToViewController(ofClass: PulletSelectionViewController.self)
+			case 1:
+				navigateToExistingViewController(ofClass: PVEDashboardViewController.self)
+			case 2:
+				handlePVEStartNewAssessment()
+			case 3:
+				handlePVESessionNavigation()
+			case 5:
+				logoutBtnAction()
+			default:
+				break
+		}
+	}
+	
+	private func handlePVEStartNewAssessment() {
+		if let existingVC = findViewController(ofClass: PVEStartNewAssessment.self) {
+			navigateToViewController(existingVC)
+		} else {
+			let vc = instantiateViewController(from: "PVEStoryboard", identifier: "PVEStartNewAssessment") as! PVEStartNewAssessment
+			navigateToViewController(vc)
+		}
+	}
+	
+	private func handlePVESessionNavigation() {
+		if let existingVC = findViewController(ofClass: PVESessionViewController.self) {
+			navigateToViewController(existingVC)
+		} else {
+			let vc = instantiateViewController(from: "PVEStoryboard", identifier: "PVESessionViewController") as! PVESessionViewController
+			navigateToViewController(vc)
+		}
+	}
+	
+	// MARK: - Microbial Navigation
+	private func handleMicrobialNavigation(_ selectedRow: Int) {
+		switch selectedRow {
+			case 0:
+				navigateToViewController(ofClass: HatcherySelectionViewController.self)
+			case 1:
+				handleMicrobialDashboardNavigation()
+			case 2:
+				handleMicrobialNewRequisition()
+			case 3:
+				handleViewRequisitionNavigation()
+			case 5:
+				logoutBtnAction()
+			default:
+				break
+		}
+	}
+	
+	private func handleMicrobialDashboardNavigation() {
+		if let microbialVC = findViewController(ofClass: MicrobialViewController.self) as? MicrobialViewController {
+			microbialVC.isNewRquisitionSelected = false
+			navigateToViewController(microbialVC)
+		}
+	}
+	
+	private func handleMicrobialNewRequisition() {
+		if let microbialVC = findViewController(ofClass: MicrobialViewController.self) as? MicrobialViewController {
+			if navigationController?.viewControllers.last == microbialVC {
+				postNotification("openStartRequisition")
+			} else {
+				microbialVC.isNewRquisitionSelected = true
+				navigateToViewController(microbialVC)
+			}
+		}
+	}
+	
+	private func handleViewRequisitionNavigation() {
+		if let existingVC = findViewController(ofClass: ViewRequisitionViewController.self) {
+			navigateToViewController(existingVC)
+		} else {
+			let vc = instantiateViewController(from: "ViewRequisition", identifier: "ViewRequisitionViewController") as! ViewRequisitionViewController
+			navigateToViewController(vc)
+		}
+	}
+	
+	// MARK: - Flock Health Navigation
+	private func handleFlockHealthNavigation(_ selectedRow: Int) {
+		switch selectedRow {
+			case 0:
+				navigateToViewController(ofClass: GrownoutSelectionViewController.self)
+			case 1:
+				handleLanguageSelection()
+			case 2:
+				handleFlockHealthDashboard()
+			case 3:
+				handleFlockHealthAssessment()
+			default:
+				break
+		}
+	}
+	
+	private func handleLanguageSelection() {
+		let vc = instantiateViewController(from: "Main", identifier: "LanguageViewController") as! LanguageViewController
+		navigateToViewController(vc)
+	}
+	
+	private func handleFlockHealthDashboard() {
+		resetFlockHealthDefaults()
+		
+		let chickValue = UserDefaults.standard.integer(forKey: LeftPanelConstants.chickKey)
+		let storyboardName = chickValue == 4 ? "DashView_Controller" : "DashViewControllerTurkey"
+		let vc = instantiateViewController(from: "Main", identifier: storyboardName)
+		navigateToViewController(vc)
+	}
+	
+	private func handleFlockHealthAssessment() {
+		guard UserDefaults.standard.integer(forKey: LeftPanelConstants.roleKey) == 1 else { return }
+		
+		resetFlockHealthDefaults()
+		UserDefaults.standard.set(1, forKey: LeftPanelConstants.sessionIdKey)
+		UserDefaults.standard.set(0, forKey: LeftPanelConstants.isBackWithoutFeedKey)
+		appDelegate.sendFeedVariable = ""
+	}
+	
+	// MARK: - Helper Functions
+	private func resetFlockHealthDefaults() {
+		UserDefaults.standard.set(0, forKey: LeftPanelConstants.postingIdKey)
+		UserDefaults.standard.set(0, forKey: LeftPanelConstants.necUnLinkedKey)
+		UserDefaults.standard.set(false, forKey: LeftPanelConstants.isPostingIdIncreaseKey)
+		UserDefaults.standard.set(false, forKey: LeftPanelConstants.unlinkedKey)
+		UserDefaults.standard.set(true, forKey: LeftPanelConstants.necKey)
+		UserDefaults.standard.set(false, forKey: LeftPanelConstants.backFromStep1Key)
+		UserDefaults.standard.removeObject(forKey: LeftPanelConstants.countKey)
+	}
+	
+	private func navigateToViewController<T: UIViewController>(ofClass type: T.Type) {
+		navigationController?.popToViewController(ofClass: type)
+		delegate?.collapseSidePanels?()
+	}
+	
+	private func navigateToViewController(_ viewController: UIViewController) {
+		navigationController?.pushViewController(viewController, animated: false)
+		delegate?.collapseSidePanels?()
+	}
+	
+	private func navigateToExistingViewController<T: UIViewController>(ofClass type: T.Type) {
+		if let existingVC = findViewController(ofClass: type) {
+			navigationController?.popToViewController(existingVC, animated: true)
+		}
+	}
+	
+	private func findViewController<T: UIViewController>(ofClass type: T.Type) -> T? {
+		return navigationController?.viewControllers.first { $0.isKind(of: type) } as? T
+	}
+	
+	private func instantiateViewController(from storyboardName: String, identifier: String) -> UIViewController {
+		let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+		return storyboard.instantiateViewController(withIdentifier: identifier)
+	}
+	
+	private func postNotification(_ name: String) {
+		NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: name), object: nil))
+		delegate?.collapseSidePanels?()
+	}
+	
+//    func didSelectLeftPenal(_ selectedRow: Int, selectedDetails: [String : String]) {
+//        
+//        let userType =   UserDefaults.standard.string(forKey:"userType")
+//        self.navigationItem.setHidesBackButton(true, animated: true)
+//        if userType == "PE" {
+//            if selectedRow == 0 {
+//                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            else if selectedRow == 1 {
+//                Constants.isDashboard = true
+//                Constants.isDataLoaded = true
+//                UserDefaults.standard.set(true, forKey: "PEDashboard")
+//                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboard"),object: nil))
+//                self.navigationController?.popToViewController(ofClass: PEDashboardViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            
+//            else if selectedRow == 2 {
+//                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToViewAssessment"),object: nil))
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            else if selectedRow == 3 {
+//                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "NavigateToScheduledAssesments"),object: nil))
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            else if selectedRow == 4 {
+//                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToOpenPlacards"),object: nil))
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//         
+//            else if selectedRow == 5 {
+//                logoutBtnAction()
+//            }
+//            
+//            else if selectedRow == 7 {
+//                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "MoveToOpenPlacards"),object: nil))
+//            }
+//        }
+//        
+//        else  if userType == "PVE" {
+//            if selectedRow == 0 {
+//                self.navigationController?.popToViewController(ofClass: PulletSelectionViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            if selectedRow == 3{
+//                
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: PVESessionViewController.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                        delegate?.collapseSidePanels?()
+//                        return
+//                    }
+//                }
+//                
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: PVESessionViewController.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                    }
+//                }
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "PVEStoryboard", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "PVESessionViewController") as! PVESessionViewController
+//                navigationController?.pushViewController(vc, animated: false) //navigationController?.popViewController(animated: true)
+//            }
+//            if selectedRow == 1 {
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: PVEDashboardViewController.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                    }
+//                }
+//            }
+//            if selectedRow == 2 {
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: PVEStartNewAssessment.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                        delegate?.collapseSidePanels?()
+//                        return
+//                    }
+//                }
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "PVEStoryboard", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "PVEStartNewAssessment") as! PVEStartNewAssessment
+//                navigationController?.pushViewController(vc, animated: false)
+//            }
+//            if selectedRow == 5 {
+//                logoutBtnAction()
+//            }
+//            delegate?.collapseSidePanels?()
+//        }
+//        
+//        
+//        //************************** Is Microbial *****************************
+//        
+//        else  if userType == "Microbial" {//
+//            
+//            if selectedRow == 0 {
+//                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            }
+//            
+//            if selectedRow == 1 {
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: MicrobialViewController.self) {
+//                        (controller as? MicrobialViewController)?.isNewRquisitionSelected = false
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                        delegate?.collapseSidePanels?()
+//                        return
+//                    }
+//                }
+//            }
+//            
+//            if selectedRow == 2 {
+//                
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: MicrobialViewController.self) {
+//                        if self.navigationController?.viewControllers.last == controller{
+//                            NotificationCenter.default.post(name: Notification.Name("openStartRequisition"), object: nil, userInfo: [:])
+//                        }else{
+//                            (controller as? MicrobialViewController)?.isNewRquisitionSelected = true
+//                            self.navigationController!.popToViewController(controller, animated: true)
+//                        }
+//                        delegate?.collapseSidePanels?()
+//                        return
+//                    }
+//                }
+//            }
+//            
+//            if selectedRow == 3 {
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: ViewRequisitionViewController.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                        delegate?.collapseSidePanels?()
+//                        return
+//                    }
+//                }
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "ViewRequisition", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewRequisitionViewController") as! ViewRequisitionViewController
+//                navigationController?.pushViewController(vc, animated: false)
+//            }
+//            
+//            if selectedRow == 5 {
+//                logoutBtnAction()
+//            }
+//        }
+//        else if userType == "FlockHealth"{
+//            switch selectedRow {
+//            case 0:
+//                self.navigationController?.popToViewController(ofClass: GrownoutSelectionViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            case 1:
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "LanguageViewController") as! LanguageViewController
+//                navigationController?.pushViewController(vc, animated: false)
+//                
+//                
+//            case 2:
+//                
+//                UserDefaults.standard.set(0, forKey: "postingId")
+//                UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                
+//                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                UserDefaults.standard.set(false, forKey: "Unlinked")
+//                UserDefaults.standard.set(true, forKey: "nec")
+//                UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                let val = UserDefaults.standard.integer(forKey: "chick")
+//                if val  ==  4  {
+//                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                    let vc = storyBoard.instantiateViewController(withIdentifier: "DashView_Controller") as! DashViewController
+//                    navigationController?.pushViewController(vc, animated: false)
+//                    
+//                } else {
+//                    
+//                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                    let vc = storyBoard.instantiateViewController(withIdentifier: "DashViewControllerTurkey") as! DashViewControllerTurkey
+//                    navigationController?.pushViewController(vc, animated: false)
+//                }
+//                
+//            case 3:
+//                if UserDefaults.standard.integer(forKey: "Role") == 1 {
+//                    
+//                    UserDefaults.standard.set(false, forKey: "Unlinked")
+//                    UserDefaults.standard.set(true, forKey: "nec")
+//                    UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                    UserDefaults.standard.set(0, forKey: "postingId")
+//                    UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                    UserDefaults.standard.removeObject(forKey: "count")
+//                    UserDefaults.standard.set(0, forKey: "postingId")
+//                    UserDefaults.standard.set(1, forKey: "sessionId")
+//                    UserDefaults.standard.set(0, forKey: "isBackWithoutFedd")
+//                    appDelegate.sendFeedVariable = ""
+//                    let val = UserDefaults.standard.integer(forKey: "chick")
+//                    if val  ==  4 {
+//                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil)
+//                        
+//                    } else {
+//                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
+//                    }
+//                }
+//            case 4:
+//                
+//                if UserDefaults.standard.integer(forKey: "Role") == 1{
+//                    
+//                    UserDefaults.standard.set(0, forKey: "postingId")
+//                    UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                    
+//                    UserDefaults.standard.set(false, forKey: "Unlinked")
+//                    UserDefaults.standard.set(true, forKey: "nec")
+//                    UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                    let val = UserDefaults.standard.integer(forKey: "chick")
+//                    if val ==  4  {
+//                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                        let vc = storyBoard.instantiateViewController(withIdentifier: "Existing") as! ExistingPostingSessionViewController
+//                        navigationController?.pushViewController(vc, animated: false)
+//                        
+//                    } else {
+//                        
+//                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                        let vc = storyBoard.instantiateViewController(withIdentifier: "ExistingTurkey") as! ExistingPostingSessionTurkey
+//                        navigationController?.pushViewController(vc, animated: false)
+//                    }
+//                }
+//            case 5:
+//                
+//                UserDefaults.standard.set(0, forKey: "postingId")
+//                UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "TrainingNew") as! TrainingViewController
+//                navigationController?.pushViewController(vc, animated: false)
+//                
+//                
+//            case 6:
+//                
+//                if UserDefaults.standard.integer(forKey: "Role") == 1 {
+//                    UserDefaults.standard.set(0, forKey: "postingId")
+//                    UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                    
+//                    UserDefaults.standard.set(false, forKey: "Unlinked")
+//                    UserDefaults.standard.set(true, forKey: "nec")
+//                    UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                    let val = UserDefaults.standard.integer(forKey: "chick")
+//                    if val  ==  4 {
+//                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                        let vc = storyBoard.instantiateViewController(withIdentifier: "Report") as! Report_MainVCViewController
+//                        navigationController?.pushViewController(vc, animated: false)
+//                        
+//                    } else {
+//                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//                        let vc = storyBoard.instantiateViewController(withIdentifier: "ReportTurkey") as! ReportDashboardTurkey
+//                        navigationController?.pushViewController(vc, animated: false)
+//                    }
+//                }
+//                
+//            case 7:
+//                
+//                UserDefaults.standard.set(0, forKey: "postingId")
+//                UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                
+//                UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                UserDefaults.standard.set(false, forKey: "Unlinked")
+//                UserDefaults.standard.set(true, forKey: "nec")
+//                UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                let val = UserDefaults.standard.integer(forKey: "chick")
+//                if val  ==  4 {
+//                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "helpView") as? HelpViewController
+//                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                } else {
+//                    
+//                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "HelpScreenVcTurkey") as? HelpScreenVcTurkey
+//                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                }
+//                
+//            case 8:
+//                
+//                if UserDefaults.standard.integer(forKey: "Role") == 1 {
+//                    UserDefaults.standard.set(0, forKey: "postingId")
+//                    UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                    
+//                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                    UserDefaults.standard.set(false, forKey: "Unlinked")
+//                    UserDefaults.standard.set(true, forKey: "nec")
+//                    UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                    
+//                    let val = UserDefaults.standard.integer(forKey: "chick")
+//                    if val  ==  4 {
+//                        let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "setting") as? SettingsViewController
+//                        self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                    }
+//                    else{
+//                        
+//                        let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "settingTurkey") as? SettingControllerTurkey
+//                        self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                    }
+//                }
+//                
+//            default:
+//                let birdTypeId = UserDefaults.standard.integer(forKey: "switchBird")
+//                let vlue = UserDefaults.standard.bool(forKey: "turkey")
+//                let vlue1 = UserDefaults.standard.bool(forKey: "Chicken")
+//                
+//                if birdTypeId ==  3 {
+//                    if ConnectionManager.shared.hasConnectivity() {
+//                        
+//                        UserDefaults.standard.set(0, forKey: "postingId")
+//                        UserDefaults.standard.set(0, forKey: "necUnLinked")
+//                        UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+//                        UserDefaults.standard.set(false, forKey: "Unlinked")
+//                        UserDefaults.standard.set(true, forKey: "nec")
+//                        UserDefaults.standard.set(false, forKey: "backFromStep1")
+//                        if vlue == true{
+//                            objApiSyncTurkey.delegeteSyncApiTurkey = self
+//                            if self.allSessionArrTurkey().count > 0 {
+//                                if WebClass.sharedInstance.connected() == true{
+//                                    Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
+//                                    self.callSyncApiTurkey()
+//                                } else {
+//                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+//                                }
+//                            } else {
+//                                
+//                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                                
+//                            }
+//                        }
+//                        else if vlue1 == true{
+//                            objApiSync.delegeteSyncApi = self
+//                            if self.allSessionArr().count > 0 {
+//                                if WebClass.sharedInstance.connected() == true{
+//                                    Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
+//                                    self.callSyncApi()
+//                                } else {
+//                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+//                                }
+//                            }
+//                            else {
+//                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                            }
+//                        }
+//                        else {
+//                            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                        }
+//                    } else {
+//                        
+//                        if vlue == true{
+//                            let custArr = CoreDataHandler().fetchCustomer()
+//                            if(custArr.count == 0){
+//                                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+//                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+//                                
+//                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+//                                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+//                            }
+//                            else{
+//                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                            }
+//                        }
+//                        else if vlue1 == true{
+//                            let custArr = CoreDataHandlerTurkey().fetchCustomerTurkey()
+//                            if(custArr.count == 0){
+//                                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+//                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+//                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+//                                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+//                            }  else {
+//                                
+//                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                            }
+//                        }
+//                        else {
+//                            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC") as? BirdsSelectionVC
+//                            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+//                        }
+//                    }
+//                }
+//            }
+//            
+//            
+//            if selectedRow == 0 {
+//                self.navigationController?.popToViewController(ofClass: GlobalDashboardViewController.self)
+//            }
+//         
+//        }
+//        
+//        //************************** Is Vaccination *****************************
+//        if userType == "Vaccination" {
+//            switch selectedRow{
+//            case 0:
+//                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
+//                delegate?.collapseSidePanels?()
+//                return
+//            case 1:
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: VaccinationDashboardVC.self) {
+//                        self.navigationController!.popToViewController(controller, animated: true)
+//                    }
+//                }
+//            case 2:
+//                
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: ViewCertificationsVC.self) {
+//                        let userDefaults = UserDefaults.standard
+//                        if userDefaults.value(forKey: "ViewCertificationsVC") != nil{
+//                            let val = userDefaults.value(forKey: "ViewCertificationsVC") as? String
+//                            if val == VaccinationCertificationStatus.submitted.rawValue{
+//                                delegate?.collapseSidePanels?()
+//                                return
+//                            }
+//                        }
+//                    }
+//                }
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "Certification", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewCertificationsVC") as! ViewCertificationsVC //PVESessionViewController
+//                vc.status = VaccinationCertificationStatus.submitted
+//                navigationController?.pushViewController(vc, animated: true)
+//                
+//            case 3:
+//                for controller in self.navigationController!.viewControllers as Array {
+//                    if controller.isKind(of: ViewCertificationsVC.self) {
+//                        let userDefaults = UserDefaults.standard
+//                        if userDefaults.value(forKey: "ViewCertificationsVC") != nil{
+//                            let val = userDefaults.value(forKey: "ViewCertificationsVC") as? String
+//                            if val == VaccinationCertificationStatus.draft.rawValue{
+//                                delegate?.collapseSidePanels?()
+//                                return
+//                            }
+//                        }
+//                    }
+//                }
+//                
+//                let storyBoard : UIStoryboard = UIStoryboard(name: "Certification", bundle:nil)
+//                let vc = storyBoard.instantiateViewController(withIdentifier: "ViewCertificationsVC") as! ViewCertificationsVC
+//                vc.status = VaccinationCertificationStatus.draft
+//                navigationController?.pushViewController(vc, animated: true)
+//                
+//            case 4:
+//                logoutBtnAction()
+//                delegate?.collapseSidePanels?()
+//                
+//            default:
+//                delegate?.collapseSidePanels?()
+//                break;
+//            }
+//        }
+//        
+//        delegate?.collapseSidePanels?()
+//    }
     
     @IBAction func leftPanelTapped(_ sender: Any) {
         delegate?.toggleLeftPanel?()

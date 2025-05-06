@@ -3501,133 +3501,125 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     // MARK: ** Posting Session Data Save In Add Vacination Button **
-    func PostingSessionDbTurkey(_ antobotic: String,birdBreesId:NSNumber,birdbreedName:String,birdBreedType:String,birdSize:String,birdSizeId:NSNumber,cocciProgramId:NSNumber,cociiProgramName: String,complexId:NSNumber,complexName: String,convential:String,customerId:NSNumber,customerName:String,customerRepId:NSNumber,customerRepName:String,imperial:String,metric:String,notes:String,salesRepId:NSNumber,salesRepName:String,sessiondate:String,sessionTypeId:NSNumber,sessionTypeName:String,vetanatrionName:String,veterinarianId: NSNumber,loginSessionId:NSNumber,postingId:NSNumber,mail: String,female: String,finilize: NSNumber,isSync : Bool,timeStamp:String,lngId:NSNumber,birdType:String,birdTypeId:NSNumber,birdbreedId:NSNumber,capNec:NSNumber ,avgAge:String ,avgWeight:String ,outTime:String ,FCR:String ,Livability:String ,mortality:String){
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        self.managedContext = appDelegate!.managedObjectContext
-        self.deleteDataWithPostingIdTurkey(postingId)
-        let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)
-        let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
-        contact1.setValue(convential, forKey:"convential")
-        contact1.setValue(antobotic, forKey:"antiboitic")
-        contact1.setValue(birdbreedId, forKey:"birdBreedId")
-        contact1.setValue(birdbreedName, forKey:"birdBreedName")
-        contact1.setValue(birdBreedType, forKey:"birdBreedType")
-        contact1.setValue(birdSize, forKey:"birdSize")
-        contact1.setValue(birdSizeId, forKey:"birdSizeId")
-        contact1.setValue(cocciProgramId, forKey:"cocciProgramId")
-        contact1.setValue(cociiProgramName, forKey:"cociiProgramName")
-        contact1.setValue(complexId, forKey:"complexId")
-        contact1.setValue(complexName, forKey:"complexName")
-        contact1.setValue(customerId, forKey:"customerId")
-        contact1.setValue(customerName, forKey:"customerName")
-        contact1.setValue(customerRepId, forKey:"customerRepId")
-        contact1.setValue(customerRepName, forKey:"customerRepName")
-        contact1.setValue(imperial, forKey:"imperial")
-        contact1.setValue(metric, forKey:"metric")
-        contact1.setValue(notes, forKey:"notes")
-        contact1.setValue(salesRepId, forKey:"salesRepId")
-        contact1.setValue(salesRepName, forKey:"salesRepName")
-        contact1.setValue(sessiondate, forKey:"sessiondate")
-        contact1.setValue(sessionTypeId, forKey:"sessionTypeId")
-        contact1.setValue(sessionTypeName, forKey:"sessionTypeName")
-        contact1.setValue(vetanatrionName, forKey:"vetanatrionName")
-        contact1.setValue(veterinarianId, forKey:"veterinarianId")
-        contact1.setValue(loginSessionId, forKey:"loginSessionId")
-        contact1.setValue(postingId, forKey:"postingId")
-        contact1.setValue(mail, forKey:"mail")
-        contact1.setValue(female, forKey:"female")
-        contact1.setValue(finilize, forKey:"finalizeExit")
-        contact1.setValue(isSync, forKey:"isSync")
-        contact1.setValue(timeStamp, forKey:"timeStamp")
-        contact1.setValue(lngId, forKey:"lngId")
-        contact1.setValue(capNec, forKey:"catptureNec")
-        contact1.setValue(mortality, forKey:"dayMortality")
-        contact1.setValue(FCR, forKey:"fcr")
-        contact1.setValue(outTime, forKey:"outTime")
-        contact1.setValue(Livability, forKey:"livability")
-        contact1.setValue(avgAge, forKey:"avgAge")
-        contact1.setValue(avgWeight, forKey:"avgWeight")
-     do
-        {
+    
+    func PostingSessionDbTurkey(with data: CoreDataHandlerTurkeyModels.PostingSessionTurkeyDBData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        self.managedContext = appDelegate.managedObjectContext
+        self.deleteDataWithPostingIdTurkey(data.postingId)
+
+        let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)!
+        let contact = NSManagedObject(entity: entity, insertInto: managedContext)
+
+        contact.setValue(data.convential, forKey: "convential")
+        contact.setValue(data.antobotic, forKey: "antiboitic")
+        contact.setValue(data.birdBreesId, forKey: "birdBreedId")
+        contact.setValue(data.birdbreedName, forKey: "birdBreedName")
+        contact.setValue(data.birdBreedType, forKey: "birdBreedType")
+        contact.setValue(data.birdSize, forKey: "birdSize")
+        contact.setValue(data.birdSizeId, forKey: "birdSizeId")
+        contact.setValue(data.cocciProgramId, forKey: "cocciProgramId")
+        contact.setValue(data.cociiProgramName, forKey: "cociiProgramName")
+        contact.setValue(data.complexId, forKey: "complexId")
+        contact.setValue(data.complexName, forKey: "complexName")
+        contact.setValue(data.customerId, forKey: "customerId")
+        contact.setValue(data.customerName, forKey: "customerName")
+        contact.setValue(data.customerRepId, forKey: "customerRepId")
+        contact.setValue(data.customerRepName, forKey: "customerRepName")
+        contact.setValue(data.imperial, forKey: "imperial")
+        contact.setValue(data.metric, forKey: "metric")
+        contact.setValue(data.notes, forKey: "notes")
+        contact.setValue(data.salesRepId, forKey: "salesRepId")
+        contact.setValue(data.salesRepName, forKey: "salesRepName")
+        contact.setValue(data.sessiondate, forKey: "sessiondate")
+        contact.setValue(data.sessionTypeId, forKey: "sessionTypeId")
+        contact.setValue(data.sessionTypeName, forKey: "sessionTypeName")
+        contact.setValue(data.vetanatrionName, forKey: "vetanatrionName")
+        contact.setValue(data.veterinarianId, forKey: "veterinarianId")
+        contact.setValue(data.loginSessionId, forKey: "loginSessionId")
+        contact.setValue(data.postingId, forKey: "postingId")
+        contact.setValue(data.mail, forKey: "mail")
+        contact.setValue(data.female, forKey: "female")
+        contact.setValue(data.finilize, forKey: "finalizeExit")
+        contact.setValue(data.isSync, forKey: "isSync")
+        contact.setValue(data.timeStamp, forKey: "timeStamp")
+        contact.setValue(data.lngId, forKey: "lngId")
+        contact.setValue(data.capNec, forKey: "catptureNec")
+        contact.setValue(data.mortality, forKey: "dayMortality")
+        contact.setValue(data.FCR, forKey: "fcr")
+        contact.setValue(data.outTime, forKey: "outTime")
+        contact.setValue(data.Livability, forKey: "livability")
+        contact.setValue(data.avgAge, forKey: "avgAge")
+        contact.setValue(data.avgWeight, forKey: "avgWeight")
+
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
-        
-        postingSession.append(contact1)
-        
+
+        postingSession.append(contact)
     }
+
     // MARK: ************* Update Posting session *****************/
     
-    func updatePostingSessionForNextButtonTurkey(_ postingId : NSNumber,antobotic: String,birdBreesId:NSNumber,birdbreedName:String,birdBreedType:String,birdSize:String,birdSizeId:NSNumber,cocciProgramId:NSNumber,cociiProgramName: String,complexId:NSNumber,complexName: String,convential:String,customerId:NSNumber,customerName:String,customerRepId:NSNumber,customerRepName:String,imperial:String,metric:String,notes:String,salesRepId:NSNumber,salesRepName:String,sessiondate:String,sessionTypeId:NSNumber,sessionTypeName:String,vetanatrionName:String,veterinarianId: NSNumber,loginSessionId:NSNumber,mail: String,female: String,finilize: NSNumber,isSync : Bool,timeStamp:String,lngId:NSNumber,birdType:String,birdTypeId:NSNumber ,avgAge:String ,avgWeight:String ,outTime:String ,FCR:String ,Livability:String ,mortality:String)
-    
-    {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+    func updatePostingSessionForNextButtonTurkey(data: CoreDataHandlerTurkeyModels.updatePostingSessionTurkeyDBData) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
-        do
-        { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if fetchedResult!.count > 0
-            {
-                let objTable: PostingSessionTurkey = (fetchedResult![0] as? PostingSessionTurkey)!
-                objTable.setValue(convential, forKey:"convential")
-                objTable.setValue(antobotic, forKey:"antiboitic")
-                objTable.setValue(0, forKey:"birdBreedId")
-                objTable.setValue(birdbreedName, forKey:"birdBreedName")
-                objTable.setValue(birdBreedType, forKey:"birdBreedType")
-                objTable.setValue(birdSize, forKey:"birdSize")
-                objTable.setValue(birdSizeId, forKey:"birdSizeId")
-                objTable.setValue(cocciProgramId, forKey:"cocciProgramId")
-                objTable.setValue(cociiProgramName, forKey:"cociiProgramName")
-                objTable.setValue(complexId, forKey:"complexId")
-                objTable.setValue(complexName, forKey:"complexName")
-                objTable.setValue(customerId, forKey:"customerId")
-                objTable.setValue(customerName, forKey:"customerName")
-                objTable.setValue(customerRepId, forKey:"customerRepId")
-                objTable.setValue(customerRepName, forKey:"customerRepName")
-                objTable.setValue(imperial, forKey:"imperial")
-                objTable.setValue(metric, forKey:"metric")
-                objTable.setValue(notes, forKey:"notes")
-                objTable.setValue(salesRepId, forKey:"salesRepId")
-                objTable.setValue(salesRepName, forKey:"salesRepName")
-                objTable.setValue(sessiondate, forKey:"sessiondate")
-                objTable.setValue(sessionTypeId, forKey:"sessionTypeId")
-                objTable.setValue(sessionTypeName, forKey:"sessionTypeName")
-                objTable.setValue(vetanatrionName, forKey:"vetanatrionName")
-                objTable.setValue(veterinarianId, forKey:"veterinarianId")
-                objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(mail, forKey:"mail")
-                objTable.setValue(female, forKey:"female")
-                objTable.setValue(finilize, forKey:"finalizeExit")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(timeStamp, forKey:"timeStamp")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(mortality, forKey:"dayMortality")
-                objTable.setValue(FCR, forKey:"fcr")
-                objTable.setValue(outTime, forKey:"outTime")
-                objTable.setValue(Livability, forKey:"livability")
-                objTable.setValue(avgAge, forKey:"avgAge")
-                objTable.setValue(avgWeight, forKey:"avgWeight")
-               do
-                {
-                    try managedContext.save()
-                }
-                catch{
-                }
+        fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, data.postingId)
+        
+        do {
+            if let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject], let objTable = fetchedResult.first as? PostingSessionTurkey {
+                
+                objTable.setValue(data.convential, forKey: "convential")
+                objTable.setValue(data.antobotic, forKey: "antiboitic")
+                objTable.setValue(data.birdBreedId, forKey: "birdBreedId")
+                objTable.setValue(data.birdBreedName, forKey: "birdBreedName")
+                objTable.setValue(data.birdBreedType, forKey: "birdBreedType")
+                objTable.setValue(data.birdSize, forKey: "birdSize")
+                objTable.setValue(data.birdSizeId, forKey: "birdSizeId")
+                objTable.setValue(data.cocciProgramId, forKey: "cocciProgramId")
+                objTable.setValue(data.cociiProgramName, forKey: "cociiProgramName")
+                objTable.setValue(data.complexId, forKey: "complexId")
+                objTable.setValue(data.complexName, forKey: "complexName")
+                objTable.setValue(data.customerId, forKey: "customerId")
+                objTable.setValue(data.customerName, forKey: "customerName")
+                objTable.setValue(data.customerRepId, forKey: "customerRepId")
+                objTable.setValue(data.customerRepName, forKey: "customerRepName")
+                objTable.setValue(data.imperial, forKey: "imperial")
+                objTable.setValue(data.metric, forKey: "metric")
+                objTable.setValue(data.notes, forKey: "notes")
+                objTable.setValue(data.salesRepId, forKey: "salesRepId")
+                objTable.setValue(data.salesRepName, forKey: "salesRepName")
+                objTable.setValue(data.sessionDate, forKey: "sessiondate")
+                objTable.setValue(data.sessionTypeId, forKey: "sessionTypeId")
+                objTable.setValue(data.sessionTypeName, forKey: "sessionTypeName")
+                objTable.setValue(data.vetanatrionName, forKey: "vetanatrionName")
+                objTable.setValue(data.veterinarianId, forKey: "veterinarianId")
+                objTable.setValue(data.loginSessionId, forKey: "loginSessionId")
+                objTable.setValue(data.postingId, forKey: "postingId")
+                objTable.setValue(data.mail, forKey: "mail")
+                objTable.setValue(data.female, forKey: "female")
+                objTable.setValue(data.finalize, forKey: "finalizeExit")
+                objTable.setValue(data.isSync, forKey: "isSync")
+                objTable.setValue(data.timeStamp, forKey: "timeStamp")
+                objTable.setValue(data.lngId, forKey: "lngId")
+                objTable.setValue(data.mortality, forKey: "dayMortality")
+                objTable.setValue(data.FCR, forKey: "fcr")
+                objTable.setValue(data.outTime, forKey: "outTime")
+                objTable.setValue(data.livability, forKey: "livability")
+                objTable.setValue(data.avgAge, forKey: "avgAge")
+                objTable.setValue(data.avgWeight, forKey: "avgWeight")
+
+                try managedContext.save()
             }
-      }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
     }
-    
+
     // MARK: ************* Update Posting on DashBoard session *****************/
     func updatePostingSessionOndashBoardTurkey(_ postingId : NSNumber,vetanatrionName:String,veterinarianId: NSNumber,captureNec: NSNumber
     )
@@ -4575,6 +4567,96 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /********************************* Save data in to CocoiPrgramFeed *************************************/
+    
+    func saveCoccoiControlDatabaseTurkey(_ data: CoreDataHandlerTurkeyModels.saveCoccoiControlFeedData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        self.managedContext = appDelegate.managedObjectContext
+        cocciControlArray = data.dbArray
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoccidiosisControlFeedTurkey")
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, data.feedId)
+
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+
+            if let results = fetchedResult, results.count > 0 {
+                if results.count <= data.index {
+                    let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeedTurkey", in: managedContext)!
+                    let person = NSManagedObject(entity: entity, insertInto: managedContext)
+
+                    person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                    person.setValue(data.postingId, forKey: "postingId")
+                    person.setValue(data.molecule, forKey: "molecule")
+                    person.setValue(data.dosage, forKey: "dosage")
+                    person.setValue(data.fromDays, forKey: "fromDays")
+                    person.setValue(data.toDays, forKey: "toDays")
+                    person.setValue(data.coccidiosisVaccine, forKey: "coccidiosisVaccine")
+                    person.setValue(data.targetWeight, forKey: "targetWeight")
+                    person.setValue(data.feedId, forKey: "feedId")
+                    person.setValue(data.feedProgram, forKey: "feedProgram")
+                    person.setValue(data.isSync, forKey: "isSync")
+                    person.setValue(data.feedType, forKey: "feedType")
+                    person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                    person.setValue(data.lngId, forKey: "lngId")
+                    person.setValue(data.lbldate, forKey: "feedDate")
+                    person.setValue(data.dosemoleculeId, forKey: "dosemoleculeId")
+
+                    try? managedContext.save()
+                    cocciCoccidiosControl.append(person)
+                } else {
+                    let objTable = results[data.index] as! CoccidiosisControlFeedTurkey
+
+                    objTable.setValue(data.loginSessionId, forKey: "loginSessionId")
+                    objTable.setValue(data.postingId, forKey: "postingId")
+                    objTable.setValue(data.molecule, forKey: "molecule")
+                    objTable.setValue(data.dosage, forKey: "dosage")
+                    objTable.setValue(data.fromDays, forKey: "fromDays")
+                    objTable.setValue(data.toDays, forKey: "toDays")
+                    objTable.setValue(data.coccidiosisVaccine, forKey: "coccidiosisVaccine")
+                    objTable.setValue(data.targetWeight, forKey: "targetWeight")
+                    objTable.setValue(data.feedId, forKey: "feedId")
+                    objTable.setValue(data.feedProgram, forKey: "feedProgram")
+                    objTable.setValue(data.formName, forKey: "formName")
+                    objTable.setValue(data.isSync, forKey: "isSync")
+                    objTable.setValue(data.feedType, forKey: "feedType")
+                    objTable.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                    objTable.setValue(data.lngId, forKey: "lngId")
+                    objTable.setValue(data.lbldate, forKey: "feedDate")
+                    objTable.setValue(data.dosemoleculeId, forKey: "dosemoleculeId")
+
+                    try? managedContext.save()
+                }
+            } else {
+                let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeedTurkey", in: managedContext)!
+                let person = NSManagedObject(entity: entity, insertInto: managedContext)
+
+                person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                person.setValue(data.postingId, forKey: "postingId")
+                person.setValue(data.molecule, forKey: "molecule")
+                person.setValue(data.dosage, forKey: "dosage")
+                person.setValue(data.fromDays, forKey: "fromDays")
+                person.setValue(data.toDays, forKey: "toDays")
+                person.setValue(data.coccidiosisVaccine, forKey: "coccidiosisVaccine")
+                person.setValue(data.targetWeight, forKey: "targetWeight")
+                person.setValue(data.feedId, forKey: "feedId")
+                person.setValue(data.feedProgram, forKey: "feedProgram")
+                person.setValue(data.isSync, forKey: "isSync")
+                person.setValue(data.feedType, forKey: "feedType")
+                person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                person.setValue(data.lngId, forKey: "lngId")
+                person.setValue(data.lbldate, forKey: "feedDate")
+                person.setValue(data.dosemoleculeId, forKey: "dosemoleculeId")
+
+                try? managedContext.save()
+                cocciCoccidiosControl.append(person)
+            }
+        } catch {
+            print(appDelegateObj.testFuntion())
+        }
+    }
+
+    /*
     func saveCoccoiControlDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String,coccidiosisVaccine:String,targetWeight:String, index : Int,dbArray: NSArray,feedId: NSNumber,feedProgram : String,formName : String,isSync : Bool,feedType: String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String,dosemoleculeId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -4700,7 +4782,7 @@ class CoreDataHandlerTurkey: NSObject {
             cocciCoccidiosControl.append(person)
         }
     }
- 
+ */
     // MARK: ******************** Get data from server forCocoidisControll **********************/
     func getDataFromCocoiiControllTurkey(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
@@ -5323,118 +5405,98 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /********************************* Save data in to AntiboticArray *************************************/
-    func saveAntiboticDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId : NSNumber,feedProgram: String,formName: String,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    
+    func saveAntiboticDatabaseTurkey(_ data: CoreDataHandlerTurkeyModels.AntiboticControlData, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
         AntiboticArray = dbArray
         
         if AntiboticArray.count > 0 {
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            self.managedContext = appDelegate.managedObjectContext
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
+            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "AntiboticFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, data.feedId)
             
-            do
-            {
+            do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if fetchedResult!.count > 0
-                {
-                    if ((fetchedResult?.count)! <= index)
-                    {
-                        let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
-                        let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(feedId , forKey:"feedId")
-                        person.setValue(feedProgram , forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lbldate, forKey:"feedDate")
+                if fetchedResult!.count > 0 {
+                    if fetchedResult?.count ?? 0 <= index {
+                        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
+                        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                        person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        person.setValue(data.postingId, forKey: "postingId")
+                        person.setValue(data.molecule, forKey: "molecule")
+                        person.setValue(data.dosage, forKey: "dosage")
+                        person.setValue(data.fromDays, forKey: "fromDays")
+                        person.setValue(data.toDays, forKey: "toDays")
+                        person.setValue(data.feedId, forKey: "feedId")
+                        person.setValue(data.feedProgram, forKey: "feedProgram")
+                        person.setValue(data.isSync, forKey: "isSync")
+                        person.setValue(data.feedType, forKey: "feedType")
+                        person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        person.setValue(data.lngId, forKey: "lngId")
+                        person.setValue(data.lbldate, forKey: "feedDate")
                         try? managedContext.save()
-
                         cocciAntibotic.append(person)
-                    }
-                    
-                    else{
+                    } else {
                         let objTable: AntiboticFeedTurkey = (fetchedResult![index] as? AntiboticFeedTurkey)!
-                        
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(feedId , forKey:"feedId")
-                        objTable.setValue(feedProgram , forKey:"feedProgram")
-                        objTable.setValue(formName , forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lbldate, forKey:"feedDate")
+                        objTable.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        objTable.setValue(data.postingId, forKey: "postingId")
+                        objTable.setValue(data.molecule, forKey: "molecule")
+                        objTable.setValue(data.dosage, forKey: "dosage")
+                        objTable.setValue(data.fromDays, forKey: "fromDays")
+                        objTable.setValue(data.toDays, forKey: "toDays")
+                        objTable.setValue(data.feedId, forKey: "feedId")
+                        objTable.setValue(data.feedProgram, forKey: "feedProgram")
+                        objTable.setValue(data.formName, forKey: "formName")
+                        objTable.setValue(data.isSync, forKey: "isSync")
+                        objTable.setValue(data.feedType, forKey: "feedType")
+                        objTable.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        objTable.setValue(data.lngId, forKey: "lngId")
+                        objTable.setValue(data.lbldate, forKey: "feedDate")
                         try? managedContext.save()
-
-                   }
-                }
-                else{
-                    let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
-                    let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(feedId , forKey:"feedId")
-                    person.setValue(feedProgram , forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lbldate, forKey:"feedDate")
+                    }
+                } else {
+                    let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
+                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                    person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                    person.setValue(data.postingId, forKey: "postingId")
+                    person.setValue(data.molecule, forKey: "molecule")
+                    person.setValue(data.dosage, forKey: "dosage")
+                    person.setValue(data.fromDays, forKey: "fromDays")
+                    person.setValue(data.toDays, forKey: "toDays")
+                    person.setValue(data.feedId, forKey: "feedId")
+                    person.setValue(data.feedProgram, forKey: "feedProgram")
+                    person.setValue(data.isSync, forKey: "isSync")
+                    person.setValue(data.feedType, forKey: "feedType")
+                    person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                    person.setValue(data.lngId, forKey: "lngId")
+                    person.setValue(data.lbldate, forKey: "feedDate")
                     try? managedContext.save()
-
                     cocciAntibotic.append(person)
                 }
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
-        }
-        else
-        {
-            let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(feedId , forKey:"feedId")
-            person.setValue(feedProgram , forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lbldate, forKey:"feedDate")
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeedTurkey", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(data.loginSessionId, forKey: "loginSessionId")
+            person.setValue(data.postingId, forKey: "postingId")
+            person.setValue(data.molecule, forKey: "molecule")
+            person.setValue(data.dosage, forKey: "dosage")
+            person.setValue(data.fromDays, forKey: "fromDays")
+            person.setValue(data.toDays, forKey: "toDays")
+            person.setValue(data.feedId, forKey: "feedId")
+            person.setValue(data.feedProgram, forKey: "feedProgram")
+            person.setValue(data.isSync, forKey: "isSync")
+            person.setValue(data.feedType, forKey: "feedType")
+            person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(data.lngId, forKey: "lngId")
+            person.setValue(data.lbldate, forKey: "feedDate")
             try? managedContext.save()
-
             cocciAntibotic.append(person)
         }
     }
-    
     /********************************* Get Api from server for antoboitic *************************************/
     
     func getDataFromAntiboiticTurkey(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
@@ -5576,115 +5638,83 @@ class CoreDataHandlerTurkey: NSObject {
         return AntiboticArray
     }
     
-    func saveAlternativeDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId : NSNumber,feedProgram: String , formName : String,isSync: Bool,feedType:String,cocoVacId:NSNumber,lngId: NSNumber,lbldate: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        self.managedContext = appDelegate!.managedObjectContext
+    
+    func saveAlternativeDatabaseTurkey(data: CoreDataHandlerTurkeyModels.AlternativeFeedData, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        self.managedContext = appDelegate.managedObjectContext
         AlternativeArray = dbArray
-        
+
         if AlternativeArray.count > 0 {
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            self.managedContext = appDelegate.managedObjectContext
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AlternativeFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
-            do
-            {
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, data.feedId)
+
+            do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if fetchedResult!.count > 0
-                {
-                    if ((fetchedResult?.count)! <= index)
-                    {
-                        let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeedTurkey", in: managedContext)
-                        let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(feedId , forKey:"feedId")
-                        person.setValue(feedProgram , forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lbldate, forKey:"feedDate")
+                if let results = fetchedResult {
+                    if results.count <= index {
+                        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeedTurkey", in: managedContext)!
+                        let person = NSManagedObject(entity: entity, insertInto: managedContext)
+                        person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        person.setValue(data.postingId, forKey: "postingId")
+                        person.setValue(data.molecule, forKey: "molecule")
+                        person.setValue(data.dosage, forKey: "dosage")
+                        person.setValue(data.fromDays, forKey: "fromDays")
+                        person.setValue(data.toDays, forKey: "toDays")
+                        person.setValue(data.feedId, forKey: "feedId")
+                        person.setValue(data.feedProgram, forKey: "feedProgram")
+                        person.setValue(data.formName, forKey: "formName")
+                        person.setValue(data.isSync, forKey: "isSync")
+                        person.setValue(data.feedType, forKey: "feedType")
+                        person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        person.setValue(data.lngId, forKey: "lngId")
+                        person.setValue(data.lbldate, forKey: "feedDate")
                         try? managedContext.save()
-
                         cocciAlternative.append(person)
-                    }
-                    else{
-                        
-                        let objTable: AlternativeFeedTurkey = (fetchedResult![index] as? AlternativeFeedTurkey)!
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(feedId , forKey:"feedId")
-                        objTable.setValue(feedProgram , forKey:"feedProgram")
-                        objTable.setValue(formName , forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lbldate, forKey:"feedDate")
+                    } else {
+                        let objTable = results[index] as! AlternativeFeedTurkey
+                        objTable.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        objTable.setValue(data.postingId, forKey: "postingId")
+                        objTable.setValue(data.molecule, forKey: "molecule")
+                        objTable.setValue(data.dosage, forKey: "dosage")
+                        objTable.setValue(data.fromDays, forKey: "fromDays")
+                        objTable.setValue(data.toDays, forKey: "toDays")
+                        objTable.setValue(data.feedId, forKey: "feedId")
+                        objTable.setValue(data.feedProgram, forKey: "feedProgram")
+                        objTable.setValue(data.formName, forKey: "formName")
+                        objTable.setValue(data.isSync, forKey: "isSync")
+                        objTable.setValue(data.feedType, forKey: "feedType")
+                        objTable.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        objTable.setValue(data.lngId, forKey: "lngId")
+                        objTable.setValue(data.lbldate, forKey: "feedDate")
                         try? managedContext.save()
-
                     }
                 }
-                else{
-                    let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeedTurkey", in: managedContext)
-                    let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(feedId , forKey:"feedId")
-                    person.setValue(feedProgram , forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lbldate, forKey:"feedDate")
-                    try? managedContext.save()
-
-                    cocciAlternative.append(person)
-                }
+            } catch {
+                // Handle error appropriately
             }
-            catch
-            {
-                
-            }
-        }
-        else{
-            let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeedTurkey", in: managedContext)
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(feedId , forKey:"feedId")
-            person.setValue(feedProgram , forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lbldate, forKey:"feedDate")
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeedTurkey", in: managedContext)!
+            let person = NSManagedObject(entity: entity, insertInto: managedContext)
+            person.setValue(data.loginSessionId, forKey: "loginSessionId")
+            person.setValue(data.postingId, forKey: "postingId")
+            person.setValue(data.molecule, forKey: "molecule")
+            person.setValue(data.dosage, forKey: "dosage")
+            person.setValue(data.fromDays, forKey: "fromDays")
+            person.setValue(data.toDays, forKey: "toDays")
+            person.setValue(data.feedId, forKey: "feedId")
+            person.setValue(data.feedProgram, forKey: "feedProgram")
+            person.setValue(data.formName, forKey: "formName")
+            person.setValue(data.isSync, forKey: "isSync")
+            person.setValue(data.feedType, forKey: "feedType")
+            person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(data.lngId, forKey: "lngId")
+            person.setValue(data.lbldate, forKey: "feedDate")
             try? managedContext.save()
-
             cocciAlternative.append(person)
         }
     }
-    
+
     func saveCocoiiVacTurkey(_ catId : Int,decscMolecule : String, lngId : Int)
     {
         
@@ -5899,7 +5929,65 @@ class CoreDataHandlerTurkey: NSObject {
         
     }
     
+    fileprivate func handleIfFetchedResultLessThan4(
+        _ fetchedResult: [NSManagedObject]?,
+        _ index: Int,
+        _ managedContext: NSManagedObjectContext,
+        _ feedData: CoreDataHandlerTurkeyModels.myCoxtinFeedData) {
+
+        if ((fetchedResult?.count)! <= index) {
+            let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            
+            person.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+            person.setValue(feedData.postingId, forKey: "postingId")
+            person.setValue(feedData.molecule, forKey: "molecule")
+            person.setValue(feedData.dosage, forKey: "dosage")
+            person.setValue(feedData.fromDays, forKey: "fromDays")
+            person.setValue(feedData.toDays, forKey: "toDays")
+            person.setValue(feedData.feedId, forKey: "feedId")
+            person.setValue(feedData.feedProgram, forKey: "feedProgram")
+            person.setValue(feedData.isSync, forKey: "isSync")
+            person.setValue(feedData.feedType, forKey: "feedType")
+            person.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(feedData.lngId, forKey: "lngId")
+            person.setValue(feedData.lbldate, forKey: "feedDate")
+
+            do {
+                try managedContext.save()
+            } catch {
+                // Handle error
+            }
+            
+            cocciMyCoxtinBinders.append(person)
+        } else {
+            let objTable: MyCotoxinBindersFeedTurkey = (fetchedResult![index] as? MyCotoxinBindersFeedTurkey)!
+            
+            objTable.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+            objTable.setValue(feedData.postingId, forKey: "postingId")
+            objTable.setValue(feedData.molecule, forKey: "molecule")
+            objTable.setValue(feedData.dosage, forKey: "dosage")
+            objTable.setValue(feedData.fromDays, forKey: "fromDays")
+            objTable.setValue(feedData.toDays, forKey: "toDays")
+            objTable.setValue(feedData.feedId, forKey: "feedId")
+            objTable.setValue(feedData.feedProgram, forKey: "feedProgram")
+            objTable.setValue(feedData.formName, forKey: "formName")
+            objTable.setValue(feedData.isSync, forKey: "isSync")
+            objTable.setValue(feedData.feedType, forKey: "feedType")
+            objTable.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+            objTable.setValue(feedData.lngId, forKey: "lngId")
+            objTable.setValue(feedData.lbldate, forKey: "feedDate")
+
+            do {
+                try managedContext.save()
+            } catch {
+                // Handle error
+            }
+        }
+    }
+
     
+    /*
     fileprivate func handleIfFetchedResultLessThan4(_ fetchedResult: [NSManagedObject]?, _ index: Int, _ managedContext: NSManagedObjectContext, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedId: NSNumber, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
         if ((fetchedResult?.count)! <= index)
         {
@@ -5956,7 +6044,7 @@ class CoreDataHandlerTurkey: NSObject {
             
         }
     }
-    
+    */
     fileprivate func handleCoxinVal(_ feedId: NSNumber, _ index: Int, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
@@ -5973,7 +6061,25 @@ class CoreDataHandlerTurkey: NSObject {
             
             if fetchedResult!.count > 0 {
                 
-                handleIfFetchedResultLessThan4(fetchedResult, index, managedContext, loginSessionId, postingId, molecule, dosage, fromDays, toDays, feedId, feedProgram, isSync, feedType, cocoVacId, lngId, lbldate, formName)
+                let feedData = CoreDataHandlerTurkeyModels.myCoxtinFeedData(
+                    loginSessionId: loginSessionId,
+                    postingId: postingId,
+                    molecule: molecule,
+                    dosage: dosage,
+                    fromDays: fromDays,
+                    toDays: toDays,
+                    feedId: feedId,
+                    feedProgram: feedProgram,
+                    isSync: isSync,
+                    feedType: feedType,
+                    cocoVacId: cocoVacId,
+                    lngId: lngId,
+                    lbldate: lbldate,
+                    formName: formName
+                )
+
+                handleIfFetchedResultLessThan4(fetchedResult, index, managedContext, feedData)
+                
             } else {
                 let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
                 let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -6007,46 +6113,41 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /////////////
-    
-    
-    func saveMyCoxtinDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String) {
+    ///
+    func saveMyCoxtinDatabaseTurkey(coxtinData: CoreDataHandlerTurkeyModels.saveTukryCoxtinData) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
         self.managedContext = appDelegate!.managedObjectContext
-        MyCoxtinBindersArray = dbArray
+        MyCoxtinBindersArray = coxtinData.dbArray
         
         if MyCoxtinBindersArray.count > 0 {
-            
-            handleCoxinVal(feedId, index, loginSessionId, postingId, molecule, dosage, fromDays, toDays, feedProgram, isSync, feedType, cocoVacId, lngId, lbldate, formName)
+            handleCoxinVal(coxtinData.feedId, coxtinData.index, coxtinData.loginSessionId, coxtinData.postingId, coxtinData.molecule, coxtinData.dosage, coxtinData.fromDays, coxtinData.toDays, coxtinData.feedProgram, coxtinData.isSync, coxtinData.feedType, coxtinData.cocoVacId, coxtinData.lngId, coxtinData.lbldate, coxtinData.formName)
         } else {
-            
             let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
             let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(feedId , forKey:"feedId")
-            person.setValue(feedProgram , forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lbldate, forKey:"feedDate")
-            do
-            {
+            person.setValue(coxtinData.loginSessionId, forKey: "loginSessionId")
+            person.setValue(coxtinData.postingId, forKey: "postingId")
+            person.setValue(coxtinData.molecule, forKey: "molecule")
+            person.setValue(coxtinData.dosage, forKey: "dosage")
+            person.setValue(coxtinData.fromDays, forKey: "fromDays")
+            person.setValue(coxtinData.toDays, forKey: "toDays")
+            person.setValue(coxtinData.feedId, forKey: "feedId")
+            person.setValue(coxtinData.feedProgram, forKey: "feedProgram")
+            person.setValue(coxtinData.isSync, forKey: "isSync")
+            person.setValue(coxtinData.feedType, forKey: "feedType")
+            person.setValue(coxtinData.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(coxtinData.lngId, forKey: "lngId")
+            person.setValue(coxtinData.lbldate, forKey: "feedDate")
+            
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             
             cocciMyCoxtinBinders.append(person)
         }
     }
+
     /************************** Ge api for MycocxoBinder *********************************/
     func getDataFromMyCocotinBinderTurkey(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
@@ -6246,64 +6347,53 @@ class CoreDataHandlerTurkey: NSObject {
     
     
     /************************** Feed Program *******************************************************/
-    func SaveFeedProgramTurkey(_ postingId : NSNumber, sessionId: NSNumber ,feedProgrameName: String,feedId: NSNumber,dbArray :NSArray ,index : Int,formName: String,isSync : Bool,lngId:NSNumber)
-    {
-        
+    
+    func SaveFeedProgramTurkey(_ index: Int, dbArray: NSArray, feedProgramData: CoreDataHandlerTurkeyModels.turkeyFeedProgramData) {
         feedprogramArray = dbArray
         
         if feedprogramArray.count > 0 {
-            
             let objTable: FeedProgramTurkey = (feedprogramArray[index] as? FeedProgramTurkey)!
             
-            do{
-                
-                if objTable.feedId == feedId {
-                    
-                    objTable.setValue(feedProgrameName, forKey:"feddProgramNam")
-                    objTable.setValue(feedId, forKey:"feedId")
-                    objTable.setValue(sessionId, forKey:"loginSessionId")
-                    objTable.setValue(postingId, forKey:"postingId")
-                    objTable.setValue(formName, forKey:"formName")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    objTable.setValue(lngId, forKey:"lngId")
+            do {
+                if objTable.feedId == feedProgramData.feedId {
+                    objTable.setValue(feedProgramData.feedProgrameName, forKey: "feddProgramNam")
+                    objTable.setValue(feedProgramData.feedId, forKey: "feedId")
+                    objTable.setValue(feedProgramData.sessionId, forKey: "loginSessionId")
+                    objTable.setValue(feedProgramData.postingId, forKey: "postingId")
+                    objTable.setValue(feedProgramData.formName, forKey: "formName")
+                    objTable.setValue(feedProgramData.isSync, forKey: "isSync")
+                    objTable.setValue(feedProgramData.lngId, forKey: "lngId")
                     
                     do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error
                     }
                 }
             }
             return
-        }
-        else {
-            
+        } else {
             let entity = NSEntityDescription.entity(forEntityName: "FeedProgramTurkey", in: managedContext)
-            
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
             
-            person.setValue(feedProgrameName, forKey:"feddProgramNam")
-            person.setValue(feedId, forKey:"feedId")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(formName, forKey:"formName")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
+            person.setValue(feedProgramData.feedProgrameName, forKey: "feddProgramNam")
+            person.setValue(feedProgramData.feedId, forKey: "feedId")
+            person.setValue(feedProgramData.sessionId, forKey: "loginSessionId")
+            person.setValue(feedProgramData.postingId, forKey: "postingId")
+            person.setValue(feedProgramData.formName, forKey: "formName")
+            person.setValue(feedProgramData.isSync, forKey: "isSync")
+            person.setValue(feedProgramData.lngId, forKey: "lngId")
             
-            do
-            {
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             
             FeddProgram.append(person)
         }
-        
     }
-    
+
     func updateFeedProgramTurkey(_ feedId: NSNumber,isSync : Bool,feedProgrameName:String,formName: String)
     {
         
@@ -6431,63 +6521,92 @@ class CoreDataHandlerTurkey: NSObject {
     
     /*************** Create database capture necropsy step 1 *************************************/
     
-    
-    
-    func SaveNecropsystep1Turkey(_ postingId : NSNumber, age: String ,farmName: String,feedProgram: String,flockId: String,houseNo: String,noOfBirds: String,sick: NSNumber,necId:NSNumber,compexName : String,complexDate: String,complexId: NSNumber,custmerId: NSNumber,feedId:NSNumber,isSync:Bool,timeStamp :String,actualTimeStamp: String,lngId:NSNumber,farmWeight:String,abf:String,breed:String,sex:String,farmId:NSNumber,imageId :NSNumber,count:NSNumber,genName:String,genId:NSNumber) {
+    func SaveNecropsystep1Turkey(_ necropsyData: CoreDataHandlerTurkeyModels.saveTurkeyNecropsyStep1Data) {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "CaptureNecropsyDataTurkey", in: managedContext)
         
-        let entityDescription =
-        NSEntityDescription.entity(forEntityName: "CaptureNecropsyDataTurkey",in: managedContext)
+        let contact = CaptureNecropsyDataTurkey(entity: entityDescription!, insertInto: managedContext)
         
-        let contact = CaptureNecropsyDataTurkey(entity: entityDescription!,insertInto: managedContext)
-        contact.age = age
-        contact.farmName = farmName
-        contact.feedProgram = feedProgram
-        contact.flockId = flockId
-        contact.sick = sick
-        contact.houseNo = houseNo
-        contact.noOfBirds = noOfBirds
-        contact.postingId = postingId
-        contact.necropsyId = necId
-        contact.complexName = compexName
-        contact.complexDate = complexDate
-        contact.complexId = complexId
-        contact.custmerId = custmerId
-        contact.feedId = feedId
+        contact.age = necropsyData.age
+        contact.farmName = necropsyData.farmName
+        contact.feedProgram = necropsyData.feedProgram
+        contact.flockId = necropsyData.flockId
+        contact.sick = necropsyData.sick
+        contact.houseNo = necropsyData.houseNo
+        contact.noOfBirds = necropsyData.noOfBirds
+        contact.postingId = necropsyData.postingId
+        contact.necropsyId = necropsyData.necId
+        contact.complexName = necropsyData.compexName
+        contact.complexDate = necropsyData.complexDate
+        contact.complexId = necropsyData.complexId
+        contact.custmerId = necropsyData.customerId
+        contact.feedId = necropsyData.feedId
         contact.isChecked = false
-        contact.isSync = isSync as NSNumber
-        contact.timeStamp = timeStamp
-        contact.actualTimeStamp = actualTimeStamp
-        contact.lngId = lngId
-        if farmWeight == ""{
-            contact.farmWeight = "0"
-        }else{
-            contact.farmWeight = farmWeight
-        }
-        contact.abf = abf
-        contact.breed = breed
-        contact.sex = sex
-        contact.farmId = farmId
+        contact.isSync = necropsyData.isSync as NSNumber
+        contact.timeStamp = necropsyData.timeStamp
+        contact.actualTimeStamp = necropsyData.actualTimeStamp
+        contact.lngId = necropsyData.lngId
         
-        contact.imageId = imageId
-        contact.farmcount = count
-        contact.generName = genName
-        contact.generID = genId
-        
-        
+        contact.farmWeight = necropsyData.farmWeight.isEmpty ? "0" : necropsyData.farmWeight
+        contact.abf = necropsyData.abf
+        contact.breed = necropsyData.breed
+        contact.sex = necropsyData.sex
+        contact.farmId = necropsyData.farmId
+        contact.imageId = necropsyData.imageId
+        contact.farmcount = necropsyData.count
+        contact.generName = necropsyData.genName
+        contact.generID = necropsyData.genId
         
         do {
             try managedContext.save()
-            
         } catch {
-            
             fatalError("Failure to save context: \(error)")
         }
         
         necrpsystep1.append(contact)
     }
     
+    func SaveNecropsystep1SingleDataTurkey(data: CoreDataHandlerTurkeyModels.singleNecropsyDataTurkey) {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "CaptureNecropsyDataTurkey", in: managedContext)
+        
+        let contact = CaptureNecropsyDataTurkey(entity: entityDescription!, insertInto: managedContext)
+        contact.age = data.age
+        contact.farmName = data.farmName
+        contact.feedProgram = data.feedProgram
+        contact.flockId = data.flockId
+        contact.sick = data.sick
+        contact.houseNo = data.houseNo
+        contact.noOfBirds = data.noOfBirds
+        contact.postingId = data.necIdSingle
+        contact.necropsyId = data.necIdSingle
+        contact.complexName = data.compexName
+        contact.complexDate = data.complexDate
+        contact.complexId = data.complexId
+        contact.custmerId = data.custmerId
+        contact.sex = data.sex
+        contact.abf = data.abf
+        contact.breed = data.breed
+        contact.farmWeight = data.farmweight
+        contact.feedId = data.feedId
+        contact.isChecked = false
+        contact.isSync = data.isSync as NSNumber
+        contact.timeStamp = data.timeStamp
+        contact.actualTimeStamp = data.actualTimeStamp
+        contact.farmId = data.farmId
+        contact.imageId = data.imgId
+        contact.generName = data.generationName
+        contact.generID = data.generationId as NSNumber
+
+        do {
+            try managedContext.save()
+        } catch {
+            fatalError("Failure to save context: \(error)")
+        }
+        
+        necrpsystep1.append(contact)
+    }
+
     
-    
+   /*
     func SaveNecropsystep1SingleDataTurkey(_ postingId : NSNumber, age: String ,farmName: String,feedProgram: String,flockId: String,houseNo: String,noOfBirds: String,sick: NSNumber,necId:NSNumber,compexName : String,complexDate: String,complexId: NSNumber,custmerId: NSNumber,feedId:NSNumber,isSync:Bool,timeStamp :String,actualTimeStamp: String,necIdSingle:NSNumber,farmweight:String,abf:String,sex:String,breed:String,farmId:NSNumber,imgId:NSNumber ,generationName:String,generationId:NSNumber)
     {
         
@@ -6522,10 +6641,6 @@ class CoreDataHandlerTurkey: NSObject {
         contact.generName = generationName
         contact.generID = generationId as NSNumber
         
-        
-        
-        
-        
         do {
             try managedContext.save()
             
@@ -6536,7 +6651,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         necrpsystep1.append(contact)
     }
-    
+    */
     
     
     
@@ -8216,121 +8331,132 @@ class CoreDataHandlerTurkey: NSObject {
     /*******************************  Capture  data Base ********************************************************/
     /***************** save data Skleta ************************************************************************/
     
-    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,lngId:NSNumber,refId:NSNumber  , actualText: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(_ data: CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        self.managedContext = appDelegate!.managedObjectContext
+
+        let entity = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.birdNo, forKey: "birdNo")
+        person.setValue(data.formName, forKey: "formName")
+        person.setValue(data.obsId, forKey: "obsID")
+        person.setValue(data.obsName, forKey: "obsName")
+        person.setValue(data.obsPoint, forKey: "obsPoint")
+        person.setValue(NSNumber(value: data.obsVisibility), forKey: "objsVisibilty")
+        person.setValue(data.measure, forKey: "measure")
+        person.setValue(data.quickLink, forKey: "quickLink")
+        person.setValue(data.necId, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+        person.setValue(data.lngId, forKey: "lngId")
+        person.setValue(data.refId, forKey: "refId")
+        person.setValue(data.actualText, forKey: "actualText")
+
+        do {
+            try managedContext.save()
+        } catch {
+            print(appDelegateObj.testFuntion())
+        }
+
+        captureSkeletaObject.append(person)
+    }
+    
+    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(data: CoreDataHandlerTurkeyModels.turkeySexNecropsyData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
         
-        let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue(data.catName, forKey:"catName")
+        person.setValue(data.birdNo, forKey:"birdNo")
+        person.setValue(data.formName, forKey:"formName")
+        person.setValue(data.obsId, forKey:"obsID")
+        person.setValue(data.obsName, forKey:"obsName")
+        person.setValue(data.obsPoint, forKey:"obsPoint")
+        person.setValue(NSNumber(value: data.obsVisibility), forKey:"objsVisibilty")
+        person.setValue(data.measure, forKey:"measure")
+        person.setValue(data.quickLink, forKey:"quickLink")
+        person.setValue(data.necId, forKey:"necropsyId")
+        person.setValue(data.isSync, forKey:"isSync")
+        person.setValue(data.lngId, forKey:"lngId")
+        person.setValue(data.refId, forKey:"refId")
+        person.setValue(data.actualText, forKey: "actualText")
         
-        person.setValue(catName, forKey:"catName")
-        person.setValue(birdNo, forKey:"birdNo")
-        person.setValue(formName, forKey:"formName")
-        person.setValue(obsId, forKey:"obsID")
-        person.setValue(obsName, forKey:"obsName")
-        person.setValue(obsPoint, forKey:"obsPoint")
-        person.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-        person.setValue(measure, forKey:"measure")
-        person.setValue(quickLink, forKey:"quickLink")
-        person.setValue(necId, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        person.setValue(lngId, forKey:"lngId")
-        person.setValue(refId, forKey:"refId")
-        person.setValue("\(obsPoint)", forKey: "actualText")
-        do
-        {
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
-        
-        
+    }
+
+    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(data: CoreDataHandlerTurkeyModels.imumneSwithcCaptureData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        self.managedContext = appDelegate!.managedObjectContext
+
+        let entity = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.birdNo, forKey: "birdNo")
+        person.setValue(data.formName, forKey: "formName")
+        person.setValue(data.obsId, forKey: "obsID")
+        person.setValue(data.obsName, forKey: "obsName")
+        person.setValue(data.obsPoint, forKey: "obsPoint")
+        person.setValue(NSNumber(value: data.obsVisibility as Bool), forKey: "objsVisibilty")
+        person.setValue(data.measure, forKey: "measure")
+        person.setValue(data.quickLink, forKey: "quickLink")
+        person.setValue(data.necId, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+        person.setValue(data.lngId, forKey: "lngId")
+        person.setValue(data.refId, forKey: "refId")
+        person.setValue("\(data.obsPoint)", forKey: "actualText")
+
+        do {
+            try managedContext.save()
+        } catch {
+            print(appDelegate!.testFuntion())
+        }
+
+        captureSkeletaObject.append(person)
     }
     
-    
-    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,lngId:NSNumber,refId:NSNumber  , actualText: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(data: CoreDataHandlerTurkeyModels.singleNecroSwithCaseData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
         
-        let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.birdNo, forKey: "birdNo")
+        person.setValue(data.formName, forKey: "formName")
+        person.setValue(data.obsId, forKey: "obsID")
+        person.setValue(data.obsName, forKey: "obsName")
+        person.setValue(data.obsPoint, forKey: "obsPoint")
+        person.setValue(NSNumber(value: data.obsVisibility), forKey: "objsVisibilty")
+        person.setValue(data.measure, forKey: "measure")
+        person.setValue(data.quickLink, forKey: "quickLink")
+        person.setValue(data.necIdSingle, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+        person.setValue(data.lngId, forKey: "lngId")
+        person.setValue(data.refId, forKey: "refId")
+        person.setValue("\(data.obsPoint)", forKey: "actualText")
         
-        person.setValue(catName, forKey:"catName")
-        person.setValue(birdNo, forKey:"birdNo")
-        person.setValue(formName, forKey:"formName")
-        person.setValue(obsId, forKey:"obsID")
-        person.setValue(obsName, forKey:"obsName")
-        person.setValue(obsPoint, forKey:"obsPoint")
-        person.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-        person.setValue(measure, forKey:"measure")
-        person.setValue(quickLink, forKey:"quickLink")
-        person.setValue(necId, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        person.setValue(lngId, forKey:"lngId")
-        person.setValue(refId, forKey:"refId")
-        person.setValue(actualText, forKey: "actualText")
-        do
-        {
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
-        
-        
     }
+
     
-    func saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:Float, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,lngId:NSNumber,refId:NSNumber  , actualText: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        self.managedContext = appDelegate!.managedObjectContext
-        
-        let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
-        
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
-        
-        person.setValue(catName, forKey:"catName")
-        person.setValue(birdNo, forKey:"birdNo")
-        person.setValue(formName, forKey:"formName")
-        person.setValue(obsId, forKey:"obsID")
-        person.setValue(obsName, forKey:"obsName")
-        person.setValue(obsPoint, forKey:"obsPoint")
-        person.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-        person.setValue(measure, forKey:"measure")
-        person.setValue(quickLink, forKey:"quickLink")
-        person.setValue(necId, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        person.setValue(lngId, forKey:"lngId")
-        person.setValue(refId, forKey:"refId")
-        person.setValue("\(obsPoint)", forKey: "actualText")
-        do
-        {
-            try managedContext.save()
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
-        captureSkeletaObject.append(person)
-        
-        
-    }
-    
+/*
     func saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,necIdSingle:NSNumber,lngId:NSNumber,refId:NSNumber)
     {
         
@@ -8369,7 +8495,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         
     }
-    
+    */
     func deleteDataWithStep2dataTurkey (_ necId: NSNumber)
     {
         
@@ -8395,35 +8521,30 @@ class CoreDataHandlerTurkey: NSObject {
         
     }
     
-    func updateCaptureSkeletaInDatabaseOnActualClickTurkey(_ catName : String,obsName : String,formName : String,   birdNo : NSNumber , actualName :String, index : Int , necId : NSNumber , isSync : Bool)
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    func updateCaptureSkeletaInDatabaseOnActualClickTurkey(data: CoreDataHandlerTurkeyModels.updateWeightSkeletaData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@ AND obsName == %@", birdNo,catName,formName,necId,obsName)
         
-        do
-        {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
+        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@ AND obsName == %@", data.birdNo, data.catName, data.formName, data.necId, data.obsName)
+        
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            let objTable: CaptureNecropsyViewDataTurkey = (fetchedResult![index] as? CaptureNecropsyViewDataTurkey)!
-            objTable.setValue(actualName, forKey:"actualText")
-            objTable.setValue(isSync, forKey:"isSync")
+            let objTable = (fetchedResult![data.index] as? CaptureNecropsyViewDataTurkey)!
+            objTable.setValue(data.actualName, forKey: "actualText")
+            objTable.setValue(data.isSync, forKey: "isSync")
             
-            
-            do
-            {
+            do {
                 try objTable.managedObjectContext!.save()
+            } catch {
+                // handle error
             }
-            catch{
-            }
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
     }
+
     /********* Update BodyWeight in immune ************/
     
     func updateCaptureSkeletaInDatabaseOnActualClickTurkeyBodyWeight(_ catName : String,obsName : String,formName : String,  obsPoint :Int, index : Int , necId : NSNumber , isSync : Bool)
@@ -8683,96 +8804,71 @@ class CoreDataHandlerTurkey: NSObject {
         
     }
     
-    func updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(_ catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,camraImage :UIImage,obsPoint:NSInteger, index : Int,obsId: NSInteger , necId : NSNumber,isSync : Bool)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        self.managedContext = appDelegate!.managedObjectContext
-        
-        
-        let imageData = camraImage.jpegData(compressionQuality: 0.5)
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdNo,catName,formName , necId)
-        
-        do
-        {
+    func updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey, index: Int) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+
+        self.managedContext = appDelegate.managedObjectContext
+
+        let imageData = input.camraImage.jpegData(compressionQuality: 0.5)
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, input.birdNo, input.catName, input.formName, input.necId)
+
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                
+            if let results = fetchedResult {
                 fecthPhotoArray = results as NSArray
-                
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
+
+                let descriptor = NSSortDescriptor(key: "obsName", ascending: true)
                 let sortedResults = fecthPhotoArray.sortedArray(using: [descriptor])
-                
-                let objTable: CaptureNecropsyViewDataTurkey = ((sortedResults as NSArray)[index] as? CaptureNecropsyViewDataTurkey)!
-                
-                objTable.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-                objTable.setValue(imageData, forKey:"cameraImage")
-                objTable.setValue(obsPoint, forKey:"obsPoint")
-                objTable.setValue(birdNo, forKey:"birdNo")
-                objTable.setValue(formName, forKey:"formName")
-                objTable.setValue(isSync, forKey:"isSync")
-                
-                do
-                {
-                    try objTable.managedObjectContext!.save()
-                }
-                catch{
+
+                if let objTable = (sortedResults as NSArray)[index] as? CaptureNecropsyViewDataTurkey {
+                    objTable.setValue(NSNumber(value: input.obsVisibility), forKey: "objsVisibilty")
+                    objTable.setValue(imageData, forKey: "cameraImage")
+                    objTable.setValue(input.obsPoint, forKey: "obsPoint")
+                    objTable.setValue(input.birdNo, forKey: "birdNo")
+                    objTable.setValue(input.formName, forKey: "formName")
+                    objTable.setValue(input.isSync, forKey: "isSync")
+
+                    try objTable.managedObjectContext?.save()
                 }
             }
-        }
-        catch
-        {
-            //print("There is some error.")
+        } catch {
+            // Log error if needed
         }
     }
-    
-    func updateCaptureSkeletaInDatabaseTurkeySexValue(_ catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger , necId : NSNumber,isSync : Bool  ,actualText : String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        self.managedContext = appDelegate!.managedObjectContext
-        
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdNo,catName,formName , necId)
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                
-                fecthPhotoArray = results as NSArray
-                
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
-                let sortedResults = fecthPhotoArray.sortedArray(using: [descriptor])
-                
-                let objTable: CaptureNecropsyViewDataTurkey = ((sortedResults as NSArray)[index] as? CaptureNecropsyViewDataTurkey)!
-                
-                objTable.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-                objTable.setValue(obsPoint, forKey:"obsPoint")
-                objTable.setValue(birdNo, forKey:"birdNo")
-                objTable.setValue(formName, forKey:"formName")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(actualText, forKey: "actualText")
-                
-                do
-                {
-                    try objTable.managedObjectContext!.save()
-                }
-                catch{
+
+    func updateCaptureSkeletaInDatabaseTurkeySexValue(_ data: CoreDataHandlerTurkeyModels.updateSkeletaTurkeySexValueObs, index: Int) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        self.managedContext = appDelegate.managedObjectContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
+        fetchRequest.predicate = NSPredicate(
+            format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@",
+            data.birdNo, data.catName, data.formName, data.necId
+        )
+
+        do {
+            if let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject] {
+                fecthPhotoArray = fetchedResult as NSArray
+
+                let sortedResults = fecthPhotoArray.sortedArray(using: [NSSortDescriptor(key: "obsName", ascending: true)])
+                if let objTable = sortedResults[index] as? CaptureNecropsyViewDataTurkey {
+                    objTable.setValue(NSNumber(value: data.obsVisibility), forKey: "objsVisibilty")
+                    objTable.setValue(data.obsPoint, forKey: "obsPoint")
+                    objTable.setValue(data.birdNo, forKey: "birdNo")
+                    objTable.setValue(data.formName, forKey: "formName")
+                    objTable.setValue(data.isSync, forKey: "isSync")
+                    objTable.setValue(data.actualText, forKey: "actualText")
+                    
+                    try objTable.managedObjectContext?.save()
                 }
             }
-        }
-        catch
-        {
-            //print("There is some error.")
+        } catch {
+            // Handle error
         }
     }
-    
+
     func deleteCaptureNecropsyViewDataTurkey () {
         
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
@@ -8886,37 +8982,33 @@ class CoreDataHandlerTurkey: NSObject {
     }
     /************************** Get Api for Save Image from server **************************************/
     
-    
-    func saveCaptureSkeletaImageInDatabaseTurkey(_ catName : String,obsName : String,formName : String,   birdNo : NSNumber,camraImage :UIImage,obsId: NSInteger , necropsyId : NSNumber , isSync : Bool )
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    func saveCaptureSkeletaImageInDatabaseTurkey(_ data: CoreDataHandlerTurkeyModels.SkeletalTurkeyImageData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        let imageData: Data = camraImage.jpegData(compressionQuality: 1.0)!
-        let entity   = NSEntityDescription.entity(forEntityName: "BirdPhotoCaptureTurkey", in: managedContext)
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
         
-        person.setValue(formName, forKey:"farmName")
-        person.setValue(catName, forKey:"catName")
-        person.setValue(birdNo, forKey:"birdNum")
-        person.setValue(obsName, forKey:"obsName")
-        person.setValue(obsId, forKey:"obsId")
-        person.setValue(imageData, forKey:"photo")
-        person.setValue(necropsyId, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        
-        do
-        {
+        guard let imageData = data.camraImage.jpegData(compressionQuality: 1.0) else { return }
+
+        let entity = NSEntityDescription.entity(forEntityName: "BirdPhotoCaptureTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+        person.setValue(data.formName, forKey: "farmName")
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.birdNo, forKey: "birdNum")
+        person.setValue(data.obsName, forKey: "obsName")
+        person.setValue(data.obsId, forKey: "obsId")
+        person.setValue(imageData, forKey: "photo")
+        person.setValue(data.necropsyId, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+
+        do {
             try managedContext.save()
+        } catch {
+            // handle error if needed
         }
-        catch
-        {
-            //print("There is some error.")
-        }
-        
+
         capturePhotoObject.append(person)
-        
     }
+
     /******************************************************************/
     func updateisSyncOnBirdPhotoCaptureDatabaseTurkey(_ necId : NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
@@ -9110,36 +9202,29 @@ class CoreDataHandlerTurkey: NSObject {
         
     }
     
-    
-    func saveNoofBirdWithNotesSingledataTurkey(_ catName : String,notes : String,formName : String,   birdNo : NSNumber, index : Int , necId : NSNumber , isSync : Bool,necIdSingle:NSNumber)
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    func saveNoofBirdWithNotesSingledataTurkey(_ data: CoreDataHandlerTurkeyModels.saveTurkeyNoteData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        let entity   = NSEntityDescription.entity(forEntityName: "NotesBirdTurkey", in: managedContext)
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
-        
-        
-        person.setValue(formName, forKey:"formName")
-        person.setValue(catName, forKey:"catName")
-        person.setValue(notes, forKey:"notes")
-        person.setValue(birdNo, forKey:"noofBirds")
-        person.setValue(necIdSingle, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        
-        do
-        {
+        let entity = NSEntityDescription.entity(forEntityName: "NotesBirdTurkey", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+        person.setValue(data.formName, forKey: "formName")
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.notes, forKey: "notes")
+        person.setValue(data.birdNo, forKey: "noofBirds")
+        person.setValue(data.necIdSingle, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+
+        do {
             try managedContext.save()
+        } catch {
+            // Handle error here
         }
-        catch
-        {
-            //print("There is some error.")
-        }
-        
+
         captureBirdWithNotesObject.append(person)
-        
-        
     }
+
+    
     
     func deleteDataBirdNotesWithIdTurkey (_ necId: NSNumber)
     {
@@ -10197,17 +10282,13 @@ class CoreDataHandlerTurkey: NSObject {
             fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do {
-                let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+                let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]           
                 
-                
-                if let results = fetchedResult {
-                    if results.count > 0{
-                        
-                        let ob: CoccidiosisTurkey = results.last as! CoccidiosisTurkey
-                        if ob.visibilityCheck == true{
-                            nameArray.append(ob.observationField!)}
-                    }
+                if let results = fetchedResult, results.count > 0, let ob = results.last as? CoccidiosisTurkey, ob.visibilityCheck == true {
+                    nameArray.append(ob.observationField!)
                 }
+
+                
             }
             catch {
             }

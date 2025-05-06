@@ -142,54 +142,264 @@ class SingleSyncData: NSObject {
         UIGraphicsEndImageContext()
         return newImage
     }
+    
     // MARK: - Convert Image to String
     func imageToNSString(_ image: UIImage) -> String {
         let data = image.pngData()
         return data!.base64EncodedString(options: .lineLength64Characters)
     }
-    /********************* Save Feed Program data On Server *****************************************************************************************************/
-    // MARK: - Feed Program with Posting ID
-    func feedprogram(postingId:NSNumber)  {
+    
+    fileprivate func handleStatusCodeAndSaveMultipleFeedAPISuccessResponse(postingId:NSNumber,_ statusCode: Int?, _ response: AFDataResponse<Any>) {
+        switch statusCode {
+        case 401:
+            self.loginMethod(postingId: postingId)
+        case 500, 503, 403, 501, 502, 400, 504, 404, 408:
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        default:
+            break
+        }
         
-        let feedPostingArrWithAllData =   CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
-        let cNecArr =  CoreDataHandler().FetchNecropsystep1WithisSync(true)
-        let necArrWithoutPosting = NSMutableArray()
-       // var timestamp = String()
-        for j in 0..<cNecArr.count
-        {
+        switch response.result {
+        case .success(let responseObject):
+            print(responseObject)
+            self.addVaccination(postingId:postingId )
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                if let s = statusCode {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                } else {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    fileprivate func populateNecArrWithoutPosting(_ cNecArr: NSArray, _ necArrWithoutPosting: NSMutableArray) {
+        for j in 0..<cNecArr.count {
             let captureNecropsyData =  cNecArr.object(at: j)  as! CaptureNecropsyData
             necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
+            for w in 0..<necArrWithoutPosting.count - 1 {
                 let c =  necArrWithoutPosting.object(at: w)  as! CaptureNecropsyData
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
+                if c.necropsyId == captureNecropsyData.necropsyId {
                     necArrWithoutPosting.remove(c)
                 }
             }
-            
         }
+    }
+    
+    fileprivate func handleAllCocciControlAndDataSetFeedProgram(_ allCocciControl: NSArray, _ dataSet: inout Int, _ FinalArray1: inout NSMutableArray, _ feeds: inout NSMutableDictionary, _ mainFeeds: NSMutableArray) {
+        for i in 0..<allCocciControl.count {
+            dataSet+=1
+            
+            let mainDict = NSMutableDictionary()
+            let cocciControl =  allCocciControl.object(at: i) as! CoccidiosisControlFeed
+            let coccidiosisVaccine = cocciControl.coccidiosisVaccine
+            let dosage = cocciControl.dosage
+            let fromDays = cocciControl.fromDays
+            let molecule = cocciControl.molecule
+            let toDays = cocciControl.toDays
+            let moleculeId = cocciControl.dosemoleculeId
+            let cocoId = cocciControl.coccidiosisVaccineId
+            let feedType = cocciControl.feedType
+            let startDate =  cocciControl.feedDate
+            
+            mainDict.setValue(coccidiosisVaccine, forKey: "coccidiosisVaccine")
+            mainDict.setValue(dosage, forKey: "dose")
+            mainDict.setValue(fromDays, forKey: "durationFrom")
+            mainDict.setValue(molecule, forKey: "molecule")
+            mainDict.setValue(toDays, forKey: "durationTo")
+            mainDict.setValue(5, forKey: "feedProgramCategoryId")
+            mainDict.setValue(moleculeId, forKey: "moleculeId")
+            mainDict.setValue(cocoId, forKey: "cocciVaccineId")
+            mainDict.setValue(feedType, forKey: "feedType")
+            FinalArray1.add(mainDict)
+            
+            if dataSet == 7 {
+                dataSet = 0
+                
+                let feedId = cocciControl.feedId as! Int
+                let feedProgram = cocciControl.feedProgram
+                feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : FinalArray1]
+                FinalArray1 = NSMutableArray()
+                mainFeeds.add(feeds)
+                feeds = NSMutableDictionary()
+            }
+        }
+    }
+    
+    fileprivate func handleAndFetchAntibioticDataSetFeedProgram(_ fetchAntibotic: NSArray, _ dataSet: inout Int, _ FinalArray1: inout NSMutableArray, _ mainFeeds: NSMutableArray, _ index: inout Int, _ feeds: inout NSMutableDictionary) {
+        for i in 0..<fetchAntibotic.count {
+            dataSet+=1
+            
+            let mainDict = NSMutableDictionary()
+            let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeed
+            let dosage = antiboticFeed.dosage
+            let feedId = antiboticFeed.feedId as! Int
+            let startDate = antiboticFeed.feedDate
+            let feedProgram = antiboticFeed.feedProgram
+            let fromDays = antiboticFeed.fromDays
+            let molecule = antiboticFeed.molecule
+            let toDays = antiboticFeed.toDays
+            let feedType = antiboticFeed.feedType
+            mainDict.setValue(dosage, forKey: "dose")
+            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(feedProgram, forKey: "feedName")
+            mainDict.setValue(fromDays, forKey: "durationFrom")
+            mainDict.setValue(molecule, forKey: "molecule")
+            mainDict.setValue(toDays, forKey: "durationTo")
+            mainDict.setValue(12, forKey: "feedProgramCategoryId")
+            mainDict.setValue(0, forKey: "moleculeId")
+            mainDict.setValue(feedType, forKey: "feedType")
+            FinalArray1.add(mainDict)
+            
+            if dataSet == 6 {
+                dataSet = 0
+                
+                let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
+                if tempArray?.count > 0 {
+                    tempArray?.addObjects(from: FinalArray1 as [AnyObject])
+                    feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
+                }
+                mainFeeds.replaceObject(at: index, with: feeds)
+                index+=1
+                FinalArray1 = NSMutableArray()
+                feeds = NSMutableDictionary()
+                
+            }
+        }
+    }
+    
+    fileprivate func handleFetchAlternativeFeedProgram(_ fetchAlternative: NSArray, _ dataSet: inout Int, _ FinalArray1: inout NSMutableArray, _ mainFeeds: NSMutableArray, _ index: inout Int, _ feeds: inout NSMutableDictionary) {
+        for i in 0..<fetchAlternative.count {
+            dataSet+=1
+            let mainDict = NSMutableDictionary()
+            let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeed
+            let dosage = antiboticFeed.dosage
+            let feedId = antiboticFeed.feedId as! Int
+            let startDate = antiboticFeed.feedDate
+            let feedProgram = antiboticFeed.feedProgram
+            let fromDays = antiboticFeed.fromDays
+            let molecule = antiboticFeed.molecule
+            let toDays = antiboticFeed.toDays
+            let feedType = antiboticFeed.feedType
+            
+            mainDict.setValue(dosage, forKey: "dose")
+            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(feedProgram, forKey: "feedName")
+            mainDict.setValue(fromDays, forKey: "durationFrom")
+            mainDict.setValue(molecule, forKey: "molecule")
+            mainDict.setValue(toDays, forKey: "durationTo")
+            mainDict.setValue(6, forKey: "feedProgramCategoryId")
+            mainDict.setValue(0, forKey: "moleculeId")
+            mainDict.setValue(feedType, forKey: "feedType")
+            FinalArray1.add(mainDict)
+            
+            if dataSet == 6 {
+                dataSet = 0
+                
+                let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
+                if tempArray?.count > 0 {
+                    tempArray?.addObjects(from: FinalArray1 as [AnyObject])
+                    feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
+                }
+                mainFeeds.replaceObject(at: index, with: feeds)
+                index+=1
+                FinalArray1 = NSMutableArray()
+                feeds = NSMutableDictionary()
+            }
+        }
+    }
+    
+    fileprivate func handleFetchMyBindeFeedProgram(_ fetchMyBinde: NSArray, _ dataSet: inout Int, _ FinalArray1: inout NSMutableArray, _ mainFeeds: NSMutableArray, _ index: inout Int, _ feeds: inout NSMutableDictionary) {
+        for i in 0..<fetchMyBinde.count {
+            dataSet += 1
+            
+            let mainDict = NSMutableDictionary()
+            let antiboticFeed = fetchMyBinde.object(at: i) as! MyCotoxinBindersFeed
+            let dosage = antiboticFeed.dosage
+            let feedId = antiboticFeed.feedId as! Int
+            let startDate = antiboticFeed.feedDate
+            let feedProgram = antiboticFeed.feedProgram
+            let fromDays = antiboticFeed.fromDays
+            let molecule = antiboticFeed.molecule
+            let toDays = antiboticFeed.toDays
+            let feedType = antiboticFeed.feedType
+            mainDict.setValue(dosage, forKey: "dose")
+            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(feedProgram, forKey: "feedName")
+            mainDict.setValue(fromDays, forKey: "durationFrom")
+            mainDict.setValue(molecule, forKey: "molecule")
+            mainDict.setValue(toDays, forKey: "durationTo")
+            mainDict.setValue(18, forKey: "feedProgramCategoryId")
+            mainDict.setValue(0, forKey: "moleculeId")
+            mainDict.setValue(feedType, forKey: "feedType")
+            FinalArray1.add(mainDict)
+            
+            if dataSet == 6 {
+                dataSet = 0
+                
+                let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
+                if tempArray?.count > 0 {
+                    tempArray?.addObjects(from: FinalArray1 as [AnyObject])
+                    feeds = ["feedName" : feedProgram!, "feedId" : feedId,"startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
+                }
+                mainFeeds.replaceObject(at: index, with: feeds)
+                index+=1
+                FinalArray1 = NSMutableArray()
+                feeds = NSMutableDictionary()
+            }
+        }
+    }
+    
+    fileprivate func handleAllCocciControlAndOtherVariable(_ allCocciControl: NSArray, _ fetchAntibotic: NSArray, _ fetchAlternative: NSArray, _ fetchMyBinde: NSArray, _ mainDict: NSMutableDictionary, _ sessionId: NSNumber, _ tempArrTime: NSMutableArray, _ i: Int, _ mainFeeds: NSMutableArray, _ sessionArray: NSMutableArray, _ sessionDictMain: inout NSMutableDictionary) {
+        if (allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0) {
+            
+            mainDict.setValue(sessionId, forKey: "sessionId")
+            let acttimeStamp = tempArrTime.object(at: i)
+            var fullData = acttimeStamp as! String
+            mainDict.setValue(fullData, forKey: "deviceSessionId")
+            let langId =  UserDefaults.standard.integer(forKey: "lngId")
+            
+            let id = UserDefaults.standard.integer(forKey: "Id")
+            mainDict.setValue(id, forKey: "UserId")
+            mainDict.setValue(false, forKey: "finalized")
+            
+            let sessionDict: NSMutableDictionary = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
+            sessionArray.add(sessionDict)
+            sessionDict.removeAllObjects()
+            sessionDictMain = ["Sessions" : sessionArray]
+        }
+    }
+    
+    /********************* Save Feed Program data On Server *****************************************************************************************************/
+    // MARK: - Feed Program with Posting ID
+    func feedprogram(postingId:NSNumber) {
+        let feedPostingArrWithAllData = CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
+        let cNecArr =  CoreDataHandler().FetchNecropsystep1WithisSync(true)
+        let necArrWithoutPosting = NSMutableArray()
+        self.populateNecArrWithoutPosting(cNecArr, necArrWithoutPosting)
         self.postingIdArr.removeAllObjects()
         let tempArrTime = NSMutableArray()
         let actualTmestamp = NSMutableArray()
         var sessionId = NSNumber()
-        for i in 0..<feedPostingArrWithAllData.count
-        {
+        for i in 0..<feedPostingArrWithAllData.count {
             let pSession =  feedPostingArrWithAllData.object(at: i) as! PostingSession
             sessionId = pSession.postingId!
             var timestamp = pSession.timeStamp!
-            var actualTimestampStr =  pSession.actualTimeStamp
+            var actualTimestampStr = pSession.actualTimeStamp
             if actualTimestampStr == nil {
                 actualTimestampStr = ""
             }
             self.postingIdArr.add(sessionId)
             tempArrTime.add(timestamp)
             actualTmestamp.add(actualTimestampStr!)
-            
         }
         
-        for i in 0..<necArrWithoutPosting.count
-        {
+        for i in 0..<necArrWithoutPosting.count {
             let nIdSession =  necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
             sessionId = nIdSession.necropsyId!
             self.postingIdArr.add(sessionId)
@@ -198,211 +408,35 @@ class SingleSyncData: NSObject {
         let sessionArray = NSMutableArray()
         var sessionDictMain = NSMutableDictionary()
         
-        for i in 0..<self.postingIdArr.count
-        {
+        for i in 0..<self.postingIdArr.count {
             
             let mainDict = NSMutableDictionary()
             var FinalArray1 = NSMutableArray()
             let allCocciControl =  CoreDataHandler().fetchAllCocciControlviaIsync(true,postinID: self.postingIdArr[i] as! NSNumber)
             var dataSet = Int()
-            var  index = Int()
+            var index = Int()
             let mainFeeds = NSMutableArray()
             var feeds = NSMutableDictionary()
-            for i in 0..<allCocciControl.count
-                    
-            {
-                dataSet+=1
-                
-                let mainDict = NSMutableDictionary()
-                let cocciControl =  allCocciControl.object(at: i) as! CoccidiosisControlFeed
-                let coccidiosisVaccine = cocciControl.coccidiosisVaccine
-                let dosage = cocciControl.dosage
-                let fromDays = cocciControl.fromDays
-                let molecule = cocciControl.molecule
-                let toDays = cocciControl.toDays
-                let moleculeId = cocciControl.dosemoleculeId
-                let cocoId = cocciControl.coccidiosisVaccineId
-                let feedType = cocciControl.feedType
-                let startDate =  cocciControl.feedDate
-                
-                mainDict.setValue(coccidiosisVaccine, forKey: "coccidiosisVaccine")
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(5, forKey: "feedProgramCategoryId")
-                mainDict.setValue(moleculeId, forKey: "moleculeId")
-                mainDict.setValue(cocoId, forKey: "cocciVaccineId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 7 {
-                    dataSet = 0
-                    
-                    let feedId = cocciControl.feedId as! Int
-                    let feedProgram = cocciControl.feedProgram
-                    feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : FinalArray1]
-                    FinalArray1 = NSMutableArray()
-                    mainFeeds.add(feeds)
-                    feeds = NSMutableDictionary()
-                }
-            }
+            self.handleAllCocciControlAndDataSetFeedProgram(allCocciControl, &dataSet, &FinalArray1, &feeds, mainFeeds)
             
             let fetchAntibotic = CoreDataHandler().fetchAntiboticViaIsSync(true,postingID: self.postingIdArr[i] as! NSNumber)
-            for i in 0..<fetchAntibotic.count {
-                dataSet+=1
-                
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeed
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let startDate =  antiboticFeed.feedDate
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(12, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    
-                    let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
-                    if tempArray?.count > 0 {
-                        tempArray?.addObjects(from: FinalArray1 as [AnyObject])
-                        feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
-                    }
-                    mainFeeds.replaceObject(at: index, with: feeds)
-                    index+=1
-                    FinalArray1 = NSMutableArray()
-                    feeds = NSMutableDictionary()
-                    
-                }
-            }
+            handleAndFetchAntibioticDataSetFeedProgram(fetchAntibotic, &dataSet, &FinalArray1, mainFeeds, &index, &feeds)
             
             let fetchAlternative = CoreDataHandler().fetchAlternativeFeedWithIsSync(true,postingID: self.postingIdArr[i] as! NSNumber)
-            
             index = 0
-            for i in 0..<fetchAlternative.count
-                    
-            {
-                dataSet+=1
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeed
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let startDate = antiboticFeed.feedDate
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(6, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    
-                    let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
-                    if tempArray?.count > 0 {
-                        tempArray?.addObjects(from: FinalArray1 as [AnyObject])
-                        feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
-                    }
-                    mainFeeds.replaceObject(at: index, with: feeds)
-                    index+=1
-                    FinalArray1 = NSMutableArray()
-                    feeds = NSMutableDictionary()
-                }
-            }
+            handleFetchAlternativeFeedProgram(fetchAlternative, &dataSet, &FinalArray1, mainFeeds, &index, &feeds)
             
             let fetchMyBinde = CoreDataHandler().fetchMyBindersViaIsSync(true,postingID: self.postingIdArr[i] as! NSNumber)
             index = 0
-            for i in 0..<fetchMyBinde.count
-                    
-            {
-                dataSet+=1
-                
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchMyBinde.object(at: i) as! MyCotoxinBindersFeed
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let startDate = antiboticFeed.feedDate
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(18, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    
-                    let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as? NSMutableArray
-                    if tempArray?.count > 0 {
-                        tempArray?.addObjects(from: FinalArray1 as [AnyObject])
-                        feeds = ["feedName" : feedProgram!, "feedId" : feedId,"startDate" : startDate ?? "","feedProgramDetails" : tempArray!]
-                    }
-                    mainFeeds.replaceObject(at: index, with: feeds)
-                    index+=1
-                    FinalArray1 = NSMutableArray()
-                    feeds = NSMutableDictionary()
-                }
-            }
+            handleFetchMyBindeFeedProgram(fetchMyBinde, &dataSet, &FinalArray1, mainFeeds, &index, &feeds)
             
-            if ( allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0){
-                
-                mainDict.setValue(sessionId, forKey: "sessionId")
-                let acttimeStamp = tempArrTime.object(at: i)
-                var fullData = acttimeStamp as! String
-                mainDict.setValue(fullData, forKey: "deviceSessionId")
-                let langId =  UserDefaults.standard.integer(forKey: "lngId")
-                
-                let id = UserDefaults.standard.integer(forKey: "Id")
-                mainDict.setValue(id, forKey: "UserId")
-                mainDict.setValue(false, forKey: "finalized")
-            
-                let sessionDict: NSMutableDictionary = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
-                sessionArray.add(sessionDict)
-                sessionDict.removeAllObjects()
-                sessionDictMain = ["Sessions" : sessionArray]
-            }
-            
+            handleAllCocciControlAndOtherVariable(allCocciControl, fetchAntibotic, fetchAlternative, fetchMyBinde, mainDict, sessionId, tempArrTime, i, mainFeeds, sessionArray, &sessionDictMain)
         }
         
         do {
-            
             if WebClass.sharedInstance.connected() {
-                
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-                //accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
@@ -412,75 +446,212 @@ class SingleSyncData: NSObject {
                 request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
-                
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        print(responseObject)
-                        self.addVaccination(postingId:postingId )
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            //  print(err)
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            print (encodingError)
-                            print (responseString)
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
+                    let statusCode = response.response?.statusCode
+                    self.handleStatusCodeAndSaveMultipleFeedAPISuccessResponse(postingId: postingId, statusCode, response)
                 }
             }
         }
     }
     
     // MARK: - ********************* Save Add Vacination data On Server ***************************
+    fileprivate func handleStatusCodeAndSuccessAPIResponse(postingId:NSNumber,_ statusCode: Int?, _ response: AFDataResponse<Any>) {
+        switch statusCode {
+        case 401:
+            self.loginMethod(postingId: postingId)
+        case 500, 503, 403, 501, 502, 400, 504, 404, 408:
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        default:
+            break
+        }
+        
+        switch response.result {
+            
+        case .success(let responseObject):
+            self.savePostingDataOnServer(postingId: postingId)
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if response.data != nil {
+                if let s = statusCode {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                } else {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleAddVaccinationCellAddVaccination(_ addVacinationAll: NSArray, _ vaccinationName: inout String, _ vaccinationDetail: NSMutableDictionary) {
+        for i in 0..<addVacinationAll.count {
+            let pSession = addVacinationAll.object(at: i) as! FieldVaccination
+            if i == 0 {
+                vaccinationName = pSession.vaciNationProgram!
+            }
+            
+            let routeName = pSession.route
+            var routeId = NSNumber()
+            let newLngId = UserDefaults.standard.integer(forKey: "lngId")
+            
+            switch newLngId {
+            case 1:
+                switch routeName {
+                case Constants.wingWeb:
+                    routeId = 1
+                case Constants.drinkingWater:
+                    routeId = 2
+                case Constants.spray:
+                    routeId = 3
+                case Constants.inOvoStr:
+                    routeId = 4
+                case "Subcutaneous":
+                    routeId = 5
+                case "Intramuscular":
+                    routeId = 6
+                case Constants.eveDrop:
+                    routeId = 7
+                default:
+                    routeId = 0
+                }
+            case 4:
+                switch routeName {
+                case Constants.spray:
+                    routeId = 21
+                case Constants.inOvoStr:
+                    routeId = 22
+                case "Intramuscular":
+                    routeId = 24
+                case Constants.aguaDeBebida:
+                    routeId = 20
+                case "Membrana Da Asa":
+                    routeId = 19
+                case "Ocular":
+                    routeId = 25
+                case Constants.Subcutânea:
+                    routeId = 23
+                default:
+                    routeId = 0
+                }
+            default:
+                break
+            }
+            
+            let strainKey = "hatcheryStrain\(i + 1)"
+            let routeKey = "hatcheryRoute\(i+1)Id"
+            
+            vaccinationDetail.setObject(pSession.strain, forKey: strainKey as NSCopying)
+            vaccinationDetail.setObject(routeId, forKey: routeKey as NSCopying)
+        }
+    }
+    
+    fileprivate func handleFieldVacinationAll(_ FieldVacinationAll: NSArray, _ vaccinationDetail: NSMutableDictionary) {
+        for i in 0..<FieldVacinationAll.count {
+            let pSession = FieldVacinationAll.object(at: i) as! HatcheryVac
+            
+            let routeName = pSession.route
+            
+            var routeId = NSNumber()
+            let newLngId = UserDefaults.standard.integer(forKey: "lngId")
+            
+            if newLngId == 1 {
+                switch routeName {
+                case Constants.wingWeb:
+                    routeId = 1
+                case Constants.drinkingWater:
+                    routeId = 2
+                case Constants.spray:
+                    routeId = 3
+                case Constants.inOvoStr:
+                    routeId = 4
+                case "Subcutaneous":
+                    routeId = 5
+                case "Intramuscular":
+                    routeId = 6
+                case Constants.eveDrop:
+                    routeId = 7
+                default:
+                    routeId = 0
+                }
+            } else if newLngId == 4 {
+                switch routeName {
+                case Constants.spray:
+                    routeId = 21
+                case Constants.inOvoStr:
+                    routeId = 22
+                case "Intramuscular":
+                    routeId = 24
+                case Constants.aguaDeBebida:
+                    routeId = 20
+                case "Membrana Da Asa":
+                    routeId = 19
+                case "Ocular":
+                    routeId = 25
+                case Constants.Subcutânea:
+                    routeId = 23
+                default:
+                    routeId = 0
+                }
+            }
+            
+            let fieldStrainKey = "fieldStrain\(i + 1)"
+            let fieldrouteKey = "fieldRoute\(i+1)Id"
+            let fieldAgeKey = "fieldAge\(i + 1)"
+            
+            vaccinationDetail .setObject(pSession.strain!, forKey: fieldStrainKey as NSCopying)
+            vaccinationDetail .setObject(routeId, forKey: fieldrouteKey as NSCopying)
+            vaccinationDetail .setObject(pSession.age!, forKey: fieldAgeKey as NSCopying)
+        }
+    }
+    
+    fileprivate func handleCallAPISaveVaccinationStatus(_ sessionDictWithVac: NSMutableDictionary,postingId:NSNumber) {
+        do {
+            if WebClass.sharedInstance.connected() {
+                
+                // Avinash Asked to do this change    let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
+                let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                let headerDict = [Constants.authorization:accestoken]
+                let urlString: String = WebClass.sharedInstance.webUrl + Url
+                var request = URLRequest(url: URL(string: urlString)! )
+                request.httpMethod = "POST"
+                request.allHTTPHeaderFields = headerDict
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
+                
+                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
+                    let statusCode = response.response?.statusCode
+                    self.handleStatusCodeAndSuccessAPIResponse(postingId: postingId, statusCode, response)
+                }
+            }
+        }
+    }
+    
     func addVaccination(postingId:NSNumber)  {
         
         let vaccinationPostingArrAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
         let necArrWithoutPosting = NSMutableArray()
         
-        for j in 0..<cNecArr.count
-        {
+        for j in 0..<cNecArr.count {
             let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyData
             necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
+            for w in 0..<necArrWithoutPosting.count - 1 {
                 let c = necArrWithoutPosting.object(at: w)  as! CaptureNecropsyData
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
+                if c.necropsyId == captureNecropsyData.necropsyId {
                     necArrWithoutPosting.remove(c)
                 }
             }
         }
         self.postingIdArr.removeAllObjects()
-        var sessionId = NSNumber()
         let tempArrTime = NSMutableArray()
         let actualTemp  = NSMutableArray()
         var vaccinationName = String ()
         
-        for i in 0..<vaccinationPostingArrAllData.count
-        {
+        for i in 0..<vaccinationPostingArrAllData.count {
             let pSession = vaccinationPostingArrAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             var timeStamp = pSession.timeStamp!
             var actualtimeStr = pSession.actualTimeStamp
             if actualtimeStr == nil{
@@ -494,164 +665,18 @@ class SingleSyncData: NSObject {
         let sessionArr = NSMutableArray()
         let sessionDictWithVac = NSMutableDictionary()
         
-        for i in 0..<self.postingIdArr.count
-        {
+        for i in 0..<self.postingIdArr.count {
             
             let pId = self.postingIdArr.object(at: i) as! NSNumber
             let addVacinationAll = CoreDataHandler().fetchFieldAddvacinationData(pId)
             let vaccinationDetail = NSMutableDictionary()
             
-            for i in 0..<addVacinationAll.count {
-                let pSession = addVacinationAll.object(at: i) as! FieldVaccination
-                if i == 0{
-                    vaccinationName = pSession.vaciNationProgram!
-                }
-                
-                let routeName = pSession.route
-                var routeId = NSNumber()
-                let newLngId = UserDefaults.standard.integer(forKey: "lngId")
-                
-                if newLngId == 1 {
-                    if routeName == Constants.wingWeb {
-                        routeId = 1
-                    }
-                    else if routeName == Constants.drinkingWater {
-                        routeId = 2
-                    }
-                    else if routeName == Constants.spray {
-                        routeId = 3
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 4
-                    }
-                    else if routeName == "Subcutaneous" {
-                        routeId = 5
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 6
-                    }
-                    else  if  routeName == Constants.eveDrop{
-                        routeId = 7
-                    }
-                    else{
-                        routeId = 0
-                    }
-                }
-                else if newLngId == 4
-                {
-                    if routeName == Constants.spray {
-                        routeId = 21
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 22
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 24
-                    }
-                    else if routeName == Constants.aguaDeBebida {
-                        routeId = 20
-                    }
-                    else if routeName == "Membrana Da Asa" {
-                        routeId = 19
-                    }
-                    else if routeName == "Ocular" {
-                        routeId = 25
-                    }
-                    else if routeName == Constants.Subcutânea {
-                        routeId = 23
-                    }
-                    else{
-                        routeId = 0
-                    }
-                }
-                
-                else{
-                }
-                
-                let strainKey = "hatcheryStrain\(i + 1)"
-                let routeKey = "hatcheryRoute\(i+1)Id"
-                
-                vaccinationDetail .setObject(pSession.strain, forKey: strainKey as NSCopying)
-                vaccinationDetail .setObject(routeId, forKey: routeKey as NSCopying)
-            }
+            handleAddVaccinationCellAddVaccination(addVacinationAll, &vaccinationName, vaccinationDetail)
             
             let FieldVacinationAll = CoreDataHandler().fetchAddvacinationData(pId)
-            for i in 0..<FieldVacinationAll.count
-            {
-                let pSession = FieldVacinationAll.object(at: i) as! HatcheryVac
-             
-                let routeName = pSession.route
-               
-                var routeId = NSNumber()
-                let newLngId = UserDefaults.standard.integer(forKey: "lngId")
-                
-                if newLngId == 1 {
-                    if routeName == Constants.wingWeb {
-                        routeId = 1
-                    }
-                    else if routeName == Constants.drinkingWater {
-                        routeId = 2
-                    }
-                    else if routeName == Constants.spray {
-                        routeId = 3
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 4
-                    }
-                    else if routeName == "Subcutaneous" {
-                        routeId = 5
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 6
-                    }
-                    else  if  routeName == Constants.eveDrop{
-                        routeId = 7
-                    }
-                    else{
-                        routeId = 0
-                    }
-                }
-                else if newLngId == 4
-                {
-                    if routeName == Constants.spray {
-                        routeId = 21
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 22
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 24
-                    }
-                    else if routeName == Constants.aguaDeBebida {
-                        routeId = 20
-                    }
-                    else if routeName == "Membrana Da Asa" {
-                        routeId = 19
-                    }
-                    else if routeName == "Ocular" {
-                        routeId = 25
-                    }
-                    else if routeName == Constants.Subcutânea {
-                        routeId = 23
-                    }
-                    else{
-                        routeId = 0
-                    }
-                }
-                
-                let fieldStrainKey = "fieldStrain\(i + 1)"
-                let fieldrouteKey = "fieldRoute\(i+1)Id"
-                let fieldAgeKey = "fieldAge\(i + 1)"
-                
-                vaccinationDetail .setObject(pSession.strain!, forKey: fieldStrainKey as NSCopying)
-                vaccinationDetail .setObject(routeId, forKey: fieldrouteKey as NSCopying)
-                vaccinationDetail .setObject(pSession.age!, forKey: fieldAgeKey as NSCopying)
-                
-            }
+            handleFieldVacinationAll(FieldVacinationAll, vaccinationDetail)
             
-            
-            if FieldVacinationAll.count > 0 || addVacinationAll.count > 0
-            {
+            if FieldVacinationAll.count > 0 || addVacinationAll.count > 0 {
                 let vaccinationArray = NSMutableArray()
                 vaccinationArray .add(vaccinationDetail)
                 let mainDict = NSMutableDictionary()
@@ -665,63 +690,14 @@ class SingleSyncData: NSObject {
                 let data = vaccinationPostingArrAllData.object(at: 0) as! PostingSession
                 let acttimeStamp = data.timeStamp
                
-                var fullData = acttimeStamp!
+                let fullData = acttimeStamp!
                 mainDict.setValue(fullData, forKey: "deviceSessionId")
                 sessionArr.add(mainDict)
             }
         }
         sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
         
-        do {
-
-            
-            if WebClass.sharedInstance.connected() {
-                
-             // Avinash Asked to do this change    let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
-                let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-                let headerDict = [Constants.authorization:accestoken]
-                let urlString: String = WebClass.sharedInstance.webUrl + Url
-                var request = URLRequest(url: URL(string: urlString)! )
-                request.httpMethod = "POST"
-                request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
-                
-                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        self.savePostingDataOnServer(postingId: postingId)
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        }
-                        else if response.data != nil {
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        handleCallAPISaveVaccinationStatus(sessionDictWithVac,postingId: postingId)
     }
     
     fileprivate func handleAPIResponseSaveMultiplePosting(_ statusCode: Int?, _ response: AFDataResponse<Any>,postingId :NSNumber) {
@@ -1045,264 +1021,164 @@ class SingleSyncData: NSObject {
     /**************************************************************************/
     
     
-    func  saveObservationImageOnServer (postingId:NSNumber){
-        
+    func saveObservationImageOnServer(postingId: NSNumber) {
         let imageArrWithIsyncIsTrue = CoreDataHandler().fecthPhotoWithiSynsTrue(true)
-        let sessionDict = NSMutableDictionary()
+        guard imageArrWithIsyncIsTrue.count > 0 else { return }
+        
+        let totalSession = fetchUniqueNecropsySessions(postingId: postingId)
+        let postingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
         let sessionArr = NSMutableArray()
-        let cNecArr =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
-        let totalSession = NSMutableArray()
-        
-        for j in 0..<cNecArr.count
-        {
-            let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyData
-            totalSession.add(captureNecropsyData)
-            for w in 0..<totalSession.count - 1
-            {
-                let c = totalSession.object(at: w)  as! CaptureNecropsyData
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
-                    totalSession.remove(c)
-                }
-            }
+
+        for session in postingArrWithAllData {
+            guard let captureNecropsyData = session as? PostingSession else { continue }
+            let sessionDetails = NSMutableDictionary()
+            let obsWithImageArr = fetchObservationImages(postingId: postingId)
+            sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
+            let id = UserDefaults.standard.integer(forKey: "Id")
+            sessionDetails.setValue(id, forKey: "UserId")
+            sessionDetails.setValue(captureNecropsyData.timeStamp!, forKey: "deviceSessionId")
+            sessionArr.add(sessionDetails)
         }
-        
-        postingArrWithAllData.removeAllObjects()
-        postingArrWithAllData =  CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
-        
-        if imageArrWithIsyncIsTrue.count > 0
-        {
-            for i in 0..<totalSession.count
-            {
-                
-                let cNec =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
-                let obsWithImageArr = NSMutableArray()
-                for x in 0..<cNec.count
-                {
-                    let cNData = cNec.object(at: x) as! CaptureNecropsyData
-                    let farmName = cNData.farmName
-                    let noOfBird = Int(cNData.noOfBirds!)
-                    let necId = Int(cNData.necropsyId!)
-                    for j in 0..<noOfBird!
-                    {
-                        let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
-                        for w in 0..<catArr.count
-                        {
-                            let obsArr = CoreDataHandler().fecthobsDataWithCatnameAndFarmNameAndBirdNumber((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
-                            
-                            for y in 0..<obsArr.count
-                            {
-                                let obsWithAllImageDataDict = NSMutableDictionary()
-                                let cData = obsArr.object(at: y) as! CaptureNecropsyViewData
-                                let photoArr = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationIDandIsync( (j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
-                                obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
-                                obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
-                                obsWithAllImageDataDict.setValue(catArr.object(at: w) as! String, forKey: "categoryName")
-                                obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
-                                
-                                let photoValArr = NSMutableArray()
-                                var yImage =  UIImage()
-                                for z in 0..<photoArr.count
-                                {
-                                    let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCapture
-                                    var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                  
-                                    
-                                    if let imageData = image.jpeg(.lowest) {
-                                        
-                                        image = UIImage(data: imageData)!
-                                        print(imageData.count)
-                                    }
-                                    let w : CGFloat = image.size.width / 7
-                                    yImage = self.resizeImage(image, newWidth: w)!
-                                    let imageDict =  NSMutableDictionary()
-                                    imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
-                                    photoValArr.add(imageDict)
-                                    
-                                }
-                                
-                                obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
-                                obsWithImageArr.add(obsWithAllImageDataDict)
-                            }
-                        }
-                    }
-                }
-            }
-            
-            for i in 0..<postingArrWithAllData.count
-            {
-                let sessionDetails = NSMutableDictionary()
-                let captureNecropsyData = postingArrWithAllData.object(at: i)  as! PostingSession
-                //  let nId = captureNecropsyData.postingId!
-                _ = captureNecropsyData.timeStamp
-                
-                let cNec = CoreDataHandler().FetchNecropsystep1NecId(postingId)
-                let obsWithImageArr = NSMutableArray()
-                for x in 0..<cNec.count
-                {
-                    let cNData = cNec.object(at: x) as! CaptureNecropsyData
-                    let farmName = cNData.farmName
-                    let noOfBird = Int(cNData.noOfBirds!)
-                    let necId = Int(cNData.necropsyId!)
-                    for j in 0..<noOfBird!
-                    {
-                        let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
-                        
-                        for w in 0..<catArr.count
-                        {
-                            let obsArr = CoreDataHandler().fecthobsDataWithCatnameAndFarmNameAndBirdNumber((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
-                            
-                            for y in 0..<obsArr.count
-                            {
-                                let obsWithAllImageDataDict = NSMutableDictionary()
-                                let cData = obsArr.object(at: y) as! CaptureNecropsyViewData
-                                let photoArr = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationIDandIsync((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
-                                obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
-                                obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
-                                obsWithAllImageDataDict.setValue(catArr.object(at: w) as! String, forKey: "categoryName")
-                                obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
-                                
-                                let photoValArr = NSMutableArray()
-                                var yImage =  UIImage()
-                                for z in 0..<photoArr.count
-                                {
-                                    let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCapture
-                                    
-                                    var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                    
-                                    if let imageData = image.jpeg(.lowest) {
-                                        image = UIImage(data: imageData)!
-                                    }
-                                    let w : CGFloat = image.size.width / 7
-                                    yImage = self.resizeImage(image, newWidth: w)!
-                                   
-                                    let imageDict =  NSMutableDictionary()
-                                    imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
-                                    photoValArr.add(imageDict)
-                                    
-                                }
-                                obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
-                                obsWithImageArr.add(obsWithAllImageDataDict)
-                            }
-                        }
-                    }
-                }
-                
-                _ = Int()
-             
-                
-                var fullData = captureNecropsyData.timeStamp!
-                sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
-                let id = UserDefaults.standard.integer(forKey: "Id")
-                sessionDetails.setValue(id, forKey: "UserId")
-                sessionDetails.setValue(fullData, forKey: "deviceSessionId")
-                sessionArr.add(sessionDetails)
-            }
-            
-        }
+
+        let sessionDict = NSMutableDictionary()
         sessionDict.setValue(sessionArr, forKey: "Sessions")
-        
-        do {
-            
-            if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-                let headerDict = [Constants.authorization:accestoken]
-                
-                let Url = "PostingSession/SaveBirdImageSyncData"
-                let urlString: String = WebClass.sharedInstance.webUrl + Url
-                var request = URLRequest(url: URL(string: urlString)! )
-                request.httpMethod = "POST"
-                request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
-                
-                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        
-                        CoreDataHandler().updateisSyncOnMyBindersViaPostingId(postingId, isSync: false, { (success) in
-                            if success == true{
-                                CoreDataHandler().updateisSyncOnAlternativeFeedPostingid(postingId , isSync: false, { (success) in
-                                    if success == true{
-                                        
-                                        CoreDataHandler().updateisSyncOnAntiboticViaPostingId(postingId , isSync: false, { (success) in
-                                            if success == true{
-                                                
-                                                CoreDataHandler().updateisSyncOnAllCocciControlviaPostingid(postingId , isSync: false, { (success) in
-                                                    if success == true{
-                                                        
-                                                        CoreDataHandler().updateisSyncOnHetcharyVacDataWithPostingId(postingId , isSync: false, { (success) in
-                                                            if success == true{
-                                                                
-                                                                CoreDataHandler().updateisSyncOnPostingSession(postingId , isSync: false, { (success) in
-                                                                    if success == true{
-                                                                        CoreDataHandler().updateisSyncOnCaptureSkeletaInDatabase(postingId , isSync: false, { (success) in
-                                                                            if success == true{
-                                                                                
-                                                                                CoreDataHandler().updateisSyncNecropsystep1neccId(postingId , isSync: false, { (success) in
-                                                                                    if success == true{
-                                                                                        
-                                                                                        CoreDataHandler().updateisSyncOnCaptureInDatabase(postingId , isSync: false, { (success) in
-                                                                                            if success == true{
-                                                                                                CoreDataHandler().updateisSyncOnNotesBirdDatabase(postingId , isSync: false, { (success) in
-                                                                                                    if success == true{
-                                                                                                        
-                                                                                                        CoreDataHandler().updateisSyncOnBirdPhotoCaptureDatabase(postingId , isSync: false, { (success) in
-                                                                                                            if success == true{
-                                                                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
-                                                                                                            }
-                                                                                                        })
-                                                                                                    }
-                                                                                                })
-                                                                                            }
-                                                                                        })
-                                                                                    }
-                                                                                })
-                                                                            }
-                                                                        })
-                                                                    }
-                                                                })
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+
+        if WebClass.sharedInstance.connected() {
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict = [Constants.authorization: accestoken]
+            let urlString = WebClass.sharedInstance.webUrl + "PostingSession/SaveBirdImageSyncData"
+            var request = URLRequest(url: URL(string: urlString)!)
+            request.httpMethod = "POST"
+            request.allHTTPHeaderFields = headerDict
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+            request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
+
+            sessionManager.request(request as URLRequestConvertible).responseJSON { response in
+                let statusCode = response.response?.statusCode
+
+                if statusCode == 401 {
+                    self.loginMethod(postingId: postingId)
+                } else if let code = statusCode, [500, 503, 403, 501, 502, 400, 504, 404, 408].contains(code) {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: code)
+                }
+
+                switch response.result {
+                case .success:
+                    self.updateSyncStatus(postingId: postingId)
+                case .failure(let error):
+                    if let err = error as? URLError, err.code == .notConnectedToInternet {
+                        self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                    } else if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
+                        print(error)
+                        print(responseString)
+                        if let code = statusCode {
+                            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: code)
+                        } else {
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            print (encodingError)
-                            print (responseString)
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
                         }
                     }
                 }
             }
         }
     }
+
+    
+    func fetchUniqueNecropsySessions(postingId: NSNumber) -> NSMutableArray {
+        let cNecArr = CoreDataHandler().FetchNecropsystep1NecId(postingId)
+        let totalSession = NSMutableArray()
+
+        for captureNecropsyData in cNecArr {
+            guard let data = captureNecropsyData as? CaptureNecropsyData else { continue }
+            if !totalSession.contains(where: { ($0 as! CaptureNecropsyData).necropsyId == data.necropsyId }) {
+                totalSession.add(data)
+            }
+        }
+
+        return totalSession
+    }
+
+    func fetchObservationImages(postingId: NSNumber) -> NSMutableArray {
+        let cNec = CoreDataHandler().FetchNecropsystep1NecId(postingId)
+        let obsWithImageArr = NSMutableArray()
+        let categories = ["skeltaMuscular", "Coccidiosis", "GITract", "Resp", "Immune"]
+
+        for cNData in cNec {
+            guard let data = cNData as? CaptureNecropsyData,
+                  let farmName = data.farmName,
+                  let noOfBirds = Int(data.noOfBirds ?? "0"),
+                  let necId = data.necropsyId?.intValue else { continue }
+            
+            for birdNumber in 1...noOfBirds {
+                for category in categories {
+                    let obsArr = CoreDataHandler().fecthobsDataWithCatnameAndFarmNameAndBirdNumber(NSNumber(value: birdNumber), farmname: farmName, catName: category, necId: NSNumber(value: necId))
+
+                    for obs in obsArr {
+                        guard let cData = obs as? CaptureNecropsyViewData,
+                              let obsID = cData.obsID else { continue }
+
+                        let photoArr = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationIDandIsync(NSNumber(value: birdNumber), farmname: farmName, catName: category, Obsid: obsID, isSync: true, necId: NSNumber(value: necId))
+                        let photoValArr = NSMutableArray()
+
+                        for photo in photoArr {
+                            guard let objBirdPhotoCapture = photo as? BirdPhotoCapture,
+                                  let photoData = objBirdPhotoCapture.photo as Data?,
+                                  let image = UIImage(data: photoData),
+                                  let imageData = image.jpeg(.lowest),
+                                  let resizedImage = self.resizeImage(UIImage(data: imageData)!, newWidth: image.size.width / 7) else { continue }
+
+                            let imageDict = NSMutableDictionary()
+                            imageDict.setValue(self.imageToNSString(resizedImage), forKey: "Image")
+                            photoValArr.add(imageDict)
+                        }
+
+                        let obsWithAllImageDataDict = NSMutableDictionary()
+                        obsWithAllImageDataDict.setValue(farmName, forKey: "farmName")
+                        obsWithAllImageDataDict.setValue(birdNumber, forKey: "birdNumber")
+                        obsWithAllImageDataDict.setValue(category, forKey: "categoryName")
+                        obsWithAllImageDataDict.setValue(obsID, forKey: "observationId")
+                        obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
+                        obsWithImageArr.add(obsWithAllImageDataDict)
+                    }
+                }
+            }
+        }
+
+        return obsWithImageArr
+    }
+
+    func updateSyncStatus(postingId: NSNumber) {
+        let coreData = CoreDataHandler()
+
+        let updateOperations: [(NSNumber, @escaping (Bool) -> Void) -> Void] = [
+            { id, completion in coreData.updateisSyncOnMyBindersViaPostingId(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnAlternativeFeedPostingid(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnAntiboticViaPostingId(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnAllCocciControlviaPostingid(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnHetcharyVacDataWithPostingId(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnPostingSession(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnCaptureSkeletaInDatabase(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncNecropsystep1neccId(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnCaptureInDatabase(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnNotesBirdDatabase(id, isSync: false, completion) },
+            { id, completion in coreData.updateisSyncOnBirdPhotoCaptureDatabase(id, isSync: false, completion) }
+        ]
+
+        func performNextUpdate(index: Int) {
+            guard index < updateOperations.count else {
+                self.delegeteSyncApiData.didFinishApiSyncdata()
+                return
+            }
+
+            updateOperations[index](postingId) { success in
+                guard success else { return }
+                performNextUpdate(index: index + 1)
+            }
+        }
+
+        performNextUpdate(index: 0)
+    }   
+    
+    
     // MARK: - /********************* Save User Setting   On Server ***************************/
     fileprivate func handleskeletenArr(_ skeletenArr: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
         for i in 0..<skeletenArr.count {
@@ -1406,6 +1282,7 @@ class SingleSyncData: NSObject {
     
     fileprivate func handleErrorCodes(_ statusCode: Int?) {
         if statusCode == 401 {
+            debugPrint("errot 401 found " , statusCode)
         } else if statusCode == 500 || statusCode == 503 || statusCode == 403 || statusCode == 501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
             self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
         }
@@ -1532,21 +1409,32 @@ class SingleSyncData: NSObject {
         }
     }
     
-    func updadateDataOnCoreData(pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
-        CoreDataHandler().updateisSyncOnMyBindersViaPostingId(pId, isSync: false, { (success) in
-            if success == true{
-                CoreDataHandler().updateisSyncOnAlternativeFeedPostingid(pId , isSync: false, { (success) in
-                    if success == true {
-                        CoreDataHandler().updateisSyncOnAntiboticViaPostingId(pId , isSync: false, { (success) in
-                            handleUpdateSyncOnAntibiotic(success,pId: pId) { (status) in
-                                completion(status)
-                            }
-                        })
-                    }
-                })
+    func updadateDataOnCoreData(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnMyBindersViaPostingId(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
             }
-        })
+            self.updateAlternativeFeedSync(pId: pId, completion: completion)
+        }
     }
+
+    private func updateAlternativeFeedSync(pId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnAlternativeFeedPostingid(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.updateAntibioticSync(pId: pId, completion: completion)
+        }
+    }
+
+    private func updateAntibioticSync(pId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnAntiboticViaPostingId(pId, isSync: false) { success in
+            self.handleUpdateSyncOnAntibiotic(success, pId: pId, completion)
+        }
+    }
+
     
     // MARK: - Update Necropsy Data on Core DB
     fileprivate func handleUpdateSyncOnBirdPhoto(_ success: Bool,nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
@@ -1573,6 +1461,7 @@ class SingleSyncData: NSObject {
             })
         }
     }
+    
     
     func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
         

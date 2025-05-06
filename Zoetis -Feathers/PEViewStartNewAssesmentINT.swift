@@ -1126,6 +1126,198 @@ class PEViewStartNewAssesmentINT: BaseViewController {
             dropDown.hide()
         }
     }
+
+    // MARK: - Sync Button Tabbed Action
+    func syncBtnTapped(showHud: Bool) {
+        if ConnectionManager.shared.hasConnectivity() {
+            self.showGlobalProgressHUDWithTitle(self.view, title: "Data syncing...")
+            let (tempArr, paramForDoaInnovoject) = prepareSyncData()
+            sendInitialSyncRequest(tempArr: tempArr, paramForDoaInnovoject: paramForDoaInnovoject)
+        }
+    }
+
+    // Helper function to prepare sync data
+    private func prepareSyncData() -> ([JSONDictionary], JSONDictionary) {
+        var tempArr: [JSONDictionary] = []
+        var inovojectDataArr: [JSONDictionary] = []
+        var dayOfAgeDataArr: [JSONDictionary] = []
+        var dayOfAgeSDataArr: [JSONDictionary] = []
+        var certificateDataArr: [JSONDictionary] = []
+        var vaccineMicroSamplesDataArr: [JSONDictionary] = []
+        var vaccineResidueMoldsDataArr: [JSONDictionary] = []
+        var refrigratorDataArr: [JSONDictionary] = []
+
+        let json = createSyncRequest(dict: peNewAssessment)
+        tempArr.append(json)
+
+        processDayOfAgeData(&dayOfAgeSData, &dayOfAgeSDataArr)
+        processRefrigeratorData(&refrigratorDataArr)
+        processDayOfAgeData(&dayOfAgeData, &dayOfAgeDataArr)
+        processInovojectData(&inovojectData, &inovojectDataArr)
+        processCertificateData(&certificateData, &certificateDataArr)
+
+        if peNewAssessment.evaluationID == 2 {
+            let residueJson = createSyncRequestForResidueData(dictArray: peNewAssessment)
+            vaccineResidueMoldsDataArr.append(residueJson)
+            let microJson = createSyncRequestForMicroData(dictArray: peNewAssessment)
+            vaccineMicroSamplesDataArr.append(microJson)
+        }
+
+        let paramForDoaInnovoject = createParamForDoaInnovoject(
+            inovojectDataArr: inovojectDataArr,
+            dayOfAgeDataArr: dayOfAgeDataArr,
+            dayOfAgeSDataArr: dayOfAgeSDataArr,
+            certificateDataArr: certificateDataArr,
+            vaccineResidueMoldsDataArr: vaccineResidueMoldsDataArr,
+            vaccineMicroSamplesDataArr: vaccineMicroSamplesDataArr,
+            refrigratorDataArr: refrigratorDataArr
+        )
+
+        return (tempArr, paramForDoaInnovoject)
+    }
+
+    // Helper function to process day of age data
+    private func processDayOfAgeData(_ dataArray: inout [InovojectData], _ jsonArray: inout [JSONDictionary]) {
+        if peNewAssessment.doaS.count > 0 {
+            var idArr: [Int] = []
+            for objn in peNewAssessment.doaS {
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn) {
+                    if !idArr.contains(data.id ?? 0) {
+                        idArr.append(data.id ?? 0)
+                        dataArray.append(data)
+                    }
+                }
+            }
+        }
+        for item in dataArray {
+            let json = createSyncRequestForDOAS(dictArray: peNewAssessment, dayOfAgeData: item)
+            jsonArray.append(json)
+        }
+    }
+
+    // Helper function to process refrigerator data
+    private func processRefrigeratorData(_ refrigratorDataArr: inout [JSONDictionary]) {
+        if regionID != 3 {
+            if let assId = UserDefaults.standard.value(forKey: "currentServerAssessmentId") as? String,
+               let id = Int(assId) {
+                let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: id)
+                for objn in refriArray {
+                    if let data = createSyncRequestRefrigator(dictArray: objn) {
+                        refrigratorDataArr.append(data)
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper function to process inovoject data
+    private func processInovojectData(_ dataArray: inout [InovojectData], _ jsonArray: inout [JSONDictionary]) {
+        if peNewAssessment.inovoject.count > 0 {
+            var idArr: [Int] = []
+            for objn in peNewAssessment.inovoject {
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn) {
+                    if !idArr.contains(data.id ?? 0) {
+                        idArr.append(data.id ?? 0)
+                        dataArray.append(data)
+                    }
+                }
+            }
+        }
+        for item in dataArray {
+            let json = createSyncRequestForInvoject(dictArray: peNewAssessment, inovojectData: item)
+            jsonArray.append(json)
+        }
+    }
+
+    // Helper function to process certificate data
+    private func processCertificateData(_ dataArray: inout [PECertificateData], _ jsonArray: inout [JSONDictionary]) {
+        if peNewAssessment.vMixer.count > 0 {
+            var idArr: [Int] = []
+            for objn in peNewAssessment.vMixer {
+                if let data = CoreDataHandlerPE().getCertificateData(doaId: objn) {
+                    if !idArr.contains(data.id ?? 0) {
+                        idArr.append(data.id ?? 0)
+                        dataArray.append(data)
+                    }
+                }
+            }
+        }
+        for item in dataArray {
+            let json = createSyncRequestForCertificateData(dictArray: peNewAssessment, peCertificateData: item)
+            jsonArray.append(json)
+        }
+    }
+
+    // Helper function to create parameter dictionary for doa inovoject
+    private func createParamForDoaInnovoject(
+        inovojectDataArr: [JSONDictionary],
+        dayOfAgeDataArr: [JSONDictionary],
+        dayOfAgeSDataArr: [JSONDictionary],
+        certificateDataArr: [JSONDictionary],
+        vaccineResidueMoldsDataArr: [JSONDictionary],
+        vaccineMicroSamplesDataArr: [JSONDictionary],
+        refrigratorDataArr: [JSONDictionary]
+    ) -> JSONDictionary {
+        var baseDict: JSONDictionary = [
+            "InovojectData": inovojectDataArr,
+            "DayOfAgeData": dayOfAgeDataArr,
+            "DayAgeSubcutaneousDetailsData": dayOfAgeSDataArr,
+            "VaccineMixerObservedData": certificateDataArr,
+            "VaccineResidueMoldsData": vaccineResidueMoldsDataArr,
+            "VaccineMicroSamplesData": vaccineMicroSamplesDataArr,
+            "DeviceId": deviceIDFORSERVER
+        ]
+
+        if regionID != 3 {
+            baseDict["RefrigeratorData"] = refrigratorDataArr
+        }
+
+        return baseDict
+    }
+
+    // Helper function to send initial sync request
+    private func sendInitialSyncRequest(tempArr: [JSONDictionary], paramForDoaInnovoject: JSONDictionary) {
+        var idArr = [String]()
+        for val in tempArr {
+            if let id = val["AssessmentId"] as? Int64, id != 0 {
+                idArr.append("\(id)")
+            }
+        }
+
+        var arr = [PESanitationDTO]()
+        for id in idArr {
+            let tempPEArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                assessmentId: id
+            )
+            arr.append(contentsOf: tempPEArr)
+        }
+
+        var param = ["AssessmentData": tempArr, "appVersion": Bundle.main.versionNumber, "IsSendEmail": "false"] as JSONDictionary
+
+        if let jsonDataArr = try? JSONEncoder().encode(arr),
+           let json = try? JSONSerialization.jsonObject(with: jsonDataArr, options: []) as? [[String: Any]] {
+            param.updateValue(json, forKey: "SanitationEmbrexScoresDataModel")
+        }
+
+        self.convertDictToJson(dict: param, apiName: "add assessment")
+        
+        ZoetisWebServices.shared.sendPostDataToServer(controller: self, parameters: param) { [weak self] (json, error) in
+            if error != nil {
+                self?.dismissGlobalHUD(self?.view ?? UIView())
+                return
+            }
+            
+            guard let self = self else { return }
+            
+            if json["StatusCode"] == 200 {
+                self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: json)
+            } else {
+                self.dismissGlobalHUD(self.view)
+                self.showAlert(title: "Error", message: "Error in first api sync", owner: self)
+            }
+        }
+    }
 }
 
 // MARK: - Other Delegates
@@ -1168,15 +1360,15 @@ extension PEViewStartNewAssesmentINT{
         pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
         let categoryCount = filterCategoryCount()
         if categoryCount > 0 {
-            var peNewAssessmentWas = PENewAssessment()
-            peNewAssessmentWas = self.peNewAssessment
+
+            let peNewAssessmentWas = self.peNewAssessment ?? PENewAssessment()
             
             CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", peNewAssessmentWas.userID ?? 0, peNewAssessmentWas.serverAssessmentId ?? ""))
             
             for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
                 for (index, ass) in cat.assessmentQuestions.enumerated(){
                    
-                    var peNewAssessmentNew = peNewAssessmentWas
+                    let peNewAssessmentNew = peNewAssessmentWas
                     peNewAssessmentNew.cID = index
                     peNewAssessmentNew.catID = cat.id
                     peNewAssessmentNew.catName = cat.categoryName
@@ -2057,181 +2249,7 @@ extension PEViewStartNewAssesmentINT{
             }
         })
     }
-    // MARK: - Sync Button Tabbed Action
-    func syncBtnTapped(showHud: Bool){
-        if ConnectionManager.shared.hasConnectivity() {
-            var tempArr : [JSONDictionary]  = []
-            var inovojectDataArr : [JSONDictionary]  = []
-            var dayOfAgeDataArr : [JSONDictionary]  = []
-            var dayOfAgeSDataArr : [JSONDictionary]  = []
-            var certificateDataArr : [JSONDictionary]  = []
-            var vaccineMicroSamplesDataArr : [JSONDictionary]  = []
-            var vaccineResidueMoldsDataArr : [JSONDictionary]  = []
-            var refrigratorDataArr : [JSONDictionary]  = []
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Data syncing...")
-            let json = createSyncRequest(dict: peNewAssessment)
-            tempArr.append(json)
-            dayOfAgeSData.removeAll()
-            if peNewAssessment.doaS.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("contain the id' which we required.")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeSData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            
-            if(regionID != 3){
-                refrigratorDataArr.removeAll()
-                var assId  = UserDefaults.standard.value(forKey: "currentServerAssessmentId")
-                let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(assId as! String) ?? 0)
-                for objn in  refriArray {
-                    if objn != nil {
-                        let data = self.createSyncRequestRefrigator(dictArray: objn)
-                        refrigratorDataArr.append(data)
-                    }
-                }
-            }
-            
-            dayOfAgeData.removeAll()
-            if peNewAssessment.doa.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("contain the id' for Day of age.")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            inovojectData.removeAll()
-            if peNewAssessment.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("contain the id' which we DOA.")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                inovojectData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            certificateData.removeAll()
-            if peNewAssessment.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                    if idArr.contains(data!.id ?? 0){
-                        debugPrint("contain the id' which we Vaccine mIxture.")
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            certificateData.append(data!)
-                        }
-                    }
-                }
-            }
-            if inovojectData.count > 0 {
-                for item in inovojectData {
-                    let json = createSyncRequestForInvoject(dictArray: peNewAssessment, inovojectData: item)
-                    inovojectDataArr.append(json)
-                }
-            }
-            if dayOfAgeData.count > 0 {
-                for item in dayOfAgeData {
-                    let json = createSyncRequestForDOA(dictArray: peNewAssessment, dayOfAgeData: item)
-                    dayOfAgeDataArr.append(json)
-                }
-            }
-            if dayOfAgeSData.count > 0 {
-                for item in dayOfAgeSData {
-                    let json = createSyncRequestForDOAS(dictArray: peNewAssessment, dayOfAgeData: item)
-                    dayOfAgeSDataArr.append(json)
-                }
-            }
-            if certificateData.count > 0 {
-                for item in certificateData {
-                    let json = createSyncRequestForCertificateData(dictArray: peNewAssessment, peCertificateData: item)
-                    certificateDataArr.append(json)
-                }
-            }
-            if peNewAssessment.evaluationID == 2 {
-                let json = createSyncRequestForResidueData(dictArray: peNewAssessment)
-                vaccineResidueMoldsDataArr.append(json)
-            }
-            if peNewAssessment.evaluationID == 2 {
-                let json = createSyncRequestForMicroData(dictArray: peNewAssessment)
-                vaccineMicroSamplesDataArr.append(json)
-            }
-            
-            var paramForDoaInnovoject = JSONDictionary()
-            if( regionID != 3 ){
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr,"RefrigeratorData":refrigratorDataArr,
-                                         "DeviceId": deviceIDFORSERVER] as JSONDictionary
-            }
-            else{
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr,
-                                         "DeviceId": deviceIDFORSERVER] as JSONDictionary
-            }
-            
-            var idArr = [String]()
-            for val in tempArr{
-                let id = val["AssessmentId"] as? Int64 ?? 0
-                if id != 0{
-                    idArr.append("\(id)")
-                }
-            }
-            var arr = [PESanitationDTO]()
-            for id in idArr{
-                let tempPEArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: id)
-                arr.append(contentsOf: tempPEArr)
-            }
-            
-            var param = ["AssessmentData":tempArr,"appVersion":Bundle.main.versionNumber,"IsSendEmail":"false"] as JSONDictionary
-            let jsonEncoder = JSONEncoder()
-            let jsonDataArr = try? jsonEncoder.encode(arr)
-            
-            if jsonDataArr != nil{
-                
-                guard let json = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]] else {return}
-                param.updateValue(json, forKey: "SanitationEmbrexScoresDataModel")
-            }
-            
-            self.convertDictToJson(dict: param,apiName: "add assessment")
-            ZoetisWebServices.shared.sendPostDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-                if error != nil {
-                    self?.dismissGlobalHUD(self?.view ?? UIView())
-                }
-                guard let self = self, error == nil else { return }
-                
-                if json["StatusCode"]  == 200{
-                    self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: json)
-                } else {
-                    self.dismissGlobalHUD(self.view)
-                    self.showAlert(title: "Error", message: "Error in first api sync", owner: self)
-                }
-            })
-        }
-    }
+	
     // MARK: - Sync Button Action
     @IBAction func syncBtnAction(_ sender: Any) {
         if ConnectionManager.shared.hasConnectivity(){
@@ -2282,7 +2300,7 @@ extension PEViewStartNewAssesmentINT{
             AssessmentId = dictArray.draftNumber ?? 0
         }
         var score = 0
-        var DisplayId = "C-" + UniID
+        let DisplayId = "C-" + UniID
         
         score = dictArray.assMinScore ?? 0
         if dictArray.assStatus == 1 {
@@ -2320,7 +2338,7 @@ extension PEViewStartNewAssesmentINT{
         
     }
     // MARK: - Create Sync Request for Refrigerator Data (PE International)
-    func createSyncRequestRefrigator(dictArray: PE_Refrigators) -> JSONDictionary{
+    func createSyncRequestRefrigator(dictArray: PE_Refrigators) -> JSONDictionary?{
         let userId = UserDefaults.standard.integer(forKey: "Id")
         let f = dictArray.value
         let s = NSString(format: "%.2f", f ?? "")

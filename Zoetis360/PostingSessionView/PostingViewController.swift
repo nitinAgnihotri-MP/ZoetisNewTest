@@ -249,33 +249,21 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        notesTextView.textContainer.lineFragmentPadding = 12
-        lngId = UserDefaults.standard.integer(forKey: "lngId")
-        isClickOnAnyField = false
-        self.printSyncLblCount()
-        userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
-        viewUpdate()
-        
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
+    fileprivate func refactorViewWillAppear() {
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
             if appDelegate.sendFeedVariable == "Feed"{
                 let value  = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-                if value.count>0{
+                if value.count>0 {
                     doneButtonP.isUserInteractionEnabled = true
                 }
             }
-        }
-        else
-        {
+        } else {
             postingId = UserDefaults.standard.integer(forKey: "postingId")
         }
-        
-        feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-        if  feedProgramArray.count == 1 {
-            feedProgramLbl.text = (feedProgramArray.object(at: 0) as AnyObject).value(forKey: "feddProgramNam") as? String
-        }
+    }
+    
+    fileprivate func refactorViewwillAppearPart2() {
         if feedProgramArray.count > 1 {
             
             let ftitle = NSMutableString()
@@ -285,12 +273,10 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 var label = UILabel()
                 let feepRGMR = (feedProgramArray.object(at: i) as AnyObject).value(forKey: "feddProgramNam") as! String
                 
-                if i == 0
-                {
+                if i == 0 {
                     label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111, height: 21))
                     ftitle.append( feepRGMR + " " )
-                }
-                else{
+                } else {
                     label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21))
                     ftitle.append(", " + feepRGMR + " " )
                 }
@@ -299,146 +285,65 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 feedProgramLbl.text = ftitle as String
             }
         }
-        
-        CustRepTextField.delegate = self
-        if  let data = CoreDataHandler().fectCustomerRepWithCustomername(1) as? NSArray
-        {
-            fetchcustRep = data
-        }
-        
-        buttonDroper.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
-        buttonDroper.addTarget(self, action: #selector(PostingViewController.buttonPressedDroper), for: .touchUpInside)
-        buttonDroper.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.3)
-        self.view .addSubview(buttonDroper)
-        autoSerchTable.delegate = self
-        autoSerchTable.dataSource = self
-        autoSerchTable.delegate = self
-        autoSerchTable.layer.cornerRadius = 7
-        autoSerchTable.layer.borderWidth = 1
-        autoSerchTable.layer.borderColor = UIColor.black.cgColor
-        self.autoSerchTable.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        buttonDroper .addSubview(autoSerchTable)
-        buttonDroper.alpha = 0
-        autoSerchTable.alpha = 0
-        feedProgramOutlet.isHidden = true
-        
-        if (newColor > 0){
-            feedProgramOutlet.layer.borderWidth = 1
-            feedProgramOutlet.layer.cornerRadius = 3.5
-            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-        }
-        
+    }
+    
+    fileprivate func refactorViewWillAppearPart3() {
         if appDelegate.isDoneClick == true {
-            
-            if UserDefaults.standard.bool(forKey: "Unlinked") == true
-            {
+            if UserDefaults.standard.bool(forKey: "Unlinked") == true {
                 postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
                 lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
-                if lngId == 3{
+                if lngId == 3 {
                     lblDate.text = UserDefaults.standard.value(forKey: "dateFrench") as? String
-                }
-                else{
+                } else {
                     strdate =  (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
                     lblDate.text = strdate
                 }
-                strdate =  (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
-                
-              
-            }
-            else
-            {
+                strdate = (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
+            } else {
                 postingId = UserDefaults.standard.integer(forKey: "postingId")
             }
+            
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
             if isPostingId == false{
                 
-               if lngId == 4 {
+                if lngId == 4 {
                     lblAddVacci.text = ""
-                }
-                else if lngId == 3 {
+                } else if lngId == 3 {
                     lblAddVacci.text = self.ajouterStr
-                }
-                else{
+                } else {
                     lblAddVacci.text = "Add vaccination"
                 }
-            }
-            else{
+            } else {
                 addVaccinationOutlet.backgroundColor = UIColor.gray
-                
-                 if lngId == 3 {
-                     lblAddVacci.text = self.ajouterStr
-                }
-                else{
+                if lngId == 3 {
+                    lblAddVacci.text = self.ajouterStr
+                } else {
                     lblAddVacci.text = "Edit vaccination"
                 }
             }
         }
+    }
+    
+    fileprivate func refactorViewWillAppearPart4() {
+        feedProgramLbl.isHidden = false
+        feedProgramOutlet.isHidden = false
+        dropImageView.isHidden = false
+        feedProgrmLbl2.isHidden = false
+        feed3PrgrmLbl.isHidden = false
+        feed4prgrmlBL.isHidden = false
+        feed5PrgrmLbl.isHidden = false
         
-        if appDelegate.isFeedProgramClick == true{
-            appDelegateObj.testFuntion()
+        if appDelegate.metricOrImperialClick == "Metric" {
+            impFeed = "Metric"
+            metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
+            imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
+        } else {
+            impFeed = "Imperial"
+            metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
+            imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
         }
         
-        if appDelegate.sendFeedVariable == "Feed" {
-            feedProgramLbl.isHidden = false
-            feedProgramOutlet.isHidden = false
-            dropImageView.isHidden = false
-            feedProgrmLbl2.isHidden = false
-            feed3PrgrmLbl.isHidden = false
-            feed4prgrmlBL.isHidden = false
-            feed5PrgrmLbl.isHidden = false
-            
-            if appDelegate.metricOrImperialClick == "Metric" {
-                impFeed = "Metric"
-                metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
-                imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
-            }
-            else{
-                impFeed = "Imperial"
-                metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
-                imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
-            }
-            
-            if UserDefaults.standard.integer(forKey: "isBackWithoutFedd") == 0 {
-                
-                feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-                
-                if feedProgramArray.count > 0 {
-                    addFeedProgramOutle.backgroundColor = UIColor.gray
-                    feedProgramOutlet.isHidden = false
-                    feedProgramOutlet.layer.borderWidth = 1
-                    feedProgramOutlet.layer.cornerRadius = 3.5
-                    feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-                    dropImageView.isHidden = false
-                    feedProgramLabel.isHidden = false
-                }
-                else
-                {
-                    addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
-                    feedProgramOutlet.isHidden = true
-                    dropImageView.isHidden = true
-                    feedProgramLabel.isHidden = true
-                }
-            }else{
-                addFeedProgramOutle.backgroundColor = UIColor.gray
-                feedProgramOutlet.isHidden = false
-                feedProgramOutlet.layer.borderWidth = 1
-                feedProgramOutlet.layer.cornerRadius = 3.5
-                feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-                dropImageView.isHidden = false
-                feedProgramLabel.isHidden = false
-            }
-        }
-        else if appDelegate.sendFeedVariable == "vaccination"
-        {
-            
-            feedProgramLbl.isHidden = false
-            feedProgramOutlet.isHidden = false
-            dropImageView.isHidden = false
-            feedProgrmLbl2.isHidden = false
-            
-            feed3PrgrmLbl.isHidden = false
-            feed4prgrmlBL.isHidden = false
-            feed5PrgrmLbl.isHidden = false
+        if UserDefaults.standard.integer(forKey: "isBackWithoutFedd") == 0 {
             
             feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
             
@@ -450,60 +355,66 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
                 dropImageView.isHidden = false
                 feedProgramLabel.isHidden = false
-            }
-            else
-            {
+            } else {
                 addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
                 feedProgramOutlet.isHidden = true
                 dropImageView.isHidden = true
                 feedProgramLabel.isHidden = true
             }
-            
-            if appDelegate.metricOrImperialClick == "Metric" {
-                impFeed = "Metric"
-                metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
-                imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
-            }
-            else{
-                impFeed = "Imperial"
-                metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
-                imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
-            }
+        } else {
+            addFeedProgramOutle.backgroundColor = UIColor.gray
+            feedProgramOutlet.isHidden = false
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+            dropImageView.isHidden = false
+            feedProgramLabel.isHidden = false
         }
+    }
+    
+    fileprivate func refactorViewWillAppearPart5() {
+        feedProgramLbl.isHidden = false
+        feedProgramOutlet.isHidden = false
+        dropImageView.isHidden = false
+        feedProgrmLbl2.isHidden = false
+        
+        feed3PrgrmLbl.isHidden = false
+        feed4prgrmlBL.isHidden = false
+        feed5PrgrmLbl.isHidden = false
         
         feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
-            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-          
-        }
-        else
-        {
-            postingId = UserDefaults.standard.integer(forKey: "postingId")
+        
+        if feedProgramArray.count > 0 {
+            addFeedProgramOutle.backgroundColor = UIColor.gray
+            feedProgramOutlet.isHidden = false
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+            dropImageView.isHidden = false
+            feedProgramLabel.isHidden = false
+        } else {
+            addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
+            feedProgramOutlet.isHidden = true
+            dropImageView.isHidden = true
+            feedProgramLabel.isHidden = true
         }
         
-        if feedProgramArray.count > 0{
-            nextButtonOutlet.backgroundColor = UIColor(red: 11/255, green:88/255, blue:160/255, alpha:1)
-            nextButtonOutlet.isUserInteractionEnabled = true
+        if appDelegate.metricOrImperialClick == "Metric" {
+            impFeed = "Metric"
+            metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
+            imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
+        } else {
+            impFeed = "Imperial"
+            metricBtnnOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
+            imperialBtnOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
         }
-        else{
-            nextButtonOutlet.backgroundColor = UIColor.lightGray
-            nextButtonOutlet.isUserInteractionEnabled = false
-        }
-        
-        /**********Ffeth data of posting session from Db **********/
-        self.postingArray = CoreDataHandler().fetchAllPostingSession(postingId as NSNumber)
-        var vetNam = String()
-        if self.postingArray.count > 0 {
-            let vetName :  PostingSession =  self.postingArray.object(at: 0) as! PostingSession
-            vetNam =   vetName.vetanatrionName!
-        }
-        
-        if   self.postingArray.count == 0 || vetNam == "" {
+    }
+    
+    fileprivate func refactorViewWillAppearPart6(_ vetNam: String) {
+        if self.postingArray.count == 0 || vetNam == "" {
             
             lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             if lngId == 3 {
-                
                 lblDate.text =  frenchEmptyDateLabel
             }
             lblCustmer.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -511,14 +422,13 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             lblSelesRep.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             maleLabel.text = NSLocalizedString("Male", comment: "")
             femaleLabel.text = NSLocalizedString("Female", comment: "")
-            if lngId == 3{
+            if lngId == 3 {
                 lblSessionType.text = "Visite De Ferme"
             }
-            if lngId == 4{
+            if lngId == 4 {
                 lblSessionType.text = "Visita Em Andamento"
                 sessionTypeIdDb = 5
-            }
-            else{
+            } else {
                 lblSessionType.text = "Farm Visit"
             }
             
@@ -536,10 +446,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             custmetIdDb = 0
             productionIdDb = 0
             productionNameStr = ""
-        }
-        else{
+        } else {
             
-            for  i in 0..<postingArray.count {
+            for i in 0..<postingArray.count {
                 
                 lblVeteration.text = (postingArray.value(forKey: "vetanatrionName") as AnyObject).object(at: i) as? String
                 lblDate.text = (postingArray.value(forKey: "sessiondate") as AnyObject).object(at: i) as? String
@@ -588,29 +497,28 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 cocciProgramIdDb = cocciProgramIdDbVal!
                 productionIdDb = productionTypeIdDbVal!
             }
-            if lngId == 3{
+            if lngId == 3 {
                 lblDate.text = strdateFrench
             }
         }
-        
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
+    }
+    
+    fileprivate func refactorViewWillAppearPart7() {
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
             lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
             
-            if lngId == 3{
+            if lngId == 3 {
                 lblDate.text = UserDefaults.standard.value(forKey: "dateFrench") as? String
-            }
-            else{
+            } else {
                 strdate =  (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
                 lblDate.text = strdate
             }
-            strdate =  (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
+            strdate = (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
             
             if (UserDefaults.standard.value(forKey: "timeStamp") as? String) != nil{
                 lblTimeStamp = lblTimestampUnlinked
-            }
-            else{
+            } else {
                 let postingArr = CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber)
                 lblTimeStamp = (postingArr.object(at: 0) as AnyObject).value(forKey: "timeStamp") as! String
             }
@@ -624,8 +532,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             doneButtonP.alpha = 1
             backButtonFronNec.alpha = 1
             nextButtonOutlet.alpha = 0
-        }
-        else{
+        } else {
             btnComplex.isUserInteractionEnabled = true
             btnDate.isUserInteractionEnabled = true
             doneButtonP.alpha = 0
@@ -633,43 +540,123 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             sliderBtnOutlet.alpha = 1
             backButtonFronNec.alpha = 0
         }
-       if lngId == 3 {
+    }
+    
+    fileprivate func refactorViewWillAppearPart8() {
+        if lngId == 3 {
             
             addVacIcon.frame = CGRect(x: 120, y: 724, width: 18, height: 18)
             feedImagrIcon.frame = CGRect(x: 399, y: 724, width: 18, height: 18)
             if(CoreDataHandler().fetchAddvacinationData(postingId as NSNumber).count == 0){
                 lblAddVacci.text = self.ajouterStr
-            }
-            else {
+            } else {
                 lblAddVacci.text = "Modifier la vaccination"
             }
             lblFeed.text = " Programme alimentaire"
-        }
-        else if lngId == 4 {
+        } else if lngId == 4 {
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
             if isPostingId == false{
                 lblAddVacci.text = NSLocalizedString("Add Vaccination", comment: "")
                 addVacIcon.frame = CGRect(x: 140, y: 722, width: 20, height: 20)
                 feedImagrIcon.frame = CGRect(x: 430, y: 723, width: 20, height: 20)
-            }
-            else {
+            } else {
                 lblAddVacci.text =  NSLocalizedString("Edit Vaccination", comment: "")
             }
             lblFeed.text = NSLocalizedString("Feed Program", comment: "")
             
-        }
-        else{
+        } else {
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
             if isPostingId == false{
                 lblAddVacci.text = NSLocalizedString("Add Vaccination", comment: "")
                 addVacIcon.frame = CGRect(x: 140, y: 722, width: 20, height: 20)
                 feedImagrIcon.frame = CGRect(x: 430, y: 723, width: 20, height: 20)
-            }
-            else {
+            } else {
                 lblAddVacci.text = "Edit Vaccination"
             }
             lblFeed.text = NSLocalizedString("Feed Program", comment: "")
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        notesTextView.textContainer.lineFragmentPadding = 12
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        isClickOnAnyField = false
+        self.printSyncLblCount()
+        userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
+        viewUpdate()
+        
+        refactorViewWillAppear()
+        
+        feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
+        if feedProgramArray.count == 1 {
+            feedProgramLbl.text = (feedProgramArray.object(at: 0) as AnyObject).value(forKey: "feddProgramNam") as? String
+        }
+        refactorViewwillAppearPart2()
+        
+        CustRepTextField.delegate = self
+        if let data = CoreDataHandler().fectCustomerRepWithCustomername(1) as? NSArray {
+            fetchcustRep = data
+        }
+        
+        buttonDroper.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
+        buttonDroper.addTarget(self, action: #selector(PostingViewController.buttonPressedDroper), for: .touchUpInside)
+        buttonDroper.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.3)
+        self.view .addSubview(buttonDroper)
+        autoSerchTable.delegate = self
+        autoSerchTable.dataSource = self
+        autoSerchTable.delegate = self
+        autoSerchTable.layer.cornerRadius = 7
+        autoSerchTable.layer.borderWidth = 1
+        autoSerchTable.layer.borderColor = UIColor.black.cgColor
+        self.autoSerchTable.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        buttonDroper .addSubview(autoSerchTable)
+        buttonDroper.alpha = 0
+        autoSerchTable.alpha = 0
+        feedProgramOutlet.isHidden = true
+        
+        if (newColor > 0) {
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+        }
+        refactorViewWillAppearPart3()
+        
+        if appDelegate.isFeedProgramClick == true {
+            appDelegateObj.testFuntion()
+        }
+        
+        if appDelegate.sendFeedVariable == "Feed" {
+            refactorViewWillAppearPart4()
+        } else if appDelegate.sendFeedVariable == "vaccination" {
+            refactorViewWillAppearPart5()
+        }
+        
+        feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+        } else {
+            postingId = UserDefaults.standard.integer(forKey: "postingId")
+        }
+        
+        if feedProgramArray.count > 0 {
+            nextButtonOutlet.backgroundColor = UIColor(red: 11/255, green:88/255, blue:160/255, alpha:1)
+            nextButtonOutlet.isUserInteractionEnabled = true
+        } else {
+            nextButtonOutlet.backgroundColor = UIColor.lightGray
+            nextButtonOutlet.isUserInteractionEnabled = false
+        }
+        
+        /**********Ffeth data of posting session from Db **********/
+        self.postingArray = CoreDataHandler().fetchAllPostingSession(postingId as NSNumber)
+        var vetNam = String()
+        if self.postingArray.count > 0 {
+            let vetName :  PostingSession =  self.postingArray.object(at: 0) as! PostingSession
+            vetNam = vetName.vetanatrionName!
+        }
+        
+        refactorViewWillAppearPart6(vetNam)
+        refactorViewWillAppearPart7()
+        refactorViewWillAppearPart8()
     }
     
     /****************** Crteating Custom tableView ********************************/
@@ -768,7 +755,54 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
         else
         {
-            CoreDataHandler().updatePostingSessionForNextButton(postingId as NSNumber,antobotic: antiboticFree.text!, birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:birdSize.text!, birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  strdate, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1,mail: maleLabel.text!,female: femaleLabel.text!,finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,productionTypName: productionNameStr , productionTypId: productionIdDb , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text! )
+            
+            let postingData = chickenCoreDataHandlerModels.updatePostingSessionData(
+                antiboitic: antiboticFree.text!,
+                birdBreesId: breedIdDb,
+                birdbreedName: "",
+                birdBreedType: "",
+                birdSize: birdSize.text!,
+                birdSizeId: birdSizeIdDb,
+                cocciProgramId: cocciProgramIdDb,
+                cociiProgramName: lblCocieeProgram.text!,
+                complexId: complexIdDb,
+                complexName: lblComplex.text!,
+                convential: "",
+                customerId: custmetIdDb,
+                customerName: lblCustmer.text!,
+                customerRepId: cusmerRepIdDb,
+                customerRepName: CustRepTextField.text!,
+                imperial: "",
+                metric: "",
+                notes: notesTextView.text,
+                salesRepId: salesRepIdDb,
+                salesRepName: lblSelesRep.text!,
+                sessiondate: strdate,
+                sessionTypeId: sessionTypeIdDb,
+                sessionTypeName: lblSessionType.text!,
+                vetanatrionName: lblVeteration.text!,
+                veterinarianId: veterinartionIdDb,
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                mail: maleLabel.text!,
+                female: femaleLabel.text!,
+                finilize: 0,
+                isSync: true,
+                timeStamp: lblTimeStamp,
+                lngId: lngId as NSNumber,
+                productionTypName: productionNameStr,
+                productionTypId: productionIdDb,
+                avgAge: avgAgeTxtFld.text!,
+                avgWeight: avgWeightTxtFld.text!,
+                outTime: outTimeTxtFld.text!,
+                FCR: fcrTxtFld.text!,
+                Livability: txtFldLivability.text!,
+                mortality: txtFldMortality.text!
+            )
+
+            CoreDataHandler().updatePostingSessionForNextButton(postingData: postingData)
+
+            
             
             UserDefaults.standard.set( birdSize.text, forKey: "targetWeight")
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "Step1") as? captureNecropsyStep1Data
@@ -1254,7 +1288,54 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         
-        CoreDataHandler().PostingSessionDb(antiboticFree.text!, birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:birdSize.text!, birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  strdate, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1, postingId:  self.postingId as NSNumber,mail: maleLabel.text!,female: femaleLabel.text!,finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,productionTypName: productionNameStr , productionTypId: productionIdDb, avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text! )
+        let postingData = chickenCoreDataHandlerModels.chickenPostingSessionData(
+            antiboitic: antiboticFree.text!,
+              birdBreesId: breedIdDb,
+              birdbreedName: "",
+              birdBreedType: "",
+              birdSize: birdSize.text!,
+              birdSizeId: birdSizeIdDb,
+              cocciProgramId: cocciProgramIdDb,
+              cociiProgramName: lblCocieeProgram.text!,
+              complexId: complexIdDb,
+              complexName: lblComplex.text!,
+              convential: "",
+              customerId: custmetIdDb,
+              customerName: lblCustmer.text!,
+              customerRepId: cusmerRepIdDb,
+              customerRepName: CustRepTextField.text!,
+              imperial: "",
+              metric: "",
+              notes: notesTextView.text,
+              salesRepId: salesRepIdDb,
+              salesRepName: lblSelesRep.text!,
+              sessiondate: strdate,
+              sessionTypeId: sessionTypeIdDb,
+              sessionTypeName: lblSessionType.text!,
+              vetanatrionName: lblVeteration.text!,
+              veterinarianId: veterinartionIdDb,
+              loginSessionId: 1,
+              postingId: self.postingId as NSNumber,
+              mail: maleLabel.text!,
+              female: femaleLabel.text!,
+              finilize: 0,
+              isSync: true,
+              timeStamp: lblTimeStamp,
+              lngId: lngId as NSNumber,
+              productionTypName: productionNameStr,
+              productionTypId: productionIdDb,
+              avgAge: avgAgeTxtFld.text!,
+              avgWeight: avgWeightTxtFld.text!,
+              outTime: outTimeTxtFld.text!,
+              FCR: fcrTxtFld.text!,
+              Livability: txtFldLivability.text!,
+              mortality: txtFldMortality.text!
+        )
+
+        CoreDataHandler().PostingSessionDb(postingData)
+        
+        
+        
         
         UserDefaults.standard.synchronize()
         
@@ -2140,13 +2221,14 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         UserDefaults.standard.set(isUnlinked, forKey: "isUpadteFeedFromUnlinked")
         UserDefaults.standard.synchronize()
         
-        if let feedId = feed.feedId as? Int {
-            if let vc = storyboard?.instantiateViewController(withIdentifier: "feed") as? FeedProgramViewController {
-                vc.navigatePostingsession = "PostingFeedProgram"
-                vc.feedPostingId = feedId
-                navigationController?.pushViewController(vc, animated: false)
-            }
+        if let feedId = feed.feedId as? Int,
+           let vc = storyboard?.instantiateViewController(withIdentifier: "feed") as? FeedProgramViewController {
+            vc.navigatePostingsession = "PostingFeedProgram"
+            vc.feedPostingId = feedId
+            navigationController?.pushViewController(vc, animated: false)
         }
+
+        
     }
     private func handleProductionTypeSelection(_ indexPath: IndexPath) {
         guard let type = ProductionTypeArr[indexPath.row] as? ProductionType else { return }

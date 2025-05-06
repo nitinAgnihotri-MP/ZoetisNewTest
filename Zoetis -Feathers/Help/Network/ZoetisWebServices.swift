@@ -48,6 +48,10 @@ class ZoetisWebServices: BaseViewController {
         case getBirdBreedChickenAndTurkey
         case getFeedProgramCatagoryAndMolecule
         case getVeterinarian
+        case TurkeyPostedSessionsVacccine
+        case TurkeyPostedNotes
+        case TurkeyPostedImages
+        case Tutorial
        }
     
     
@@ -1213,23 +1217,29 @@ extension ZoetisWebServices {
     
     func getTurkeyPostedSessionsVacccineResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.TurkeyPostedSessionsVacccine, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getTurkeyPostedNotesResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+       
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.TurkeyPostedNotes, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getTurkeyPostedImagesResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.TurkeyPostedImages, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getTutorialResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.Tutorial, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     //    ***************************** Post Data to Server *************************************
@@ -1268,7 +1278,7 @@ extension ZoetisWebServices {
     
     func getRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary,  headers: [String: Any], completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.GET(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
+        ZoetisApiManager.GET(showHud, showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api 1",error, endPoint)
@@ -1278,7 +1288,7 @@ extension ZoetisWebServices {
     
     func deleteRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary, headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
+        ZoetisApiManager.POST(showHud, showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
             print("response is ",json, endPoint)
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
@@ -1290,7 +1300,7 @@ extension ZoetisWebServices {
     func postRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
     
-        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
+        ZoetisApiManager.POST(showHud, showHudText, endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api with End Point -- " , endPoint)

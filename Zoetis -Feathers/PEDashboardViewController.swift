@@ -443,13 +443,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         return timeStamp
 
     }
-    // MARK: - Save Image In PE Module
-    private func saveImageInPEModule(imageData:Data)->Int{
-        _ = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_ImageEntity")
-        let imageCount = getImageCountInPEModule()
-        CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount+1, imageData: imageData)
-        return imageCount+1
-    }
+
     // MARK: - Get Image Count In PE Module
     func getImageCountInPEModule() -> Int {
         let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_ImageEntity")
@@ -645,12 +639,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         return imageCount+1
         
     }
-    // MARK: - Save DOA Data In PE Module
-    private func saveDOAInPEModule(inovojectData:InovojectData,assessment: PE_AssessmentInProgress,fromDoaS:Bool?=false) -> Int{
-        let imageCount = getDOACountInPEModule()
-        CoreDataHandlerPE().saveDOAPEModule(assessment: assessment, doaId: imageCount+1,inovojectData: inovojectData,fromDoaS: fromDoaS)
-        return imageCount+1
-    }
+
     // MARK: - Dismiss Loader
     func dismissHUD(){
         let mainQueue = OperationQueue.main
@@ -3617,28 +3606,7 @@ extension PEDashboardViewController{
             self.showToastWithTimer(message: "Failed to get Posting Assessment list", duration: 3.0)
             self.dismissGlobalHUD(self.view ?? UIView())
         }
-    }
-    // MARK: - Get Images of Posted assessment
-    private func getPostingAssessmentImagesListByUser(){
-        if ConnectionManager.shared.hasConnectivity() {
-            ZoetisWebServices.shared.getPostingImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let _ = self, error == nil else {
-                    self?.dismissGlobalHUD(self?.view ?? UIView())
-                    return
-                }
-                let mainQueue = OperationQueue.main
-                mainQueue.addOperation{
-                    self?.handlGetPostingAssessmentImagesListByUser(json)
-                    UserDefaults.standard.set(true, forKey: "hasPEDataLoaded")
-                    UserDefaults.standard.set(true, forKey: "hasPELoadedPrevData")
-                }
-            })
-        }else{
-            self.showToastWithTimer(message: "Failed to get Posted assessment images list", duration: 3.0)
-            self.dismissGlobalHUD(self.view ?? UIView())
-        }
-    }
-    
+    }    
     // MARK: - Get Rejected assessment List
     private func getRejectedAssessmentListByUser(){
         if ConnectionManager.shared.hasConnectivity() {
@@ -4436,7 +4404,37 @@ extension PEDashboardViewController{
         }
     }
 
-    private func handleScores(for assessment: PENewAssessment, objDic: [String: Any]) {
+	fileprivate func handleAssessmentAndUpdateLocalDB(_ allAssesmentArr: NSArray, _ naArray: [Int], _ assArray: [Int]) {
+		for qMark in allAssesmentArr {
+			let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+			for assID in naArray {
+				if (Int(truncating: objMark.assID ?? 0) == assID) {
+					var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
+					let catISSelected = 0
+					let maxMarks = objMark.assMaxScore ?? 0
+					let reMark = Int(totalMark) - Int(truncating: maxMarks)
+					totalMark = Int(truncating: NSNumber(value: reMark))
+					CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected: catISSelected, catMaxMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
+				}
+			}
+		}
+		
+		for qMark in allAssesmentArr {
+			let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+			for assID in assArray {
+				if (Int(truncating: objMark.assID ?? 0) == assID) {
+					var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
+					let catISSelected = 0
+					let maxMarks = objMark.assMaxScore ?? 0
+					let reMark = Int(totalMark) - Int(truncating: maxMarks)
+					totalMark = Int(truncating: NSNumber(value: reMark))
+					CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected: catISSelected, catResultMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
+				}
+			}
+		}
+	}
+	
+	private func handleScores(for assessment: PENewAssessment, objDic: [String: Any]) {
         let assessmentScoresPostingData = objDic["AssessmentScoresPostingData"] as? [[String: Any]] ?? []
         let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
         var filterScoreData: [[String: Any]] = [[:]]
@@ -4472,33 +4470,7 @@ extension PEDashboardViewController{
             naArray.append(assID)
         }
 
-        for qMark in allAssesmentArr {
-            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-            for assID in naArray {
-                if (Int(truncating: objMark.assID ?? 0) == assID) {
-                    var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                    let catISSelected = 0
-                    let maxMarks = objMark.assMaxScore ?? 0
-                    let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                    totalMark = Int(truncating: NSNumber(value: reMark))
-                    CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected: catISSelected, catMaxMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
-                }
-            }
-        }
-
-        for qMark in allAssesmentArr {
-            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-            for assID in assArray {
-                if (Int(truncating: objMark.assID ?? 0) == assID) {
-                    var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                    let catISSelected = 0
-                    let maxMarks = objMark.assMaxScore ?? 0
-                    let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                    totalMark = Int(truncating: NSNumber(value: reMark))
-                    CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected: catISSelected, catResultMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
-                }
-            }
-        }
+		handleAssessmentAndUpdateLocalDB(allAssesmentArr, naArray, assArray)
 
         var assNAArray: [[String: Any]] = [[:]]
         for cat in assessmentScoresPostingData {
@@ -4600,7 +4572,18 @@ extension PEDashboardViewController{
         }
     }
 
-    private func handleDayOfAge(for assessment: PENewAssessment, objDic: [String: Any]) {
+	fileprivate func handleXXXXArrayAndUpdateVname(_ xxxx: Int, _ vIDArray: NSArray, _ VName: inout String, _ vNameArray: NSArray, _ otherText: String) {
+		if xxxx != 0 {
+			if vIDArray.contains(xxxx) {
+				let indexOfd = vIDArray.index(of: xxxx)
+				VName = vNameArray[indexOfd] as? String ?? ""
+			}
+		} else {
+			VName = otherText
+		}
+	}
+	
+	private func handleDayOfAge(for assessment: PENewAssessment, objDic: [String: Any]) {
         let DayPostingData = objDic["DayOfAgePostingData"] as? [Any] ?? []
         let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
         for inoDic in DayPostingData {
@@ -4622,30 +4605,17 @@ extension PEDashboardViewController{
             let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
             let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
             let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
-            var VManufacturerName = ""
             var VName = ""
             let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
             let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
             let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
             let xxx = ManufacturerId
-            if xxx != 0 {
-                let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                if vManufacutrerNameArray.count > indexOfd {
-                    VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                }
-            }
+        
             let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
             let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
             let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
             let xxxx = VaccineId
-            if xxxx != 0 {
-                if vIDArray.contains(xxxx) {
-                    let indexOfd = vIDArray.index(of: xxxx)
-                    VName = vNameArray[indexOfd] as? String ?? ""
-                }
-            } else {
-                VName = otherText
-            }
+			handleXXXXArrayAndUpdateVname(xxxx, vIDArray, &VName, vNameArray, otherText)
             if otherText != "" {
                 VName = otherText
             }

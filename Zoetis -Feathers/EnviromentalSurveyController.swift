@@ -98,8 +98,8 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     
     private func removeIfUserDoesNotSaveAnythingInNewSession(){
         let sessionDataArr = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
-        if sessionDataArr.count == 0{
-            let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+        if sessionDataArr.count == 0 {
+            let prediacateForSessionType = predicateForSessionType()
             MicrobialSelectedUnselectedReviewer.deleteReviewer(predicate: prediacateForSessionType)
         }
     }
@@ -252,7 +252,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     
     private func saveReviewersDataToDatabase(isSessionType: Bool) {
         let prediacateForNonSessionType = NSPredicate(format: "timeStamp == %@", argumentArray: [self.currentRequisition.timeStamp])
-        let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+        let prediacateForSessionType = predicateForSessionType()
         let doesReviewerExists = MicrobialSelectedUnselectedReviewer.doReviewersExisitsFortheTimeStamp(predicate: isSessionType ? prediacateForSessionType : prediacateForNonSessionType)
         if !doesReviewerExists{
             let reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
@@ -269,7 +269,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         self.reviewerDetails.removeAll()
         switch requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+            let prediacateForSessionType = predicateForSessionType()
             self.reviewerDetails = MicrobialSelectedUnselectedReviewer.fetchDetailsForReviewer(predicate: prediacateForSessionType)
         case .SHOW_DRAFT_FOR_EDITING,.SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             let prediacateForNonSessionType = NSPredicate(format: "timeStamp == %@", argumentArray: [self.currentRequisition.timeStamp])
@@ -1099,10 +1099,11 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
     }
 
     private func handleCompanySelection(_ selectedValue: String, cell: UITableViewCell?) {
-        if let formCell = cell as? EnviromentalFormCell {
-            formCell.companyTextField.text = selectedValue
-        } else if let formCell = cell as? BacterialFormCell {
-            formCell.companyTextField.text = selectedValue
+        
+        if let envFormCell = cell as? EnviromentalFormCell {
+            envFormCell.companyTextField.text = selectedValue
+        } else if let bacFormCell = cell as? BacterialFormCell {
+            bacFormCell.companyTextField.text = selectedValue
         }
         
         if currentRequisition.company != selectedValue {
@@ -1117,8 +1118,8 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
     private func handleSiteSelection(_ selectedValue: String, _ cell: UITableViewCell?) {
         if let cell = cell as? EnviromentalFormCell {
             cell.siteTextField.text = selectedValue
-        } else if let cell = cell as? BacterialFormCell {
-            cell.siteTextField.text = selectedValue
+        } else if let bcell = cell as? BacterialFormCell {
+            bcell.siteTextField.text = selectedValue
         }
         currentRequisition.site = selectedValue
         currentRequisition.siteId = currentRequisition.getSiteIdforSelectedSite()

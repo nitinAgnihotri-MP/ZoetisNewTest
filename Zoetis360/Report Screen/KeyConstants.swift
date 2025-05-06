@@ -87,7 +87,7 @@ class Regions: NSObject {
             detailsArray = [643,641,645,647,650,1878]
             
         } else {
-            detailsArray = [643,641,645,647,650 ,2036] // need to change this for production.
+            detailsArray = [643,641,645,647,650 ,2036 , 2037] // need to change this for production.
         }
                 
         switch countryID {

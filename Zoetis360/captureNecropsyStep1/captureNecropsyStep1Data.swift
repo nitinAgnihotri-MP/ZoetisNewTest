@@ -664,7 +664,54 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         let complexId = UserDefaults.standard.integer(forKey:"UnlinkComplex")
         let custMid = UserDefaults.standard.integer(forKey:"unCustId")
         self.timeStampString  = self.timeStamp()
-        CoreDataHandler().PostingSessionDb("", birdBreesId: 0, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: 0, cocciProgramId: 0, cociiProgramName: "", complexId: complexId as NSNumber, complexName: lblComplex.text!, convential:"", customerId: custMid as NSNumber, customerName:"", customerRepId: 0, customerRepName: "", imperial: "", metric: "", notes: "", salesRepId: 0, salesRepName: "", sessiondate:strDateEn, sessionTypeId: 0, sessionTypeName: "", vetanatrionName: "", veterinarianId: 0 , loginSessionId: 1, postingId: self.ncropsyId as NSNumber,mail: "",female: "",finilize:0, isSync : true,timeStamp:timeStampString,lngId:lngId as NSNumber,productionTypName: "" , productionTypId: 0 ,avgAge: "" , avgWeight: "" , outTime: "" , FCR: "" , Livability: "" , mortality: "")
+        
+        let postingData = chickenCoreDataHandlerModels.chickenPostingSessionData(
+            antiboitic: "",
+             birdBreesId: 0,
+             birdbreedName: "",
+             birdBreedType: "",
+             birdSize: "",
+             birdSizeId: 0,
+             cocciProgramId: 0,
+             cociiProgramName: "",
+             complexId: complexId as NSNumber,
+             complexName: lblComplex.text!,
+             convential: "",
+             customerId: custMid as NSNumber,
+             customerName: "",
+             customerRepId: 0,
+             customerRepName: "",
+             imperial: "",
+             metric: "",
+             notes: "",
+             salesRepId: 0,
+             salesRepName: "",
+             sessiondate: strDateEn,
+             sessionTypeId: 0,
+             sessionTypeName: "",
+             vetanatrionName: "",
+             veterinarianId: 0,
+             loginSessionId: 1,
+             postingId: self.ncropsyId as NSNumber,
+             mail: "",
+             female: "",
+             finilize: 0,
+             isSync: true,
+             timeStamp: timeStampString,
+             lngId: lngId as NSNumber,
+             productionTypName: "",
+             productionTypId: 0,
+             avgAge: "",
+             avgWeight: "",
+             outTime: "",
+             FCR: "",
+             Livability: "",
+             mortality: ""
+        )
+
+        CoreDataHandler().PostingSessionDb(postingData)
+        
+        
         
         let _ = CoreDataHandler().fetchAllPostingSession(self.ncropsyId as NSNumber)
         
@@ -696,10 +743,61 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         //Raman's code
         if UserDefaults.standard.bool(forKey:"Unlinked") == true
         {
-            CoreDataHandler().SaveNecropsystep1(neciIdStep as NSNumber, age: self.lblAge.text!, farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text!, flockId: flockIdTextField.text!, houseNo: houseNoTextFld.text!, noOfBirds: lblNoBirds.text!, sick: asb as NSNumber,necId:neciIdStep as NSNumber,compexName:lblComplex.text!,complexDate:strDateEn,complexId:complexId as NSNumber,custmerId:custMid as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStampString,actualTimeStamp:timeStampString,lngId:lngId as NSNumber,farmId:countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId), count: count as NSNumber  )
+            
+            let necropsyData = chickenCoreDataHandlerModels.saveNecropsyStep1Data(
+                postingId: neciIdStep as NSNumber,
+                   age: self.lblAge.text!,
+                   farmName: appendfeedProgramwithCount,
+                   feedProgram: feedProgramDisplayLabel.text!,
+                   flockId: flockIdTextField.text!,
+                   houseNo: houseNoTextFld.text!,
+                   noOfBirds: lblNoBirds.text!,
+                   sick: asb as NSNumber,
+                   necId: neciIdStep as NSNumber,
+                   compexName: lblComplex.text!,
+                   complexDate: strDateEn,
+                   complexId: complexId as NSNumber,
+                   custmerId: custMid as NSNumber,
+                   feedId: feedId as NSNumber,
+                   isSync: true,
+                   timeStamp: timeStampString,
+                   actualTimeStamp: timeStampString,
+                   lngId: lngId as NSNumber,
+                   farmId: countFarmId as NSNumber,
+                   imageId: NSNumber(value: imageAutoIncrementId),
+                   count: count as NSNumber
+            )
+
+            CoreDataHandler().SaveNecropsystep1(data: necropsyData)
+            
         }
         else {
-            CoreDataHandler().SaveNecropsystep1(neciIdStep as NSNumber, age: self.lblAge.text!, farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text!, flockId: flockIdTextField.text!, houseNo: houseNoTextFld.text!, noOfBirds: lblNoBirds.text!, sick: asb as NSNumber,necId:neciIdStep as NSNumber,compexName:lblComplex.text!,complexDate:strDateEn,complexId:complexId as NSNumber,custmerId:custmerIdFarm as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStampString,actualTimeStamp:timeStampString,lngId:lngId as NSNumber,farmId:countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId), count: count as NSNumber  )
+            let necropsyData = chickenCoreDataHandlerModels.saveNecropsyStep1Data(
+                postingId: neciIdStep as NSNumber,
+                    age: self.lblAge.text!,
+                    farmName: appendfeedProgramwithCount,
+                    feedProgram: feedProgramDisplayLabel.text!,
+                    flockId: flockIdTextField.text!,
+                    houseNo: houseNoTextFld.text!,
+                    noOfBirds: lblNoBirds.text!,
+                    sick: asb as NSNumber,
+                    necId: neciIdStep as NSNumber,
+                    compexName: lblComplex.text!,
+                    complexDate: strDateEn,
+                    complexId: complexId as NSNumber,
+                    custmerId: custmerIdFarm as NSNumber,
+                    feedId: feedId as NSNumber,
+                    isSync: true,
+                    timeStamp: timeStampString,
+                    actualTimeStamp: timeStampString,
+                    lngId: lngId as NSNumber,
+                    farmId: countFarmId as NSNumber,
+                    imageId: NSNumber(value: imageAutoIncrementId),
+                    count: count as NSNumber
+            )
+
+            CoreDataHandler().SaveNecropsystep1(data: necropsyData)
+            
         }
         
         UserDefaults.standard.set(false, forKey: "nec")
@@ -785,14 +883,18 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                     if success == true{
                         
                         CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
-                            if success == true{
-                                
-                                self.deleteSessionWithPostingId(necropsyId:ncropsyId as NSNumber)
+                            if success {
+                                self.handleSessionDeletion(for: necropsyId as NSNumber)
                             }
                         })
                     }})
             }})
     }
+    
+    func handleSessionDeletion(for necropsyId: NSNumber) {
+        self.deleteSessionWithPostingId(necropsyId: necropsyId)
+    }
+    
     
     @objc func ClickDeleteBtton(_ sender: UIButton){
         let person = captureNecropsy[sender.tag]

@@ -418,18 +418,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         }
     }
     
-    // MARK: - Save DOA Data in PE Module
-    private func saveDOAInPEModule(inovojectData:InovojectData,assessment: PE_AssessmentInProgress,fromDoaS:Bool?=false) -> Int{
-        let imageCount = getDOACountInPEModule()
-        CoreDataHandlerPE().saveDOAPEModule(assessment: assessment, doaId: imageCount+1,inovojectData: inovojectData,fromDoaS: fromDoaS)
-        return imageCount+1
-    }
-    // MARK: - Save Images in PE Module
-    private func saveImageInPEModule(imageData:Data)->Int{
-        let imageCount = getImageCountInPEModule()
-        CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount+1, imageData: imageData)
-        return imageCount+1
-    }
+
     // MARK: - Get Images Count
     func getImageCountInPEModule() -> Int {
         let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_ImageEntity")
@@ -465,13 +454,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
             self.dismissGlobalHUD(self.view)
         }
     }
-    // MARK: - Save Inovoject Data in PE Module
-    private func saveInovojectInPEModule(inovojectData:InovojectData,assessment: PE_AssessmentInProgress) -> Int{
-        let imageCount = getDOACountInPEModule()
-        CoreDataHandlerPE().saveInovojectPEModule(assessment: assessment ?? PE_AssessmentInProgress(), doaId: imageCount+1,inovojectData: inovojectData)
-        return imageCount+1
-        
-    }
+
     // MARK: - Filter Category Count
     func filterCategoryCount(peNewAssessmentOf:PENewAssessment) -> Int {
         var peCategoryFilteredArray: [PECategory] =  []
@@ -508,17 +491,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         }
         return carColIdArray.count
     }
-    // MARK: - Get Latest Marks of Assessment
-    private func GetLatestMarkOfAss(assID:Int) -> Int {
-        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
-        for ass in allAssesmentArr {
-            let objMark = ass as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-            if Int(objMark.assID ?? 0) == assID {
-                return  objMark.catResultMark as? Int ?? 0
-            }
-        }
-        return 0
-    }
+
     
     func convertDateFormatter(date: String) -> String {
         let dateFormatter = DateFormatter()
@@ -537,22 +510,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         
         return timeStamp
     }
-    // MARK: - Save Draft Data
-    private func saveDraftData(assessmentId: String, index: Int) {
-        let allAssesmentArr = CoreDataHandlerPE().getRejectedAssessmentArrayPEObject(ofCurrentAssessment:true)
-        PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"draft",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId)
-        let draftNumber = getDraftCountFromDb()
-        CoreDataHandlerPE().saveDraftPEInDB(newAssessmentArray: allAssesmentArr , draftNumber: draftNumber + 1)
-        let predicate = NSPredicate(format:serverAssesIdStr, peAssessmentRejectedArray[index].serverAssessmentId ?? "" )
-        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentRejected", predicate: predicate)
-        peAssessmentRejectedArray.remove(at: index)
-        tableview.reloadData()
-        UserDefaults.standard.set(peAssessmentRejectedArray.count, forKey: "rejected_count")
-        UserDefaults.standard.synchronize()
-        self.showAlertViewWithMessageAndActionHandler(Constants.alertStr, message: "Your Assessment moved to draft", actionHandler: nil)
-        
-        finishSession()
-    }
+
     // MARK: - Finish & Clean Session
     func finishSession()  {
         cleanSession()

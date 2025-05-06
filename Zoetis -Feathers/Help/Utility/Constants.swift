@@ -302,6 +302,9 @@ struct Constants {
     static let dataSyncSuccess = "Data synced successfully."
 }
 
+func predicateForSessionType() -> NSPredicate {
+    return NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+}
 enum ZoetisArt {
     
     struct FontSize {
@@ -765,6 +768,21 @@ let appDelegateObj = UIApplication.shared.delegate as! AppDelegate
          var samplingMethodTypeValue: String
      }
   
+     
+     struct FeatherPulpSampleInfoDataSave {
+         var plateIdGenerated: String
+         var plateId: Int
+         var flockId: String
+         var houseNo: String
+         var sampleDescription: String
+         var additionalTests: String
+         var checkMark: String
+         var microsporeCheck: String
+         var sessionId: Int
+         var timeStamp: String
+         var isSessionPlate: Bool
+     }
+
 }
 
 
@@ -1033,8 +1051,798 @@ struct CoreDataHandlerTurkeyModels
         var refId: NSNumber
     }
 
+    struct PostingSessionTurkeyDBData {
+        var antobotic: String
+        var birdBreesId: NSNumber
+        var birdbreedName: String
+        var birdBreedType: String
+        var birdSize: String
+        var birdSizeId: NSNumber
+        var cocciProgramId: NSNumber
+        var cociiProgramName: String
+        var complexId: NSNumber
+        var complexName: String
+        var convential: String
+        var customerId: NSNumber
+        var customerName: String
+        var customerRepId: NSNumber
+        var customerRepName: String
+        var imperial: String
+        var metric: String
+        var notes: String
+        var salesRepId: NSNumber
+        var salesRepName: String
+        var sessiondate: String
+        var sessionTypeId: NSNumber
+        var sessionTypeName: String
+        var vetanatrionName: String
+        var veterinarianId: NSNumber
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var mail: String
+        var female: String
+        var finilize: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var lngId: NSNumber
+        var birdType: String
+        var birdTypeId: NSNumber
+        var birdbreedId: NSNumber
+        var capNec: NSNumber
+        var avgAge: String
+        var avgWeight: String
+        var outTime: String
+        var FCR: String
+        var Livability: String
+        var mortality: String
+    }
+
+
+    struct updatePostingSessionTurkeyDBData {
+        var postingId: NSNumber
+        var antobotic: String
+        var birdBreesId: NSNumber
+        var birdBreedName: String
+        var birdBreedType: String
+        var birdSize: String
+        var birdSizeId: NSNumber
+        var cocciProgramId: NSNumber
+        var cociiProgramName: String
+        var complexId: NSNumber
+        var complexName: String
+        var convential: String
+        var customerId: NSNumber
+        var customerName: String
+        var customerRepId: NSNumber
+        var customerRepName: String
+        var imperial: String
+        var metric: String
+        var notes: String
+        var salesRepId: NSNumber
+        var salesRepName: String
+        var sessionDate: String
+        var sessionTypeId: NSNumber
+        var sessionTypeName: String
+        var vetanatrionName: String
+        var veterinarianId: NSNumber
+        var loginSessionId: NSNumber
+        var mail: String
+        var female: String
+        var finalize: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var lngId: NSNumber
+        var birdType: String
+        var birdTypeId: NSNumber
+        var birdBreedId: NSNumber
+        var capNec: NSNumber
+        var avgAge: String
+        var avgWeight: String
+        var outTime: String
+        var FCR: String
+        var livability: String
+        var mortality: String
+    }
+
+    struct saveCoccoiControlFeedData {
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var molecule: String
+        var dosage: String
+        var fromDays: String
+        var toDays: String
+        var coccidiosisVaccine: String
+        var targetWeight: String
+        var index: Int
+        var dbArray: NSArray
+        var feedId: NSNumber
+        var feedProgram: String
+        var formName: String
+        var isSync: Bool
+        var feedType: String
+        var cocoVacId: NSNumber
+        var lngId: NSNumber
+        var lbldate: String
+        var dosemoleculeId: NSNumber
+    }
+
+    // Define a struct to group related parameters
+    struct AntiboticControlData {
+        var loginSessionId: NSNumber
+           var postingId: NSNumber
+           var molecule: String
+           var dosage: String
+           var fromDays: String
+           var toDays: String
+           var feedId: NSNumber
+           var feedProgram: String
+           var formName: String
+           var isSync: Bool
+           var feedType: String
+           var cocoVacId: NSNumber
+           var lngId: NSNumber
+           var lbldate: String
+    }
+
+
+    struct AlternativeFeedData {
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var molecule: String
+        var dosage: String
+        var fromDays: String
+        var toDays: String
+        var feedId: NSNumber
+        var feedProgram: String
+        var formName: String
+        var isSync: Bool
+        var feedType: String
+        var cocoVacId: NSNumber
+        var lngId: NSNumber
+        var lbldate: String
+    }
+
+    struct myCoxtinFeedData {
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var molecule: String
+        var dosage: String
+        var fromDays: String
+        var toDays: String
+        var feedId: NSNumber
+        var feedProgram: String
+        var isSync: Bool
+        var feedType: String
+        var cocoVacId: NSNumber
+        var lngId: NSNumber
+        var lbldate: String
+        var formName: String
+    }
+
+    struct turkeyFeedProgramData {
+        var postingId: NSNumber
+        var sessionId: NSNumber
+        var feedProgrameName: String
+        var feedId: NSNumber
+        var formName: String
+        var isSync: Bool
+        var lngId: NSNumber
+    }
+
+    struct saveTurkeyNecropsyStep1Data {
+        let postingId: NSNumber
+        let age: String
+        let farmName: String
+        let feedProgram: String
+        let flockId: String
+        let houseNo: String
+        let noOfBirds: String
+        let sick: NSNumber
+        let necId: NSNumber
+        let compexName: String
+        let complexDate: String
+        let complexId: NSNumber
+        let customerId: NSNumber
+        let feedId: NSNumber
+        let isSync: Bool
+        let timeStamp: String
+        let actualTimeStamp: String
+        let lngId: NSNumber
+        let farmWeight: String
+        let abf: String
+        let breed: String
+        let sex: String
+        let farmId: NSNumber
+        let imageId: NSNumber
+        let count: NSNumber
+        let genName: String
+        let genId: NSNumber
+    }
+
+    struct singleNecropsyDataTurkey {
+        var postingId: NSNumber
+        var age: String
+        var farmName: String
+        var feedProgram: String
+        var flockId: String
+        var houseNo: String
+        var noOfBirds: String
+        var sick: NSNumber
+        var necId: NSNumber
+        var compexName: String
+        var complexDate: String
+        var complexId: NSNumber
+        var custmerId: NSNumber
+        var feedId: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var actualTimeStamp: String
+        var necIdSingle: NSNumber
+        var farmweight: String
+        var abf: String
+        var sex: String
+        var breed: String
+        var farmId: NSNumber
+        var imgId: NSNumber
+        var generationName: String
+        var generationId: NSNumber
+    }
+    struct switchCaseCaptureSkeletaDataTurkey {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let obsVisibility: Bool
+        let birdNo: NSNumber
+        let obsPoint: NSInteger
+        let index: Int
+        let obsId: NSInteger
+        let measure: String
+        let quickLink: NSNumber
+        let necId: NSNumber
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let actualText: String
+    }
+
+    struct turkeySexNecropsyData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let obsVisibility: Bool
+        let birdNo: NSNumber
+        let obsPoint: NSInteger
+        let index: Int
+        let obsId: NSInteger
+        let measure: String
+        let quickLink: NSNumber
+        let necId: NSNumber
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let actualText: String
+    }
+
+    struct imumneSwithcCaptureData {
+        var catName: String
+        var obsName: String
+        var formName: String
+        var obsVisibility: Bool
+        var birdNo: NSNumber
+        var obsPoint: Float
+        var index: Int
+        var obsId: NSInteger
+        var measure: String
+        var quickLink: NSNumber
+        var necId: NSNumber
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var actualText: String
+    }
+
+    struct singleNecroSwithCaseData {
+        var catName: String
+        var obsName: String
+        var formName: String
+        var obsVisibility: Bool
+        var birdNo: NSNumber
+        var obsPoint: NSInteger
+        var index: Int
+        var obsId: NSInteger
+        var measure: String
+        var quickLink: NSNumber
+        var necId: NSNumber
+        var isSync: Bool
+        var necIdSingle: NSNumber
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+    
+    struct updateSkeletaTurkeySexValueObs {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let obsVisibility: Bool
+        let birdNo: NSNumber
+        let obsPoint: NSInteger
+        let obsId: NSInteger
+        let necId: NSNumber
+        let isSync: Bool
+        let actualText: String
+    }
+
+    struct SkeletalTurkeyImageData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let birdNo: NSNumber
+        let camraImage: UIImage
+        let obsId: NSInteger
+        let necropsyId: NSNumber
+        let isSync: Bool
+    }
+
+    struct saveTurkeyNoteData {
+        let catName: String
+        let notes: String
+        let formName: String
+        let birdNo: NSNumber
+        let necId: NSNumber  // Can be used if needed elsewhere
+        let isSync: Bool
+        let necIdSingle: NSNumber
+    }
+
+    
+    struct saveTukryCoxtinData {
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var molecule: String
+        var dosage: String
+        var fromDays: String
+        var toDays: String
+        var index: Int
+        var dbArray: NSArray
+        var feedId: NSNumber
+        var feedProgram: String
+        var formName: String
+        var isSync: Bool
+        var feedType: String
+        var cocoVacId: NSNumber
+        var lngId: NSNumber
+        var lbldate: String
+    }
+    struct updateWeightSkeletaData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let birdNo: NSNumber
+        let actualName: String
+        let index: Int
+        let necId: NSNumber
+        let isSync: Bool
+    }
+    struct SkeletaUpdateSwithCaseTurkey {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let obsVisibility: Bool
+        let birdNo: NSNumber
+        let camraImage: UIImage
+        let obsPoint: NSInteger
+        let obsId: NSInteger
+        let necId: NSNumber
+        let isSync: Bool
+    }
+    
 
     
     
+    
+ 
+}
+
+struct chickenCoreDataHandlerModels
+{
+    struct saveSkeletaSettingsInDB{
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let quicklinkIndex: Int
+    }
+    
+    struct updateSkeletaSettingData {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct saveCoccidiosisSettingDB {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var quicklinkIndex: Int
+    }
+    
+    struct updateCoccidiosisSettingData {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct saveGITractSettingData {
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let quicklinkIndex: Int
+    }
+
+    struct updateGITractSettingData {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct saveRespiratorySettings {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var quicklinkIndex: Int
+    }
+
+    struct updateRespiratorySettings {
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+    }
+
+    struct saveImmuneSettings {
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let quicklinkIndex: Int
+    }
+    
+    struct ImmuneUpdateData {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct chickenPostingSessionData {
+        var antiboitic: String
+        var birdBreesId: NSNumber
+        var birdbreedName: String
+        var birdBreedType: String
+        var birdSize: String
+        var birdSizeId: NSNumber
+        var cocciProgramId: NSNumber
+        var cociiProgramName: String
+        var complexId: NSNumber
+        var complexName: String
+        var convential: String
+        var customerId: NSNumber
+        var customerName: String
+        var customerRepId: NSNumber
+        var customerRepName: String
+        var imperial: String
+        var metric: String
+        var notes: String
+        var salesRepId: NSNumber
+        var salesRepName: String
+        var sessiondate: String
+        var sessionTypeId: NSNumber
+        var sessionTypeName: String
+        var vetanatrionName: String
+        var veterinarianId: NSNumber
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var mail: String
+        var female: String
+        var finilize: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var lngId: NSNumber
+        var productionTypName: String
+        var productionTypId: NSNumber
+        var avgAge: String
+        var avgWeight: String
+        var outTime: String
+        var FCR: String
+        var Livability: String
+        var mortality: String
+    }
+
+    struct updatePostingSessionData {
+        var antiboitic: String
+        var birdBreesId: NSNumber
+        var birdbreedName: String
+        var birdBreedType: String
+        var birdSize: String
+        var birdSizeId: NSNumber
+        var cocciProgramId: NSNumber
+        var cociiProgramName: String
+        var complexId: NSNumber
+        var complexName: String
+        var convential: String
+        var customerId: NSNumber
+        var customerName: String
+        var customerRepId: NSNumber
+        var customerRepName: String
+        var imperial: String
+        var metric: String
+        var notes: String
+        var salesRepId: NSNumber
+        var salesRepName: String
+        var sessiondate: String
+        var sessionTypeId: NSNumber
+        var sessionTypeName: String
+        var vetanatrionName: String
+        var veterinarianId: NSNumber
+        var loginSessionId: NSNumber
+        var postingId: NSNumber
+        var mail: String
+        var female: String
+        var finilize: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var lngId: NSNumber
+        var productionTypName: String
+        var productionTypId: NSNumber
+        var avgAge: String
+        var avgWeight: String
+        var outTime: String
+        var FCR: String
+        var Livability: String
+        var mortality: String
+    }
+
+    struct saveChickenFeedProgramData {
+        var postingId: NSNumber
+        var sessionId: NSNumber
+        var feedProgrameName: String
+        var feedId: NSNumber
+        var dbArray: NSArray
+        var index: Int
+        var formName: String
+        var isSync: Bool
+        var lngId: NSNumber
+    }
+    struct BirdNotesData {
+        var catName: String
+        var notes: String
+        var formName: String
+        var birdNo: NSNumber
+        var index: Int
+        var necId: NSNumber
+        var isSync: Bool
+        var necIdSingle: NSNumber
+    }
+
+    struct saveSkeletalBirdPhotoCaptureData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let birdNo: NSNumber
+        let cameraImage: UIImage
+        let obsId: NSInteger
+        let necropsyId: NSNumber
+        let isSync: Bool
+        let viewController: CaptureNecropsyDataViewController
+    }
+
+    struct actualClickUpdateCaptureSkeletaData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let birdNo: NSNumber
+        let actualName: String
+        let index: Int
+        let necId: NSNumber
+        let isSync: Bool
+        let refId: NSNumber
+    }
+
+    struct updateSkeletaSingleSyncSkeletaData {
+        var catName: String
+        var obsName: String
+        var formName: String
+        var obsVisibility: Bool
+        var birdNo: NSNumber
+        var obsPoint: NSInteger
+        var index: Int
+        var obsId: NSInteger
+        var measure: String
+        var quickLink: NSNumber
+        var necId: NSNumber
+        var isSync: Bool
+        var necIdSingle: NSNumber
+        var lngId: NSNumber
+        var refId: NSNumber
+        var actualText: String
+    }
+
+    struct SaveNecropsystep1SingleNecropsyData {
+        var postingId: NSNumber
+        var age: String
+        var farmName: String
+        var feedProgram: String
+        var flockId: String
+        var houseNo: String
+        var noOfBirds: String
+        var sick: NSNumber
+        var necId: NSNumber
+        var compexName: String
+        var complexDate: String
+        var complexId: NSNumber
+        var custmerId: NSNumber
+        var feedId: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var actualTimeStamp: String
+        var necIdSingle: NSNumber
+        var farmId: NSNumber
+        var imgId: NSNumber
+    }
+    struct saveNecropsyStep1Data {
+        var postingId: NSNumber
+        var age: String
+        var farmName: String
+        var feedProgram: String
+        var flockId: String
+        var houseNo: String
+        var noOfBirds: String
+        var sick: NSNumber
+        var necId: NSNumber
+        var compexName: String
+        var complexDate: String
+        var complexId: NSNumber
+        var custmerId: NSNumber
+        var feedId: NSNumber
+        var isSync: Bool
+        var timeStamp: String
+        var actualTimeStamp: String
+        var lngId: NSNumber
+        var farmId: NSNumber
+        var imageId: NSNumber
+        var count: NSNumber
+    }
+
+    struct saveChiknHtchryVacintnDetails {
+        var type: String
+        var strain: String
+        var route: String
+        var age: String
+        var postingId: NSNumber
+        var vaciProgram: String
+        var sessionId: NSNumber
+        var isSync: Bool
+        var lngId: NSNumber
+        var routeID: Int
+    }
+    
+    struct saveChknFieldVaccinationDetails {
+        var type: String
+        var strain: String
+        var route: String
+        var postingId: NSNumber
+        var vaciProgram: String
+        var sessionId: NSNumber
+        var isSync: Bool
+        var lngId: NSNumber
+        var routeID: Int
+    }
+    
+    struct updateSkeletalSwitchCaseCaptureData {
+        let catName: String
+        let obsName: String
+        let formName: String
+        let obsVisibility: Bool
+        let birdNo: NSNumber
+        let cameraImage: UIImage
+        let obsPoint: Int
+        let index: Int
+        let obsId: Int
+        let necId: NSNumber
+        let isSync: Bool
+    }
+
+    struct saveChknAntibioticFeedData {
+        let loginSessionId: NSNumber
+        let postingId: NSNumber
+        let molecule: String
+        let dosage: String
+        let fromDays: String
+        let toDays: String
+        let index: Int
+        let dbArray: NSArray
+        let feedId: NSNumber
+        let feedProgram: String
+        let formName: String
+        let isSync: Bool
+        let feedType: String
+        let cocoVacId: NSNumber
+        let lngId: NSNumber
+        let lblDate: String
+    }
+
 }
 

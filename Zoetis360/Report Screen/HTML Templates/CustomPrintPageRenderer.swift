@@ -19,8 +19,8 @@ class CustomPrintPageRenderer: UIPrintPageRenderer {
         super.init()
         
         // Specify the frame of the A4 page.
-        let pageFrame = CGRect(x: 0.0, y: 0.0, width: AllValidSessions.sharedInstance.isHistory == true ? A4PageWidth : A4PageWidth, height: A4PageHeight)
-        
+        let pageFrame = CGRect(x: 0.0, y: 0.0, width: A4PageWidth, height: A4PageHeight)
+
         // Set the page frame.
         self.setValue(NSValue(cgRect: pageFrame), forKey: "paperRect")
         

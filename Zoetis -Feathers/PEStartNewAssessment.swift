@@ -1724,8 +1724,7 @@ extension PEStartNewAssessment{
     fileprivate func handleFilteredArrayAndNewAssessment(_ peCategoryFilteredArray: [PECategory], _ peNewAssessmentWas: PENewAssessment) {
         for cat in peCategoryFilteredArray {
             for (index, ass) in cat.assessmentQuestions.enumerated(){
-                var peNewAssessmentNew = PENewAssessment()
-                peNewAssessmentNew = peNewAssessmentWas
+                var peNewAssessmentNew = peNewAssessmentWas
                 peNewAssessmentNew.cID = index
                 peNewAssessmentNew.catID = cat.id
                 peNewAssessmentNew.catName = cat.categoryName
@@ -1785,9 +1784,8 @@ extension PEStartNewAssessment{
         peCategoryArray(&peCategoryFilteredArray)
         
         if peCategoryFilteredArray.count > 0 {
-            var peNewAssessmentWas = PENewAssessment()
+            var peNewAssessmentWas = self.peNewAssessment ?? PENewAssessment()
             
-            peNewAssessmentWas = self.peNewAssessment
             
             if handmixSwitch.isOn {
                 peNewAssessmentWas.isHandMix = true
@@ -1842,23 +1840,7 @@ extension PEStartNewAssessment{
         pECategoriesAssesmentsResponse.peCategoryArray = peCategoryFilteredArray
         return pECategoriesAssesmentsResponse.peCategoryArray.count
     }
-    
-    private func cleanSession(){
-        
-        let peNewAssessmentSurrentIs =   PENewAssessment()
-        let peNewAssessmentNew = PENewAssessment()
-        peNewAssessmentNew.siteId = peNewAssessmentSurrentIs.siteId
-        peNewAssessmentNew.customerId = peNewAssessmentSurrentIs.customerId
-        peNewAssessmentNew.complexId = peNewAssessmentSurrentIs.complexId
-        peNewAssessmentNew.siteName = peNewAssessmentSurrentIs.siteName
-        peNewAssessmentNew.userID = peNewAssessmentSurrentIs.userID
-        peNewAssessmentNew.customerName = peNewAssessmentSurrentIs.customerName
-        peNewAssessmentNew.firstname = peNewAssessmentSurrentIs.firstname
-        peNewAssessmentNew.username = peNewAssessmentSurrentIs.username
-        peNewAssessmentNew.evaluatorName = peNewAssessmentSurrentIs.evaluatorName
-        
-        
-    }
+
     
     @IBAction func flockImageGreaterSlected(_ sender: Any) {
         
@@ -1976,12 +1958,6 @@ extension PEStartNewAssessment {
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }
-    
-    private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print(appDelegateObj.testFuntion())
-    }
-    
-    
 }
 
 // MARK: - UITextFieldDelegate
@@ -2090,7 +2066,6 @@ extension PEStartNewAssessment : UITextFieldDelegate{
             
             return string == numberFiltered && newString.length <= maxLength
             
-            return isValid
         }
         
         

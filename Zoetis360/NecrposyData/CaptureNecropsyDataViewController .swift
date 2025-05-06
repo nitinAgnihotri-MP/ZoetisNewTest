@@ -223,6 +223,34 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     @objc func callFirstMethodToLoadView() {
+        self.callLoad { status in
+            guard status else { return }
+            self.proceedAfterCallLoad()
+        }
+    }
+
+    private func proceedAfterCallLoad() {
+        self.saveSkeletonCat { status in
+            guard status else { return }
+            self.proceedAfterSaveSkeleton()
+        }
+    }
+
+    private func proceedAfterSaveSkeleton() {
+        self.saveCocoiCat { status in
+            guard status else { return }
+            self.proceedAfterSaveCocoi()
+        }
+    }
+
+    private func proceedAfterSaveCocoi() {
+        self.saveResCat { status in
+            saveResCatValidation(status)
+        }
+    }
+
+    /*
+    @objc func callFirstMethodToLoadView() {
         self.callLoad { (status) in
             
             if status == true {
@@ -240,6 +268,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
         }
     }
+    */
     // MARK: 🟠 Call Load Method
     func callLoad(_ completion: (_ status: Bool) -> Void) {
         tableViewSelectedRow = 0
@@ -1853,12 +1882,43 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if Int(array[0]) != 0
                     {
                         cell.incrementLabel.text = String(array[0])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating: skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                               catName: "skeltaMuscular",
+                               obsName: skleta1.obsName ?? "",
+                               formName: skleta.formName ?? "",
+                               obsVisibility: Bool(truncating: skleta1.objsVisibilty ?? 0),
+                               birdNo: skleta.birdNo ?? 0,
+                               cameraImage: image ?? UIImage(),
+                               obsPoint: Int(array[0]) ?? 0,
+                               index: rowIndex,
+                               obsId: Int(truncating: skleta1.obsID ?? 0),
+                               necId: necId as NSNumber,
+                               isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                        
                     }
                     else
                     {
                         cell.incrementLabel.text = String(array[1])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating: skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(truncating: skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                catName: "skeltaMuscular",
+                                obsName: skleta1.obsName ?? "",
+                                formName: skleta.formName ?? "",
+                                obsVisibility: Bool(truncating: skleta1.objsVisibilty ?? 0),
+                                birdNo: skleta.birdNo ?? 0,
+                                cameraImage: image ?? UIImage(),
+                                obsPoint: Int(array[1]) ?? 0,
+                                index: rowIndex,
+                                obsId: Int(truncating: skleta1.obsID ?? 0),
+                                necId: necId as NSNumber,
+                                isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                     }
                 }
                 else
@@ -1871,19 +1931,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                            NSNumber(value: currentElement) == skleta1.obsPoint {
                           
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase(
-                                    "skeltaMuscular",
-                                    obsName: skleta1.obsName!,
-                                    formName: skleta.formName!,
-                                    obsVisibility: Bool(truncating: skleta1.objsVisibilty!),
-                                    birdNo: skleta.birdNo!,
-                                    camraImage: image!,
-                                    obsPoint: Int(array[i+1])!,
+                            
+                            let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                catName: "skeltaMuscular",
+                                    obsName: skleta1.obsName ?? "",
+                                    formName: skleta.formName ?? "",
+                                    obsVisibility: Bool(truncating: skleta1.objsVisibilty ?? 0),
+                                    birdNo: skleta.birdNo ?? 0,
+                                cameraImage: image ?? UIImage(),
+                                    obsPoint: Int(array[i + 1]) ?? 0,
                                     index: rowIndex,
-                                    obsId: Int(truncating: skleta1.obsID!),
-                                    necId: necId as NSNumber,
+                                    obsId: Int(truncating: skleta1.obsID ?? 0),
+                                necId: necId as NSNumber,
                                     isSync: true
-                                )
+                            )
+
+                            CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                            
                                 break
                             
                         }
@@ -1926,12 +1990,43 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if Int(array[0]) != 0
                     {
                         cell.incrementLabel.text = String(array[0])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating: cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                catName: "Coccidiosis",
+                                obsName: cocoi1.obsName ?? "",
+                                formName: cocoi.formName ?? "",
+                                obsVisibility: Bool(truncating: cocoi1.objsVisibilty ?? 0),
+                                birdNo: cocoi.birdNo ?? 0,
+                                cameraImage: image ?? UIImage(),
+                                obsPoint: Int(array[0]) ?? 0,
+                                index: rowIndex,
+                                obsId: Int(truncating: cocoi1.obsID ?? 0),
+                                necId: necId as NSNumber,
+                                isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+
+                        
                     }
                     else
                     {
                         cell.incrementLabel.text = String(array[1])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating: cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(truncating: cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                catName: "Coccidiosis",
+                                obsName: cocoi1.obsName!,
+                                formName: cocoi.formName!,
+                                obsVisibility: Bool(truncating: cocoi1.objsVisibilty!),
+                                birdNo: cocoi.birdNo!,
+                                cameraImage: image!,
+                                obsPoint: Int(array[1])!,
+                                index: rowIndex,
+                                obsId: Int(truncating: cocoi1.obsID!),
+                                necId: necId as NSNumber,
+                                isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                     }
                 }
                 else
@@ -1948,7 +2043,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if Int(array[i])! as NSNumber == cocoi1.obsPoint
                             {
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating: cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                      catName: "Coccidiosis",
+                                        obsName: cocoi1.obsName!,
+                                        formName: cocoi.formName!,
+                                        obsVisibility: Bool(truncating: cocoi1.objsVisibilty!),
+                                        birdNo: cocoi.birdNo!,
+                                        cameraImage: image!,
+                                        obsPoint: Int(array[i+1])!,
+                                        index: rowIndex,
+                                        obsId: Int(truncating: cocoi1.obsID!),
+                                        necId: necId as NSNumber,
+                                        isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                                 
                             }
@@ -1992,12 +2103,42 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if Int(array[0]) != 0
                     {
                         cell.incrementLabel.text = String(array[0])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating: gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                              catName: "GITract",
+                               obsName: gitract1.obsName!,
+                               formName: gitract.formName!,
+                               obsVisibility: Bool(truncating: gitract1.objsVisibilty!),
+                               birdNo: gitract.birdNo!,
+                              cameraImage: image!,
+                               obsPoint: Int(array[0])!,
+                               index: rowIndex,
+                               obsId: Int(truncating: gitract1.obsID!),
+                               necId: necId as NSNumber,
+                               isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                        
                     }
                     else
                     {
                         cell.incrementLabel.text = String(array[1])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating: gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(truncating: gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                             catName: "GITract",
+                             obsName: gitract1.obsName!,
+                             formName: gitract.formName!,
+                             obsVisibility: Bool(truncating: gitract1.objsVisibilty!),
+                             birdNo: gitract.birdNo!,
+                             cameraImage: image!,
+                             obsPoint: Int(array[1])!,
+                             index: rowIndex,
+                             obsId: Int(truncating: gitract1.obsID!),
+                             necId: necId as NSNumber,
+                             isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                     }
                     
                 }
@@ -2015,7 +2156,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if (Int(array[i])! as NSNumber)  == gitract1.obsPoint
                             {
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating: gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                       catName: "GITract",
+                                       obsName: gitract1.obsName!,
+                                       formName: gitract.formName!,
+                                       obsVisibility: Bool(truncating: gitract1.objsVisibilty!),
+                                       birdNo: gitract.birdNo!,
+                                       cameraImage: image!,
+                                       obsPoint: Int(array[i+1])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: gitract1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                                 
                             }
@@ -2060,12 +2217,43 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if Int(array[0]) != 0
                     {
                         cell.incrementLabel.text = String(array[0])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating: resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                catName: "Resp",
+                                obsName: resp1.obsName!,
+                                formName: resp.formName!,
+                                obsVisibility: Bool(truncating: resp1.objsVisibilty!),
+                                birdNo: resp.birdNo!,
+                                cameraImage: image!,
+                                obsPoint: Int(array[0])!,
+                                index: rowIndex,
+                                obsId: Int(truncating: resp1.obsID!),
+                                necId: necId as NSNumber,
+                                isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                        
                     }
                     else
                     {
                         cell.incrementLabel.text = String(array[1])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating: resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                             catName: "Resp",
+                             obsName: resp1.obsName!,
+                             formName: resp.formName!,
+                             obsVisibility: Bool(truncating: resp1.objsVisibilty!),
+                             birdNo: resp.birdNo!,
+                             cameraImage: image!,
+                             obsPoint: Int(array[1])!,
+                             index: rowIndex,
+                             obsId: Int(truncating: resp1.obsID!),
+                             necId: necId as NSNumber,
+                             isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                         
                     }
                     
@@ -2084,7 +2272,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if Int(array[i])! as NSNumber == resp1.obsPoint
                             {
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating: resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                    catName: "Resp",
+                                     obsName: resp1.obsName!,
+                                     formName: resp.formName!,
+                                     obsVisibility: Bool(truncating: resp1.objsVisibilty!),
+                                     birdNo: resp.birdNo!,
+                                    cameraImage: image!,
+                                     obsPoint: Int(array[i+1])!,
+                                     index: rowIndex,
+                                     obsId: Int(truncating: resp1.obsID!),
+                                     necId: necId as NSNumber,
+                                     isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                                 
                             }
@@ -2130,12 +2334,41 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         
                         cell.incrementLabel.text = String(array[0])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating: immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                               catName: "Immune",
+                               obsName: immune1.obsName!,
+                               formName: immune.formName!,
+                               obsVisibility: Bool(truncating: immune1.objsVisibilty!),
+                               birdNo: immune.birdNo!,
+                               cameraImage: image!,
+                               obsPoint: Int(array[0])!,
+                               index: rowIndex,
+                               obsId: Int(truncating: immune1.obsID!),
+                               necId: necId as NSNumber,
+                               isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                     }
                     else
                     {
                         cell.incrementLabel.text = String(array[1])
-                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating: immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(truncating: immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                        
+                        let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                            catName: "Immune",
+                                obsName: immune1.obsName!,
+                                formName: immune.formName!,
+                                obsVisibility: Bool(truncating: immune1.objsVisibilty!),
+                                birdNo: immune.birdNo!,
+                            cameraImage: image!,
+                                obsPoint: Int(array[1])!,
+                                index: rowIndex,
+                                obsId: Int(truncating: immune1.obsID!),
+                                necId: necId as NSNumber,
+                                isSync: true
+                        )
+
+                        CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                         
                     }
                 }
@@ -2154,7 +2387,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if Int(array[i])! as NSNumber == immune1.obsPoint
                             {
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating: immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                        catName: "Immune",
+                                        obsName: immune1.obsName!,
+                                        formName: immune.formName!,
+                                        obsVisibility: Bool(truncating: immune1.objsVisibilty!),
+                                        birdNo: immune.birdNo!,
+                                        cameraImage: image!,
+                                        obsPoint: Int(array[i+1])!,
+                                        index: rowIndex,
+                                        obsId: Int(truncating: immune1.obsID!),
+                                        necId: necId as NSNumber,
+                                        isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                                 
                             }
@@ -2235,14 +2484,45 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             {
                               
                                     cell.incrementLabel.text = array[0]
-                                    CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating:skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                       catName: "skeltaMuscular",
+                                        obsName: skleta1.obsName!,
+                                        formName: skleta.formName!,
+                                        obsVisibility: Bool(truncating: skleta1.objsVisibilty!),
+                                        birdNo: skleta.birdNo!,
+                                       cameraImage: image!,
+                                        obsPoint: Int(array[0])!,
+                                        index: rowIndex,
+                                        obsId: Int(truncating: skleta1.obsID!),
+                                        necId: necId as NSNumber,
+                                        isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                                     break
                                 
                             }
                             if Int(array[i])! as NSNumber == skleta1.obsPoint
                             {
                                 cell.incrementLabel.text = array[i-1]
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating:skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[i-1])! , index: rowIndex, obsId: Int(truncating:skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                    catName: "skeltaMuscular",
+                                       obsName: skleta1.obsName!,
+                                       formName: skleta.formName!,
+                                       obsVisibility: Bool(truncating: skleta1.objsVisibilty!),
+                                       birdNo: skleta.birdNo!,
+                                    cameraImage: image!,
+                                       obsPoint: Int(array[i-1])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: skleta1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                                 
                             }
@@ -2299,7 +2579,22 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if cocoi.obsPoint == 1 , Int(array[i]) == 0
                             {
                                     cell.incrementLabel.text = array[0]
-                                    CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating:cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                       catName: "Coccidiosis",
+                                       obsName: cocoi1.obsName!,
+                                       formName: cocoi.formName!,
+                                       obsVisibility: Bool(truncating: cocoi1.objsVisibilty!),
+                                       birdNo: cocoi.birdNo!,
+                                       cameraImage: image!,
+                                       obsPoint: Int(array[0])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: cocoi1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                                     break
                                 
                             }
@@ -2307,7 +2602,22 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if Int(array[i])! as NSNumber == cocoi1.obsPoint
                             {
                                 cell.incrementLabel.text = array[i-1]
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating:cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[i-1])! , index: rowIndex, obsId: Int(truncating:cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                        catName: "Coccidiosis",
+                                        obsName: cocoi1.obsName!,
+                                        formName: cocoi.formName!,
+                                        obsVisibility: Bool(truncating: cocoi1.objsVisibilty!),
+                                        birdNo: cocoi.birdNo!,
+                                        cameraImage: image!,
+                                        obsPoint: Int(array[i-1])!,
+                                        index: rowIndex,
+                                        obsId: Int(truncating: cocoi1.obsID!),
+                                        necId: necId as NSNumber,
+                                        isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                                 break
                                 
                             }
@@ -2366,14 +2676,46 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if gitract1.obsPoint == 1 , Int(array[i]) == 0
                             {
                                     cell.incrementLabel.text = array[0]
-                                    CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating:gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                    catName: "GITract",
+                                       obsName: gitract1.obsName!,
+                                       formName: gitract.formName!,
+                                       obsVisibility: Bool(truncating: gitract1.objsVisibilty!),
+                                       birdNo: gitract.birdNo!,
+                                    cameraImage: image!,
+                                       obsPoint: Int(array[0])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: gitract1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                     break
                                 
                             }
                             if Int(array[i])! as NSNumber == gitract1.obsPoint
                             {
                                 cell.incrementLabel.text = array[i-1]
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating:gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[i-1])! , index: rowIndex, obsId: Int(truncating:gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                    catName: "GITract",
+                                        obsName: gitract1.obsName!,
+                                        formName: gitract.formName!,
+                                        obsVisibility: Bool(truncating: gitract1.objsVisibilty!),
+                                        birdNo: gitract.birdNo!,
+                                    cameraImage: image!,
+                                        obsPoint: Int(array[i-1])!,
+                                        index: rowIndex,
+                                        obsId: Int(truncating: gitract1.obsID!),
+                                        necId: necId as NSNumber,
+                                        isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                             }
                         }
@@ -2431,7 +2773,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if resp1.obsPoint == 1 , Int(array[i]) == 0
                             {
                                     cell.incrementLabel.text = array[0]
-                                    CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating:resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                       catName: "Resp",
+                                       obsName: resp1.obsName!,
+                                       formName: resp.formName!,
+                                       obsVisibility: Bool(truncating: resp1.objsVisibilty!),
+                                       birdNo: resp.birdNo!,
+                                       cameraImage: image!,
+                                       obsPoint: Int(array[0])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: resp1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                     break
                                 
                             }
@@ -2439,7 +2797,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if Int(array[i])! as NSNumber == resp1.obsPoint
                             {
                                 cell.incrementLabel.text = array[i-1]
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating:resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[i-1])! , index: rowIndex, obsId: Int(truncating:resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                       catName: "Resp",
+                                       obsName: resp1.obsName!,
+                                       formName: resp.formName!,
+                                       obsVisibility: Bool(truncating: resp1.objsVisibilty!),
+                                       birdNo: resp.birdNo!,
+                                       cameraImage: image!,
+                                       obsPoint: Int(array[i-1])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: resp1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                             }
                         }
@@ -2495,14 +2869,45 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             {
                                 
                                     cell.incrementLabel.text = array[0]
-                                    CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating:immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                      catName: "Immune",
+                                       obsName: immune1.obsName!,
+                                       formName: immune.formName!,
+                                       obsVisibility: Bool(truncating: immune1.objsVisibilty!),
+                                       birdNo: immune.birdNo!,
+                                      cameraImage: image!,
+                                       obsPoint: Int(array[0])!,
+                                       index: rowIndex,
+                                       obsId: Int(truncating: immune1.obsID!),
+                                       necId: necId as NSNumber,
+                                       isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                     break
                                 
                             }
                             if Int(array[i])! as NSNumber == immune1.obsPoint
                             {
                                 cell.incrementLabel.text = array[i-1]
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating:immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[i-1])! , index: rowIndex, obsId: Int(truncating:immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                                      catName: "Immune",
+                                      obsName: immune1.obsName!,
+                                      formName: immune.formName!,
+                                      obsVisibility: Bool(truncating: immune1.objsVisibilty!),
+                                      birdNo: immune.birdNo!,
+                                      cameraImage: image!,
+                                      obsPoint: Int(array[i-1])!,
+                                      index: rowIndex,
+                                      obsId: Int(truncating: immune1.obsID!),
+                                      necId: necId as NSNumber,
+                                      isSync: true
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                                
                                 break
                             }
                         }
@@ -2563,8 +2968,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     image = UIImage(named:"Image01")
                 }
+                                
+                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                    catName: "skeltaMuscular",
+                       obsName: skleta1.obsName!,
+                       formName: skleta.formName!,
+                       obsVisibility: sender.isOn,
+                       birdNo: skleta.birdNo!,
+                       cameraImage: image!,
+                       obsPoint: incrementValue,
+                       index: rowIndex,
+                       obsId: Int(truncating: skleta1.obsID!),
+                       necId: necId as NSNumber,
+                       isSync: true
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: sender.isOn, birdNo: skleta.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: skleta1.obsID!),necId: necId as NSNumber,isSync :true)
                 
             }
             
@@ -2605,7 +3025,23 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     image = UIImage(named:"Image01")
                 }
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: sender.isOn, birdNo: cocoi.birdNo!, camraImage: image!, obsPoint:incrementValue , index: rowIndex, obsId: Int(truncating: cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
+                
+                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                    catName: "Coccidiosis",
+                       obsName: cocoi1.obsName!,
+                       formName: cocoi.formName!,
+                       obsVisibility: sender.isOn,
+                       birdNo: cocoi.birdNo!,
+                    cameraImage: image!,
+                       obsPoint: incrementValue,
+                       index: rowIndex,
+                       obsId: Int(truncating: cocoi1.obsID!),
+                       necId: necId as NSNumber,
+                       isSync: true
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
+                
                 
             }
             
@@ -2649,7 +3085,22 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     image = UIImage(named:"Image01")
                 }
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility: sender.isOn, birdNo: gitract.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: gitract1.obsID!),necId: necId as NSNumber,isSync :true)
+                
+                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                       catName: "GITract",
+                       obsName: gitract1.obsName!,
+                       formName: gitract.formName!,
+                       obsVisibility: sender.isOn,
+                       birdNo: gitract.birdNo!,
+                       cameraImage: image!,
+                       obsPoint: incrementValue,
+                       index: rowIndex,
+                       obsId: Int(truncating: gitract1.obsID!),
+                       necId: necId as NSNumber,
+                       isSync: true
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
             }
             
             dataArrayGiTract.removeAllObjects()
@@ -2691,7 +3142,21 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     
                 }
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: sender.isOn, birdNo: resp.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
+                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                    catName: "Resp",
+                        obsName: resp1.obsName!,
+                        formName: resp.formName!,
+                        obsVisibility: sender.isOn,
+                        birdNo: resp.birdNo!,
+                    cameraImage: image!,
+                        obsPoint: incrementValue,
+                        index: rowIndex,
+                        obsId: Int(truncating: resp1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                 
             }
             
@@ -2730,8 +3195,22 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if image == nil {
                     image = UIImage(named:"Image01")
                 }
-                
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: sender.isOn, birdNo: immune.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: immune1.obsID!),necId: necId as NSNumber,isSync :true)
+                                
+                let captureData = chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData(
+                        catName: "Immune",
+                        obsName: immune1.obsName!,
+                        formName: immune.formName!,
+                        obsVisibility: sender.isOn,
+                        birdNo: immune.birdNo!,
+                        cameraImage: image!,
+                        obsPoint: incrementValue,
+                        index: rowIndex,
+                        obsId: Int(truncating: immune1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwitchCase(captureData)
                 
             }
             
@@ -2804,7 +3283,20 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             if FetchObsArr.count > 0 {
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : selectedSexValue, index: rowIndex, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                    catName: "Immune",
+                       obsName: immune1.obsName!,
+                       formName: immune.formName!,
+                       birdNo: immune.birdNo!,
+                       actualName: selectedSexValue,
+                       index: rowIndex,
+                       necId: necId as NSNumber,
+                       isSync: true,
+                       refId: immune.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
             }
             
             dataArrayImmu.removeAllObjects()
@@ -3132,22 +3624,27 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     fileprivate func handleIsBirdCountAndAddSkeletonResponseData(_ isBirdCount: Bool?) {
-        if isBirdCount == false {
-            
-            self.addSkeltonResponseData(noOfBirdsArr1) { (status) in
-                if status == true {
-                    self.addCocoiResponseData(self.noOfBirdsArr1, completion: { (status) in
-                        if status == true {
-                            self.addGitractResponseData(self.noOfBirdsArr1, completion: { (status) in
-                                self.handleAddGITrakt(status)
-                            })
-                        }
-                    })
-                }
-            }
+        guard isBirdCount == false else { return }
+
+        self.addSkeltonResponseData(noOfBirdsArr1) { status in
+            guard status else { return }
+            self.continueAfterSkeleton()
         }
     }
-    
+
+    private func continueAfterSkeleton() {
+        self.addCocoiResponseData(self.noOfBirdsArr1) { status in
+            guard status else { return }
+            self.continueAfterCocoi()
+        }
+    }
+
+    private func continueAfterCocoi() {
+        self.addGitractResponseData(self.noOfBirdsArr1) { status in
+            self.handleAddGITrakt(status)
+        }
+    }
+
     fileprivate func handlePostingIdFromExistingNavigateAddBirdResponseData() {
         if postingIdFromExistingNavigate == "Exting" {
             CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
@@ -3930,8 +4427,25 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 else{
                     necId = UserDefaults.standard.integer(forKey: "necId") as Int
                 }
-                self.showtoast(message: "Observation Start")
-                CoreDataHandler().saveCaptureSkeletaImageInDatabase(self.photoDict.value(forKey: "catName") as! String, obsName: self.photoDict.value(forKey: "obsName") as! String, formName: self.photoDict.value(forKey: "formName") as! String, birdNo: self.photoDict.value(forKey: "birdNo") as! NSNumber, camraImage: image, obsId: self.photoDict.value(forKey: "obsid") as! Int , necropsyId : necId as NSNumber, isSync :true, viewController: self)
+                self.showtoast(message: "Observation Start")                
+                
+                let birdData = chickenCoreDataHandlerModels.saveSkeletalBirdPhotoCaptureData(
+                    catName: self.photoDict.value(forKey: "catName") as! String,
+                    obsName: self.photoDict.value(forKey: "obsName") as! String,
+                    formName: self.photoDict.value(forKey: "formName") as! String,
+                    birdNo: self.photoDict.value(forKey: "birdNo") as! NSNumber,
+                    cameraImage: image,
+                    obsId: self.photoDict.value(forKey: "obsid") as! Int ,
+                    necropsyId:  necId as NSNumber,
+                    isSync: true,
+                    viewController: self
+                )
+
+                CoreDataHandler().saveCaptureSkeletaImageInDatabase(data: birdData)
+
+                
+                
+                
                 self.showtoast(message: "Observation Saved")
                 if self.postingIdFromExistingNavigate == "Exting"{
                     
@@ -4867,7 +5381,20 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
                             if FetchObsArr.count > 0 {
                                 
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : selectedSexValue, index: indexPath.row, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
+                                
+                                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                                    catName: "Immune",
+                                       obsName: immune1.obsName!,
+                                       formName: immune.formName!,
+                                       birdNo: immune.birdNo!,
+                                       actualName: selectedSexValue,
+                                       index: indexPath.row,
+                                       necId: necId as NSNumber,
+                                       isSync: true,
+                                       refId: immune.refId!
+                                )
+
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
                             }
                             
                             dataArrayImmu.removeAllObjects()
@@ -5214,7 +5741,20 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let skleta1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             
             if FetchObsArr.count > 0 {
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , birdNo: skleta.birdNo!,  actualName : textField.text!, index: rowIndex, necId :necId as NSNumber, isSync :true, refId: skleta.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                    catName: "skeltaMuscular",
+                        obsName: skleta1.obsName!,
+                        formName: skleta.formName!,
+                        birdNo: skleta.birdNo!,
+                        actualName: textField.text!,
+                        index: rowIndex,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        refId: skleta.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
             }
             
             dataSkeltaArray.removeAllObjects()
@@ -5235,7 +5775,20 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let cocoi1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             if FetchObsArr.count > 0 {
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , birdNo: cocoi.birdNo!,  actualName : textField.text!, index: rowIndex, necId :necId as NSNumber, isSync :true, refId: cocoi.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                    catName: "Coccidiosis",
+                        obsName: cocoi1.obsName!,
+                        formName: cocoi.formName!,
+                        birdNo: cocoi.birdNo!,
+                        actualName: textField.text!,
+                        index: rowIndex,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        refId: cocoi.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
             }
             
             dataArrayCocoi.removeAllObjects()
@@ -5257,7 +5810,21 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let gitract1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             if FetchObsArr.count > 0 {
                 
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , birdNo: gitract.birdNo!,  actualName : textField.text!, index: rowIndex, necId :necId as NSNumber, isSync :true,refId: gitract.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                        catName: "GITract",
+                        obsName: gitract1.obsName!,
+                        formName: gitract.formName!,
+                        birdNo: gitract.birdNo!,
+                        actualName: textField.text!,
+                        index: rowIndex,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        refId: gitract.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
+                
             }
             
             dataArrayGiTract.removeAllObjects()
@@ -5278,7 +5845,21 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let resp1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             
             if FetchObsArr.count > 0 {
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Resp", obsName: resp1.obsName!, formName:resp.formName! , birdNo: resp.birdNo!,  actualName : textField.text!, index: rowIndex, necId :necId as NSNumber, isSync :true,refId: resp.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                    catName: "Resp",
+                        obsName: resp1.obsName!,
+                        formName: resp.formName!,
+                        birdNo: resp.birdNo!,
+                        actualName: textField.text!,
+                        index: rowIndex,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        refId: resp.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
+                
             }
             
             dataArrayRes.removeAllObjects()
@@ -5299,7 +5880,20 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             if FetchObsArr.count > 0 {
-                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : textField.text!, index: rowIndex, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
+                
+                let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                       catName: "Immune",
+                       obsName: immune1.obsName!,
+                       formName: immune.formName!,
+                       birdNo: immune.birdNo!,
+                       actualName: textField.text!,
+                       index: rowIndex,
+                       necId: necId as NSNumber,
+                       isSync: true,
+                       refId: immune.refId!
+                )
+
+                CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
             }
             
             dataArrayImmu.removeAllObjects()

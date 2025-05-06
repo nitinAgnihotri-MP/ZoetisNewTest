@@ -554,7 +554,13 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     }
     
     
-    private func handleInovojectDataAndShowAlerts() -> Bool? {
+	fileprivate func handleRegionIdAndManageStrings() {
+		if regionID == 3, strings.contains(Constants.pleaseEnterVaccineDetailsStr) {
+			strings.removeAll { $0 == Constants.pleaseEnterVaccineDetailsStr }
+		}
+	}
+	
+	private func handleInovojectDataAndShowAlerts() -> Bool? {
         guard !inovojectData.isEmpty else {
             showAlertForNoValid()
             return regionID == 3 ? nil : false
@@ -566,10 +572,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             return regionID == 3 ? nil : false
         }
 
-        if regionID == 3, strings.contains(Constants.pleaseEnterVaccineDetailsStr) {
-            strings.removeAll { $0 == Constants.pleaseEnterVaccineDetailsStr }
-        }
-
+		handleRegionIdAndManageStrings()
+		
         for inovo in inovojectData {
             if inovo.invoHatchAntibiotic == 1, inovo.invoHatchAntibioticText.isEmpty {
                 showAlertForAntibiotic()
@@ -1146,8 +1150,22 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let refrigtorArray = CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
         if(refrigtorArray.count > 0) {
             for refrii in refrigtorArray{
-                if(CoreDataHandlerPE().checkOfflineSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)) {
-                    CoreDataHandlerPE().updateOfflineRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                if(CoreDataHandlerPE().checkOfflineSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)) {                    
+                    
+                    let updateData = CoreDataHandlerPEModels.updateOfflineRefrigeratorData(
+                        id: Int(refrii.id ?? 0),
+                          labelText: refrii.labelText ?? "",
+                          rollOut: refrii.rollOut ?? "",
+                          unit: refrii.unit ?? "",
+                          value: refrii.value ?? 0.0,
+                          catID: refrii.catID ?? 0,
+                          isCheck: refrii.isCheck ?? false,
+                          isNA: refrii.isNA ?? false,
+                          serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                    )
+
+                    CoreDataHandlerPE().updateOfflineRefrigatorInDB(updateData)
+                    
                 } else {
                     CoreDataHandlerPE().saveOfflineRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
                 }
@@ -1468,6 +1486,175 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             }
         })
     }
+	
+	private func handleNAButtonAction(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress, indexPath: IndexPath) {
+		if cell.btn_NA.isSelected {
+			handleNAButtonSelected(for: assessment, at: indexPath)
+		} else {
+			handleNAButtonDeselected(for: assessment, at: indexPath)
+		}
+	}
+	
+	private func handleNAButtonSelected(for assessment: PE_AssessmentInProgress, at indexPath: IndexPath) {
+		if assessment.sequenceNoo == 2 {
+			switch assessment.qSeqNo {
+				case 13:
+					handleMultipleNAUpdates(startIndex: indexPath.row, count: 3)
+				case 1:
+					handleMultipleNAUpdates(startIndex: indexPath.row, count: 2)
+				default:
+					handleSingleNAUpdate(for: assessment, at: indexPath)
+			}
+		} else {
+			handleSingleNAUpdate(for: assessment, at: indexPath)
+		}
+		refreshTableView()
+	}
+	
+	private func handleNAButtonDeselected(for assessment: PE_AssessmentInProgress, at indexPath: IndexPath) {
+		if assessment.sequenceNoo == 2 {
+			switch assessment.qSeqNo {
+				case 13:
+					handleMultipleNAUpdates(startIndex: indexPath.row, count: 3, isNA: false)
+				case 1:
+					handleMultipleNAUpdates(startIndex: indexPath.row, count: 2, isNA: false)
+				default:
+					handleSingleNAUpdate(for: assessment, at: indexPath, isNA: false)
+			}
+		} else {
+			handleSingleNAUpdate(for: assessment, at: indexPath, isNA: false)
+		}
+		refreshTableView()
+	}
+	
+	private func handleMultipleNAUpdates(startIndex: Int, count: Int, isNA: Bool = true) {
+		for i in 0..<count {
+			guard let assessment = catArrayForTableIs[startIndex + i] as? PE_AssessmentInProgress else { continue }
+			updateNAState(for: assessment, isNA: isNA)
+		}
+	}
+	
+	private func handleSingleNAUpdate(for assessment: PE_AssessmentInProgress, at indexPath: IndexPath, isNA: Bool = true) {
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			
+			self.tableviewIndexPath = indexPath
+			var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
+			let maxMarks = assessment.assMaxScore ?? 0
+			var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
+			
+			if assessment.assStatus != 1 {
+				if assessment.sequenceNoo == 2 && assessment.qSeqNo == 13 {
+					self.totalScoreLabel.text = String(totalresult)
+				} else {
+					totalresult += isNA ? -Int(truncating: maxMarks) : Int(truncating: maxMarks)
+					self.totalScoreLabel.text = String(totalresult)
+				}
+				
+				self.selectedCategory?.catMaxMark = totalresult
+				assessment.catMaxMark = totalresult as NSNumber
+				self.selectedCategory?.catResultMark = result
+				assessment.catResultMark = result as NSNumber
+				self.resultScoreLabel.text = String(result)
+			} else {
+				if assessment.sequenceNoo == 2 && assessment.qSeqNo == 13 {
+					self.totalScoreLabel.text = String(totalresult)
+					self.resultScoreLabel.text = String(result)
+				} else {
+					result += isNA ? -Int(truncating: maxMarks) : Int(truncating: maxMarks)
+					totalresult += isNA ? -Int(truncating: maxMarks) : Int(truncating: maxMarks)
+				}
+				
+				self.selectedCategory?.catMaxMark = totalresult
+				assessment.catMaxMark = totalresult as NSNumber
+				self.selectedCategory?.catResultMark = result
+				assessment.catResultMark = result as NSNumber
+				self.resultScoreLabel.text = String(result)
+			}
+			
+			assessment.isNA = isNA
+			self.update_isNA(assessment: assessment)
+			self.updateAssessmentInDb(assessment: assessment)
+			
+			if isNA {
+				self.handleDispatchQueueTotalScoreLbl(totalresult, result)
+			} else {
+				self.handleDispatchQueueTotalResultText(totalresult, result)
+			}
+			
+			self.updateSpecialFields(for: assessment, isNA: isNA)
+			self.catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber, peNewAssessment: self.peNewAssessment)
+			self.updateScore(isAllNA: false)
+			self.chechForLastCategory()
+		}
+	}
+	
+	private func updateNAState(for assessment: PE_AssessmentInProgress, isNA: Bool) {
+		var result = Int(resultScoreLabel.text ?? "0") ?? 0
+		let maxMarks = assessment.assMaxScore ?? 0
+		var totalresult = Int(totalScoreLabel.text ?? "0") ?? 0
+		
+		if assessment.assStatus != 1 {
+			selectedCategory?.catResultMark = result
+			assessment.catResultMark = result as NSNumber
+			resultScoreLabel.text = String(result)
+			
+			if isNA {
+				totalresult += Int(truncating: maxMarks)
+			} else {
+				totalresult -= Int(truncating: maxMarks)
+			}
+		} else {
+			if isNA {
+				totalresult += Int(truncating: maxMarks)
+				result += Int(truncating: maxMarks)
+			} else {
+				totalresult -= Int(truncating: maxMarks)
+				result -= Int(truncating: maxMarks)
+			}
+			
+			resultScoreLabel.text = String(result)
+			selectedCategory?.catResultMark = result
+			assessment.catResultMark = result as NSNumber
+		}
+		
+		selectedCategory?.catMaxMark = totalresult
+		assessment.catMaxMark = totalresult as NSNumber
+		totalScoreLabel.text = String(totalresult)
+		assessment.isNA = isNA
+		
+		update_isNA(assessment: assessment)
+		updateAssessmentInDb(assessment: assessment)
+	}
+	
+	private func updateSpecialFields(for assessment: PE_AssessmentInProgress, isNA: Bool) {
+		if assessment.sequenceNoo == 3 && assessment.rollOut == "Y" {
+			peNewAssessment.qcCount = isNA ? "NA" : ""
+			CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessment, fromDraft: true)
+		}
+		
+		if assessment.catName == "Miscellaneous" && assessment.rollOut == "Y" {
+			peNewAssessment.ampmValue = isNA ? "NA" : ""
+			CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessment, fromDraft: true)
+		}
+	}
+	
+	private func handleDispatchQueueTotalScoreLbl(_ totalresult: Int, _ result: Int) {
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			self.totalScoreLabel.text = String(totalresult)
+			self.resultScoreLabel.text = String(result)
+		}
+	}
+	
+	private func handleDispatchQueueTotalResultText(_ totalresult: Int, _ result: Int) {
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			self.totalScoreLabel.text = String(totalresult)
+			self.resultScoreLabel.text = String(result)
+		}
+	}
+
 }
 
 // MARK: - PE Draft Assessment Finalize & table View Delegates
@@ -1531,44 +1718,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
 
         return 2
     }
-    
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        if catArrayForTableIs.count > 0 {
-//            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-//            if assessment?.sequenceNoo == 1  {
-//                if checkForTraning() {
-//                    return 5
-//                } else {
-//                    return 4
-//                }
-//            } else if assessment?.sequenceNoo == 3 {
-//                if regionID != 3 {
-//                    return 1
-//                } else {
-//                    if peNewAssessment.evaluationID == 1 {
-//                        return 1
-//                    } else {
-//                        return 2
-//                    }
-//                }
-//            }
-//            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr{
-//                return 1
-//            }
-//            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-//                return 3
-//            } else {
-//                return 1
-//            }
-//        }
-//        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr{
-//            return 1
-//        }
-//        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-//            return 3
-//        }
-//        return 2
-//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if checkForTraning() {
@@ -1842,24 +1991,28 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
 
-    private func configureVaccineMixerCellCompletions(_ cell: VaccineMixerCell, at indexPath: IndexPath,tableView:UITableView) {
+	fileprivate func handleRegionAndupdateCell(_ date: String?,_ cell: VaccineMixerCell) {
+		if regionID != 3 {
+			let inputFormatter = DateFormatter()
+			inputFormatter.dateFormat = Constants.ddMMyyyStr
+			let showDate = inputFormatter.date(from: date ?? "")
+			inputFormatter.dateFormat = Constants.ddMMyyyStr
+			if let showDate = showDate {
+				let resultString = inputFormatter.string(from: showDate)
+				cell.certDateSelectBtn.setTitle(resultString, for: .normal)
+			} else {
+				cell.certDateSelectBtn.setTitle(date, for: .normal)
+			}
+		} else {
+			cell.certDateSelectBtn.setTitle(date, for: .normal)
+		}
+	}
+	
+	private func configureVaccineMixerCellCompletions(_ cell: VaccineMixerCell, at indexPath: IndexPath,tableView:UITableView) {
         cell.certDateCompletion = { [unowned self] (count) in
             if cell.vaccNameField.text != "", !dataArray.contains(cell.vaccNameField.text!) {
                 let date = peNewAssessment.evaluationDate
-                if regionID != 3 {
-                    let inputFormatter = DateFormatter()
-                    inputFormatter.dateFormat = Constants.ddMMyyyStr
-                    let showDate = inputFormatter.date(from: date ?? "")
-                    inputFormatter.dateFormat = Constants.ddMMyyyStr
-                    if let showDate = showDate {
-                        let resultString = inputFormatter.string(from: showDate)
-                        cell.certDateSelectBtn.setTitle(resultString, for: .normal)
-                    } else {
-                        cell.certDateSelectBtn.setTitle(date, for: .normal)
-                    }
-                } else {
-                    cell.certDateSelectBtn.setTitle(date, for: .normal)
-                }
+				handleRegionAndupdateCell(date,cell)
                 cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                 dateBlock?(date, false, true, count)
             }
@@ -2666,10 +2819,10 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
             if vManufacutrerNameArray.count > 0 {
                 self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
-                    self.dayOfAgeSData[indexPath.row].vaccineMan = selectedVal
+                    self.dayOfAgeData[indexPath.row].vaccineMan = selectedVal
                     self.reloadTableViewWithoutAnimation()
-                    self.dayOfAgeSData[indexPath.row].name = ""
-                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
+                    self.dayOfAgeData[indexPath.row].name = ""
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
                     self.reloadTableViewWithoutAnimation()
                 }
                 self.dropHiddenAndShow()
@@ -2686,7 +2839,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
             self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String]() , kWidth: cell.tfAmpleSize.frame.width, kAnchor: cell.tfAmpleSize, yheight: cell.tfAmpleSize.bounds.height) { [unowned self] selectedVal, index  in
                 
-                self.dayOfAgeSData[indexPath.row].ampuleSize = selectedVal
+                self.dayOfAgeData[indexPath.row].ampuleSize = selectedVal
                 self.handlePENewAssessmentDDt()
                 
                 let c = self.ml
@@ -2880,680 +3033,169 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    func setupPEQuestionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> PEQuestionTableViewCell {
+    // MARK: - Cell Configuration Helpers
+    private func configureNAButton(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress?) {
+        if regionID != 3 {
+            let isNAAllowed = assessment?.isAllowNA ?? false
+            cell.btn_NA.isHidden = !isNAAllowed
+            cell.lbl_NA.isHidden = !isNAAllowed
+            
+            if isNAAllowed {
+                cell.btn_NA.isSelected = assessment?.isNA ?? false
+                configureNAState(for: cell, assessment: assessment)
+            }
+        } else {
+            cell.btn_NA.isHidden = true
+            cell.lbl_NA.isHidden = true
+        }
         
-        if let cell = tableView.dequeueReusableCell(withIdentifier: PEQuestionTableViewCell.identifier) as? PEQuestionTableViewCell{
-            catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-            var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-            cell.assessmentProgress = assessment
-            
-            if regionID != 3 {
-                if((assessment?.isAllowNA) ?? false ) {
-                    cell.btn_NA.isHidden = false
-                    cell.lbl_NA.isHidden = false
-                    if((assessment?.isNA) ?? false) {
-                        cell.btn_NA.isSelected = true
-                        
-                        if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3  && assessment?.qSeqNo == 12{
-                            cell.txtQCCount.text =  "NA"
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        if assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous" && assessment?.qSeqNo == 1{
-                            cell.txtQCCount.text =  "NA"
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                    } else {
-                        if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3 && assessment?.qSeqNo == 12{
-                            cell.txtQCCount.text =  ""
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        if assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous" && assessment?.qSeqNo == 1{
-                            cell.txtQCCount.text =  ""
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        cell.btn_NA.isSelected = false
-                    }
-                } else {
-                    cell.btn_NA.isHidden = true
-                    cell.lbl_NA.isHidden = true
-                }
-            } else {
-                cell.btn_NA.isHidden = true
-                
-                cell.lbl_NA.isHidden = true
-            }
-            
-            
-            if(btn_NA.isSelected) {
-                cell.btn_NA.isUserInteractionEnabled = false
-            } else {
-                cell.btn_NA.isUserInteractionEnabled = true
-            }
-            
-            if((assessment?.isNA) ?? false) {
-                cell.btn_NA.isSelected = true
-                cell.contentView.alpha = 0.3
-                cell.btnImageCount.isUserInteractionEnabled = false
-                cell.noteBtn.isUserInteractionEnabled = false
-                cell.cameraBTn.isUserInteractionEnabled = false
-                cell.assessmentLbl.isUserInteractionEnabled = false
-                cell.switchBtn.isUserInteractionEnabled = false
-                cell.btnInfo.isUserInteractionEnabled = false
-                cell.txtQCCount.isUserInteractionEnabled = false
-            }
-            else {
-                
-                cell.btn_NA.isSelected = false
-                cell.contentView.alpha = 1
-                cell.btnImageCount.isUserInteractionEnabled = true
-                cell.noteBtn.isUserInteractionEnabled = true
-                cell.cameraBTn.isUserInteractionEnabled = true
-                cell.assessmentLbl.isUserInteractionEnabled = true
-                cell.switchBtn.isUserInteractionEnabled = true
-                cell.btnInfo.isUserInteractionEnabled = true
-                cell.txtQCCount.isUserInteractionEnabled = true
-                
-            }
-            
-            let maxMarksIs = assessment?.assMaxScore as? Int ?? 0
-            let boldMark1 =  "("
-            let boldMark2 =  ")"
-            let mrk = String(maxMarksIs)
-            if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3 && assessment?.qSeqNo == 12 {
-                cell.txtQCCount.text =  assessment?.qcCount ?? ""
-                cell.showQcCountextField()
-                if(assessment?.isNA ?? false) {
-                    cell.txtQCCount.text =  "NA"
-                    cell.showQcCountextField()
-                    self.peNewAssessment.qcCount  = "NA"
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                } else {
-                    cell.txtQCCount.text =  assessment?.qcCount ?? ""
-                    cell.showQcCountextField()
-                    self.peNewAssessment.qcCount  = cell.txtQCCount.text
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                    
-                }
-            } else if assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous" && assessment?.qSeqNo == 1 {
-                cell.txtQCCount.text =  assessment?.ampmValue ?? ""
-                cell.showAMPMValuetextField()
-                if(assessment?.isNA ?? false) {
-                    cell.txtQCCount.text =  "NA"
-                    cell.showAMPMValuetextField()
-                    self.peNewAssessment.ampmValue  = "NA"
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                } else {
-                    cell.txtQCCount.text =  assessment?.ampmValue ?? ""
-                    cell.showAMPMValuetextField()
-                    self.peNewAssessment.ampmValue  = cell.txtQCCount.text
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                }
-            } else if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3 && assessment?.qSeqNo == 1
-            {
-                cell.txtPersonName.text =  assessment?.personName ?? ""
-                cell.txtFrequency.text =  assessment?.frequency ?? ""
-                cell.showFrequencytextField()
-            }
-            
-            else if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 5 && assessment?.qSeqNo == 5
-            {
-                cell.txtQCCount.text = assessment?.ppmValue ?? ""
-                cell.showPPMField()
-                self.peNewAssessment.ppmValue  = cell.txtQCCount.text
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-            }
-            
-            else {
+        cell.btn_NA.isUserInteractionEnabled = !btn_NA.isSelected
+    }
+
+    private func configureNAState(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress?) {
+        let isNA = assessment?.isNA ?? false
+        cell.btn_NA.isSelected = isNA
+        cell.contentView.alpha = isNA ? 0.3 : 1.0
+        
+        let userInteractionEnabled = !isNA
+        cell.btnImageCount.isUserInteractionEnabled = userInteractionEnabled
+        cell.noteBtn.isUserInteractionEnabled = userInteractionEnabled
+        cell.cameraBTn.isUserInteractionEnabled = userInteractionEnabled
+        cell.assessmentLbl.isUserInteractionEnabled = userInteractionEnabled
+        cell.switchBtn.isUserInteractionEnabled = userInteractionEnabled
+        cell.btnInfo.isUserInteractionEnabled = userInteractionEnabled
+        cell.txtQCCount.isUserInteractionEnabled = userInteractionEnabled
+    }
+
+    private func configureSpecialFields(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress?) {
+        guard let assessment = assessment else { return }
+        
+        if assessment.rollOut == "Y" {
+            switch (assessment.sequenceNoo, assessment.qSeqNo) {
+            case (3, 12):
+                configureQCCountField(for: cell, assessment: assessment)
+            case (_, _) where assessment.catName == "Miscellaneous" && assessment.qSeqNo == 1:
+                configureAMPMField(for: cell, assessment: assessment)
+            case (3, 1):
+                configurePersonNameAndFrequency(for: cell, assessment: assessment)
+            default:
                 cell.hideAMPMValuetextField()
                 cell.hideQcCountextField()
-                cell.hidePPMfield()
             }
-            
-            cell.setGraddientAndLayerQcCountextFieldView()
-            cell.assessmentLbl.text =  boldMark1 + mrk + boldMark2 + (assessment?.assDetail1 ?? "")
-            cell.assessmentLbl.attributedText =   cell.assessmentLbl.text?.withBoldText(text: boldMark1 + mrk + boldMark2)
-            
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  UIColor.cellAlternateBlueCOlor()
-            } else {
-                cell.contentView.backgroundColor =   UIColor.white
-            }
-            if assessment?.camera == 1 {
-                cell.cameraBTn.isEnabled = true
-                cell.cameraBTn.alpha = 1
-            } else {
-                cell.cameraBTn.isEnabled = false
-                cell.cameraBTn.alpha = 0.3
-            }
-            
-            if assessment?.assStatus == 1 {
-//                cell.switchClicked(status: true)
-                cell.switchBtn.setOn(true, animated: false)
-            } else {
-//                cell.switchClicked(status: false)
-                cell.switchBtn.setOn(false, animated: false)
-            }
-            let imageCount = assessment?.images as? [Int]
-            let cnt = imageCount?.count
-            let ttle = String(cnt ?? 0)
-            cell.btnImageCount.setTitle(ttle,for: .normal)
-            if ttle == "0"{
-                cell.btnImageCount.isHidden = true
-            } else {
-                cell.btnImageCount.isHidden = false
-            }
-            let image1 = UIImage(named: Constants.peCommentImageStr)
-            let image2 = UIImage(named: Constants.peCommentSelectedStr)
-            if assessment?.note == "" || assessment?.note == nil {
-                cell.noteBtn.setImage(image1, for: .normal)
-            } else {
-                cell.noteBtn.setImage(image2, for: .normal)
-            }
-            
-            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-            {
-                cell.txtQCCount.isUserInteractionEnabled = false
-                cell.txtPersonName.isUserInteractionEnabled = false
-                cell.switchBtn.isUserInteractionEnabled = false
-                cell.txtFrequency.isUserInteractionEnabled = false
-                cell.cameraBTn.isUserInteractionEnabled = false
-                cell.noteBtn.isUserInteractionEnabled = true
-                cell.viewFrequency.isUserInteractionEnabled = false
-                cell.btnImageCount.isUserInteractionEnabled = true
-                cell.btnInfo.isUserInteractionEnabled = true
-            }
-            else
-            {
-                cell.txtQCCount.isUserInteractionEnabled = true
-                cell.txtPersonName.isUserInteractionEnabled = true
-                cell.switchBtn.isUserInteractionEnabled = true
-                cell.txtFrequency.isUserInteractionEnabled = true
-                cell.cameraBTn.isUserInteractionEnabled = true
-                cell.noteBtn.isUserInteractionEnabled = true
-                cell.viewFrequency.isUserInteractionEnabled = true
-                cell.btnImageCount.isUserInteractionEnabled = true
-                cell.btnInfo.isUserInteractionEnabled = true
-            }
-            
-            cell.txtQCCountCompletion = {[unowned self] ( txt) in
-                self.peNewAssessment.qcCount  = txt ?? ""
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-            }
-            
-            cell.txtAMPMCompletion = {[unowned self] ( txt) in
-                self.peNewAssessment.ampmValue  = txt ?? ""
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-            }
-            
-            cell.txtNamePersonCompletion = {[unowned self] ( txt) in
-                self.peNewAssessment.personName  = txt ?? ""
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-            }
-            
-            cell.txtPPMCompletion = {[unowned self] ( txt) in
-                self.peNewAssessment.ppmValue  = txt ?? ""
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-            }
-            
-            
-            cell.btnFrequencyClickedCompletion = {[unowned self] ( error) in
-                let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-                let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-                if vManufacutrerNameArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.txtFrequency.frame.width, kAnchor: cell.txtFrequency, yheight: cell.txtFrequency.bounds.height) { [unowned self] selectedVal, index  in
-                        cell.txtFrequency.text = selectedVal
-                        self.peNewAssessment.frequency = selectedVal
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                    }
-                    self.dropHiddenAndShow()
-                }
-            }
-            
-            cell.completion = { [unowned self] (status, error) in
-                self.tableviewIndexPath = indexPath
-                self.tableview.isUserInteractionEnabled = true
-                textValue = Int(assessment?.ppmValue ?? "")
-                if status ?? false {
-                    
-                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                    let maxMarks =  assessment?.assMaxScore ?? 0
-                    result = result + Int(truncating: maxMarks)
-                    self.selectedCategory?.catResultMark = result
-                    assessment?.catResultMark = result as NSNumber
-                    self.resultScoreLabel.text = String(result)
-                    assessment?.assStatus = 1
-                    self.updateAssessmentInDb(assessment : assessment!)
-                    
-                }
-                 else {
-                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                    let maxMarks = assessment?.assMaxScore ?? 0
-                    result = result - Int(truncating: maxMarks)
-                    self.selectedCategory?.catResultMark = result
-                    assessment?.catResultMark = result as NSNumber
-                    self.resultScoreLabel.text = String(result)
-                    assessment?.assStatus = 0
-                    
-                    self.updateAssessmentInDb(assessment : assessment!)
-                    
-                }
-                
-                self.updateScore(isAllNA: false)
-                self.catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-                self.chechForLastCategory()
-                self.tableview.isUserInteractionEnabled = true
-            }
-            cell.imagesCompletion  = {[unowned self] ( error) in
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as? GroupImagesPEViewController
-                self.refreshArray()
-                assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                vc?.imagesArray = assessment?.images as? [Int] ?? [Int]()
-                if vc != nil{
-                    self.navigationController?.present(vc!, animated: false, completion: nil)
-                }
-            }
-            cell.btnNA  = {[unowned self] () in
-                
-                if(cell.btn_NA.isSelected) {
-                    
-                    if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                        for i in 0..<3{
-                            let newAssment = catArrayForTableIs[indexPath.row + i] as? PE_AssessmentInProgress
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  newAssment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            if(newAssment?.assStatus != 1) {
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                if(newAssment?.isNA ?? false) {
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                newAssment?.isNA = false
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            else{
-                                if(newAssment?.isNA ?? false) {
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                    result = result + Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                self.resultScoreLabel.text = String(result)
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                newAssment?.isNA = false
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            
-                        }
-                        self.refreshTableView()
-                    }
-                    if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 1) {
-                        for i in 0..<2{
-                            let newAssment = catArrayForTableIs[indexPath.row + i] as? PE_AssessmentInProgress
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  newAssment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            if(newAssment?.assStatus != 1) {
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                if(newAssment?.isNA ?? false) {
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                newAssment?.isNA = false
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            else{
-                                
-                                if(newAssment?.isNA ?? false) {
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                    result = result + Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                self.totalScoreLabel.text = String(totalresult)
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                newAssment?.isNA = false
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                        }
-                        self.refreshTableView()
-                    }
-                    else{
-                        DispatchQueue.main.async {
-                            self.tableviewIndexPath = indexPath
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  assessment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            if(assessment?.assStatus != 1) {
-                                
-                                if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                                    self.totalScoreLabel.text = String(totalresult)
-                                    
-                                } else {
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                    self.totalScoreLabel.text = String(totalresult)
-                                }
-                                
-                                self.selectedCategory?.catMaxMark = totalresult
-                                assessment?.catMaxMark = totalresult as NSNumber
-                                self.selectedCategory?.catResultMark = result
-                                assessment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                assessment?.isNA = false
-                                cell.btn_NA.isSelected = false
-                                cell.contentView.alpha = 1
-                                cell.btnImageCount.isUserInteractionEnabled = true
-                                cell.noteBtn.isUserInteractionEnabled = true
-                                cell.cameraBTn.isUserInteractionEnabled = true
-                                cell.assessmentLbl.isUserInteractionEnabled = true
-                                cell.switchBtn.isUserInteractionEnabled = true
-                                cell.btnInfo.isUserInteractionEnabled = true
-                                cell.txtQCCount.isUserInteractionEnabled = true
-                                self.update_isNA(assessment: assessment!)
-                                self.updateAssessmentInDb(assessment : assessment!)
-                                
-                            } else {
-                                
-                                if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                                    self.handleTextfieldTextForResultAndTotalResult(result, totalresult)
-                                } else {
-                                    result = result + Int(truncating: maxMarks)
-                                    totalresult = totalresult + Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                assessment?.catMaxMark = totalresult as NSNumber
-                                self.selectedCategory?.catResultMark = result
-                                assessment?.catResultMark = result as NSNumber
-                                assessment?.isNA = false
-                                cell.btn_NA.isSelected = false
-                                cell.contentView.alpha = 1
-                                cell.btnImageCount.isUserInteractionEnabled = true
-                                cell.noteBtn.isUserInteractionEnabled = true
-                                cell.cameraBTn.isUserInteractionEnabled = true
-                                cell.assessmentLbl.isUserInteractionEnabled = true
-                                cell.switchBtn.isUserInteractionEnabled = true
-                                cell.btnInfo.isUserInteractionEnabled = true
-                                cell.txtQCCount.isUserInteractionEnabled = true
-                                self.update_isNA(assessment: assessment!)
-                                self.updateAssessmentInDb(assessment : assessment!)
-                                self.handleTextfieldTextForResultAndTotalResult(result, totalresult)
-                            }
-                            
-                            if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y"{
-                                cell.txtQCCount.text =  ""
-                                cell.txtQCCount.isUserInteractionEnabled = true//false
-                                self.peNewAssessment.qcCount  = ""
-                                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                            }
-                            if assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y" {
-                                cell.txtQCCount.text =  ""
-                                cell.txtQCCount.isUserInteractionEnabled = true//false
-                                self.peNewAssessment.ampmValue  = ""
-                                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft: true)
-                            }
-                            
-                            self.catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-                            
-                            updateScore(isAllNA: false)
-                            self.chechForLastCategory()
-                        }
-                    }
-                } else {
-                    if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                        for i in 0..<3{
-                            let newAssment = catArrayForTableIs[indexPath.row + i] as? PE_AssessmentInProgress
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  newAssment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            if(newAssment?.assStatus != 1) {
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                if(newAssment?.isNA == false) {
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                }
-                                
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                newAssment?.isNA = true
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            else{
-                                
-                                if(newAssment?.isNA == false) {
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                    result = result - Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                newAssment?.isNA = true
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            
-                        }
-                        self.refreshTableView()
-                    }
-                    if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 1) {
-                        for i in 0..<2{
-                            let newAssment = catArrayForTableIs[indexPath.row + i] as? PE_AssessmentInProgress
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  newAssment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            if(newAssment?.assStatus != 1) {
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                self.resultScoreLabel.text = String(result)
-                                if(newAssment?.isNA == false) {
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                }
-                                
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                newAssment?.isNA = true
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                            else{
-                                
-                                if(newAssment?.isNA == false) {
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                    result = result - Int(truncating: maxMarks)
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                newAssment?.catMaxMark = totalresult as NSNumber
-                                self.totalScoreLabel.text = String(totalresult)
-                                self.resultScoreLabel.text = String(result)
-                                self.selectedCategory?.catResultMark = result
-                                newAssment?.catResultMark = result as NSNumber
-                                newAssment?.isNA = true
-                                self.update_isNA(assessment: newAssment!)
-                                self.updateAssessmentInDb(assessment : newAssment!)
-                            }
-                        }
-                        self.refreshTableView()
-                    }
-                    else{
-                        
-                        DispatchQueue.main.async {
-                            self.tableviewIndexPath = indexPath
-                            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                            let maxMarks =  assessment?.assMaxScore ?? 0
-                            var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                            
-                            if(assessment?.assStatus != 1) {
-                                
-                                if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                                    self.totalScoreLabel.text = String(totalresult)
-                                } else {
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                    self.totalScoreLabel.text = String(totalresult)
-                                }
-                                
-                                self.selectedCategory?.catMaxMark = totalresult
-                                assessment?.catMaxMark = totalresult as NSNumber
-                                self.selectedCategory?.catResultMark = result
-                                self.resultScoreLabel.text = String(result)
-                                assessment?.catResultMark = result as NSNumber
-                                assessment?.isNA = true
-                                cell.btn_NA.isSelected = true
-                                cell.contentView.alpha = 0.3
-                                cell.btnImageCount.isUserInteractionEnabled = false
-                                cell.noteBtn.isUserInteractionEnabled = false
-                                cell.cameraBTn.isUserInteractionEnabled = false
-                                cell.assessmentLbl.isUserInteractionEnabled = false
-                                cell.switchBtn.isUserInteractionEnabled = false
-                                cell.btnInfo.isUserInteractionEnabled = false
-                                cell.txtQCCount.isUserInteractionEnabled = false
-                                self.update_isNA(assessment: assessment!)
-                                self.updateAssessmentInDb(assessment : assessment!)
-                                
-                            }
-                            else{
-                                
-                                if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
-                                    self.handleTextfieldTextForResultAndTotalResult(result, totalresult)
-                                    
-                                } else {
-                                    result = result - Int(truncating: maxMarks)
-                                    totalresult = totalresult - Int(truncating: maxMarks)
-                                    
-                                }
-                                self.selectedCategory?.catMaxMark = totalresult
-                                assessment?.catMaxMark = totalresult as NSNumber
-                                self.selectedCategory?.catResultMark = result
-                                assessment?.catResultMark = result as NSNumber
-                                assessment?.isNA = true
-                                cell.btn_NA.isSelected = true
-                                cell.contentView.alpha = 0.3
-                                cell.btnImageCount.isUserInteractionEnabled = false
-                                cell.noteBtn.isUserInteractionEnabled = false
-                                cell.cameraBTn.isUserInteractionEnabled = false
-                                cell.assessmentLbl.isUserInteractionEnabled = false
-                                cell.switchBtn.isUserInteractionEnabled = false
-                                cell.btnInfo.isUserInteractionEnabled = false
-                                cell.txtQCCount.isUserInteractionEnabled = false
-                                self.update_isNA(assessment: assessment!)
-                                self.updateAssessmentInDb(assessment : assessment!)
-                                self.handleTextfieldTextForResultAndTotalResult(result, totalresult)
-                                
-                            }
-                            if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y"{
-                                cell.txtQCCount.text =  "NA"
-                                cell.txtQCCount.isUserInteractionEnabled = false
-                                self.peNewAssessment.qcCount  = "NA"
-                                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                            }
-                            if assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y"{
-                                cell.txtQCCount.text =  "NA"
-                                cell.txtQCCount.isUserInteractionEnabled = false
-                                self.peNewAssessment.ampmValue  = "NA"
-                                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
-                            }
-                            
-                            self.catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-                            
-                            self.refreshTableView()
-                            updateScore(isAllNA: false)
-                            self.chechForLastCategory()
-                        }
-                    }
-                }
-                
-            }
-            cell.commentCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                self.refreshArray()
-                assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-                vc.textOfTextView = assessment?.note ?? ""
-                vc.infoText = assessment?.informationText ?? ""
-                if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
-                    vc.editable = false
-                    
-                    if vc.editable {
-                        self.navigationController?.present(vc, animated: false, completion: nil)
-                    } else {
-                        if assessment?.note != nil && assessment?.note != ""{
-                            self.navigationController?.present(vc, animated: false, completion: nil)
-                        }
-                    }
-                } else {
-                    vc.commentCompleted = {[unowned self] ( note) in
-                        if note == "" {
-                            let image = UIImage(named: Constants.peCommentImageStr)
-                            cell.noteBtn.setImage(image, for: .normal)
-                            
-                        } else {
-                            let image = UIImage(named: Constants.peCommentSelectedStr)
-                            cell.noteBtn.setImage(image, for: .normal)
-                            
-                        }
-                        assessment?.note = note
-                        if assessment != nil {
-                            self.updateNoteAssessmentInProgressPE(assessment : assessment!)
-                        }
-                    }
-                    self.navigationController?.present(vc, animated: false, completion: nil)
-                }
-                
-            }
-            cell.cameraCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                
-                var assessment = self.catArrayForTableIs[self.tableviewIndexPath.row] as? PE_AssessmentInProgress
-                
-                let images = CoreDataHandlerPE().getImagecountOfQuestion(assessment:assessment ?? PE_AssessmentInProgress(),fromDraft: true)
-                if images < 5 {
-                    self.takePhoto(cell.cameraBTn)
-                } else {
-                    self.showAlertForNoCamera()
-                }
-            }
-            cell.infoCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "InfoPEViewController") as? InfoPEViewController
-                let maxMarksIs =  assessment?.assMaxScore as? Int ?? 0
-                let boldMark1 =  "("
-                let boldMark2 =  ") "
-                let mrk = String(maxMarksIs)
-                let str  =  boldMark1 + mrk + boldMark2 + (assessment?.assDetail1 ?? "")
-                vc?.questionDescriptionIs = str
-                vc?.imageDataBase64 = assessment?.informationImage ?? ""
-                vc?.infotextIs = assessment?.informationText ?? ""
-                if vc != nil{
-                    self.navigationController?.present(vc!, animated: false, completion: nil)
-                }
-            }
-            return cell
         }
-        return UITableViewCell() as! PEQuestionTableViewCell
+    }
+
+    private func configureQCCountField(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress) {
+        cell.showQcCountextField()
+        cell.txtQCCount.text = assessment.isNA ? "NA" : (assessment.qcCount ?? "")
+        peNewAssessment.qcCount = cell.txtQCCount.text
+        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessment, fromDraft: true)
+    }
+
+    private func configureAMPMField(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress) {
+        cell.showAMPMValuetextField()
+        cell.txtQCCount.text = assessment.isNA ? "NA" : (assessment.ampmValue ?? "")
+        peNewAssessment.ampmValue = cell.txtQCCount.text
+        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessment, fromDraft: true)
+    }
+
+    private func configurePersonNameAndFrequency(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress) {
+        cell.txtPersonName.text = assessment.personName ?? ""
+        cell.txtFrequency.text = assessment.frequency ?? ""
+        cell.showFrequencytextField()
+    }
+
+    private func configureCellAppearance(for cell: PEQuestionTableViewCell, at indexPath: IndexPath, assessment: PE_AssessmentInProgress?) {
+        cell.contentView.backgroundColor = indexPath.row % 2 == 0 ? UIColor.cellAlternateBlueCOlor() : UIColor.white
+        
+        if let assessment = assessment {
+            let maxMarks = assessment.assMaxScore as? Int ?? 0
+            let markText = "(\(maxMarks))"
+            cell.assessmentLbl.text = markText + (assessment.assDetail1 ?? "")
+            cell.assessmentLbl.attributedText = cell.assessmentLbl.text?.withBoldText(text: markText)
+            
+            cell.cameraBTn.isEnabled = assessment.camera == 1
+            cell.cameraBTn.alpha = assessment.camera == 1 ? 1 : 0.3
+            
+            cell.switchBtn.setOn(assessment.assStatus == 1, animated: false)
+            
+            let imageCount = assessment.images as? [Int] ?? []
+            let count = imageCount.count
+            cell.btnImageCount.setTitle(String(count), for: .normal)
+            cell.btnImageCount.isHidden = count == 0
+            
+            let noteImage = assessment.note?.isEmpty ?? true ? 
+                UIImage(named: Constants.peCommentImageStr) : 
+                UIImage(named: Constants.peCommentSelectedStr)
+            cell.noteBtn.setImage(noteImage, for: .normal)
+        }
+    }
+
+    // MARK: - Main Cell Setup Function
+    func setupPEQuestionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> PEQuestionTableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PEQuestionTableViewCell.identifier) as? PEQuestionTableViewCell,
+              let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress else {
+            return PEQuestionTableViewCell()
+        }
+        
+        cell.assessmentProgress = assessment
+        
+        // Configure cell components
+        configureNAButton(for: cell, assessment: assessment)
+        configureSpecialFields(for: cell, assessment: assessment)
+        configureCellAppearance(for: cell, at: indexPath, assessment: assessment)
+        
+        // Set up completion handlers
+        setupCompletionHandlers(for: cell, assessment: assessment, indexPath: indexPath)
+        
+        return cell
+    }
+
+    private func setupCompletionHandlers(for cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress, indexPath: IndexPath) {
+        cell.completion = { [weak self] (status, error) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.handleAssessmentCompletion(status: status, assessment: assessment, indexPath: indexPath)
+            }
+        }
+        
+        cell.imagesCompletion = { [weak self] (error) in
+            guard let self = self else { return }
+            self.presentGroupImagesViewController(for: assessment, at: indexPath)
+        }
+        
+        cell.btnNA = { [weak self] in
+            guard let self = self else { return }
+            self.handleNAButtonAction(for: cell, assessment: assessment, indexPath: indexPath)
+        }
+    }
+
+    private func handleAssessmentCompletion(status: Bool?, assessment: PE_AssessmentInProgress, indexPath: IndexPath) {
+        tableviewIndexPath = indexPath
+        tableview.isUserInteractionEnabled = false
+        
+        var result = Int(resultScoreLabel.text ?? "0") ?? 0
+        let maxMarks = assessment.assMaxScore ?? 0
+        result += status ?? false ? Int(truncating: maxMarks) : -Int(truncating: maxMarks)
+        
+        selectedCategory?.catResultMark = result
+        assessment.catResultMark = result as NSNumber
+        resultScoreLabel.text = String(result)
+        assessment.assStatus = status ?? false ? 1 : 0
+        
+        updateAssessmentInDb(assessment: assessment)
+        updateScore(isAllNA: false)
+        chechForLastCategory()
+        tableview.isUserInteractionEnabled = true
+    }
+
+    private func presentGroupImagesViewController(for assessment: PE_AssessmentInProgress, at indexPath: IndexPath) {
+        let storyBoard = UIStoryboard(name: "PEStoryboard", bundle: nil)
+        let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
+        refreshArray()
+        let updatedAssessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
+        vc.imagesArray = updatedAssessment?.images as? [Int] ?? [0]
+        navigationController?.present(vc, animated: false, completion: nil)
     }
     
     // MARK: -  DROP DOWN HIDDEN AND SHOW
@@ -3588,289 +3230,266 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr) {
-            let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-            
-            refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-            let array =   CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-            if (section == 0) {
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier)as! RefrigatorTempProbeCell
-                
-                footerView.topValueTxtFld.delegate = self
-                footerView.middleValueTxtFld.delegate = self
-                footerView.bottomValueTxtFld.delegate = self
-                footerView.mainTempUnit.isHidden = false
-                footerView.topValueTxtFld.text = ""
-                footerView.middleValueTxtFld.text = ""
-                footerView.bottomValueTxtFld.text = ""
-                
-                if(btn_NA.isSelected && self.selctedNACategoryArray.contains(78)) {
-                    footerView.contentView.alpha = 0.3
-                } else {
-                    footerView.contentView.alpha = 1
-                }
-                var assessment = array[2] as? PE_AssessmentInProgress
-                
-                var unitValue = ""
-                var valueText = ""
-                if(self.refrigtorProbeArray.count > 0) {
-                    for i in 2...4{
-                        var ar = array[i] as? PE_AssessmentInProgress
-                        for j in 0..<self.refrigtorProbeArray.count-1{
-                            if(ar?.assID == self.refrigtorProbeArray[j].id) {
-                                if(i == 2) {
-                                    footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                    
-                                }
-                                if(i == 3) {
-                                    footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                }
-                                if(i == 4) {
-                                    footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                }
-                            }
-                        }
-                        
-                    }
-                }
-                
-                
-                if(refrigtorProbeArray.count > 0) {
-                    for i in refrigtorProbeArray{
-                        let unit = i as! PE_Refrigators
-                        if(unit.unit != "") {
-                            footerView.main_UnitTextFld.text = unit.unit ?? ""
-                        }
-                        
-                    }
-                }
-                footerView.mainTempUnitCompletion = { sender,txtfld ,textLabel in
-                    var unitArray =  ["Celsius","Fahrenheit"]
-                    if unitArray.count > 0 {
-                        self.dropDownVIewNew(arrayData: unitArray ?? [], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
-                            txtfld.text = selectedVal
-                            CoreDataHandlerPE().updateUnitDraftRefrigatorInDB(Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0, unit: txtfld.text ?? "" )
-                            self.refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                            self.tableview.reloadData()
-                        }
-                        self.dropHiddenAndShow()
-                    }
-                }
-                
-                footerView.unitCompletion = { sender,txtfld ,textLabel in
-                    var unitArray = ["Fahrenheit","Celsius"]
-                    if unitArray.count > 0 {
-                        self.dropDownVIewNew(arrayData: unitArray ?? [], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
-                            txtfld.text = selectedVal
-                            
-                            if(textLabel == "Top") {
-                                assessment = array[2] as? PE_AssessmentInProgress
-                                valueText = footerView.topValueTxtFld.text ?? ""
-                                
-                                
-                            }
-                            else if (textLabel == "Middle") {
-                                assessment = array[3] as? PE_AssessmentInProgress
-                                valueText = footerView.middleValueTxtFld.text ?? ""
-                                
-                            }
-                            else{
-                                assessment = array[4] as? PE_AssessmentInProgress
-                                valueText = footerView.bottomValueTxtFld.text ?? ""
-                                
-                            }
-                            let assID = assessment?.assID
-                            if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)) {
-                                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "" , value: Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                                self.tableview.reloadData()
-                                
-                            }
-                            else{
-                                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "" , value: Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                                
-                                self.tableview.reloadData()
-                            }
-                            
-                        }
-                        self.dropHiddenAndShow()
-                    }
-                }
-                
-                footerView.valueCompletion = { value , textLabel in
-                    if(textLabel == "Top") {
-                        unitValue =  footerView.topTxtFld.text ?? ""
-                        assessment = array[2] as? PE_AssessmentInProgress
-                        
-                        
-                    }
-                    else if (textLabel == "Middle") {
-                        unitValue =  footerView.middleTxtFld.text ?? ""
-                        assessment = array[3] as? PE_AssessmentInProgress
-                        
-                    }
-                    else{
-                        unitValue =  footerView.bottomTxtFld.text ?? ""
-                        assessment = array[4] as? PE_AssessmentInProgress
-                        
-                    }
-                    let assID = assessment?.assID
-                    if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(value?.text ?? "0.0") ?? 0.0 ,catID: self.selectedCategory?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        self.tableview.reloadData()
-                        
-                    }
-                    else{
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(value?.text ?? "0.0") ?? 0.0,catID: self.selectedCategory?.catID as! NSNumber,isCheck: true,isNA: false ,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        self.tableview.reloadData()
-                    }
-                    
-                }
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
-            }
-            else if ( section == 1) {
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier)as! RefrigatorTempProbeCell
-                footerView.mainTempUnit.isHidden = true
-                footerView.topValueTxtFld.delegate = self
-                footerView.middleValueTxtFld.delegate = self
-                footerView.bottomValueTxtFld.delegate = self
-                footerView.topValueTxtFld.text = ""
-                footerView.middleValueTxtFld.text = ""
-                footerView.bottomValueTxtFld.text = ""
-                if(btn_NA.isSelected && self.selctedNACategoryArray.contains(78)) {
-                    footerView.contentView.alpha = 0.3
-                    
-                } else {
-                    footerView.contentView.alpha = 1
-                }
-                var assessment = array[7] as? PE_AssessmentInProgress
-                var unitValue = ""
-                var valueText = ""
-                
-                
-                if(self.refrigtorProbeArray.count > 0) {
-                    for i in 7...9{
-                        var ar = array[i] as? PE_AssessmentInProgress
-                        
-                        for j in 0..<self.refrigtorProbeArray.count{
-                            if(ar?.assID == self.refrigtorProbeArray[j].id) {
-                                if(i == 7) {
-                                    footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                }
-                                if(i == 8) {
-                                    footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                }
-                                if(i == 9) {
-                                    footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                                        footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    }
-                                    
-                                }
-                            }
-                            
-                        }
-                        
-                    }
-                }
-                footerView.unitCompletion = { sender,txtfld ,textLabel in
-                    var unitArray = ["Fahrenheit","Celsius"]
-                    if unitArray.count > 0 {
-                        self.dropDownVIewNew(arrayData: unitArray ?? [], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
-                            txtfld.text = selectedVal
-                            
-                            if(textLabel == "Top") {
-                                assessment = array[7] as? PE_AssessmentInProgress
-                                valueText = footerView.topValueTxtFld.text ?? ""
-                            }
-                            if (textLabel == "Middle") {
-                                assessment = array[8] as? PE_AssessmentInProgress
-                                valueText = footerView.middleValueTxtFld.text ?? ""
-                            }
-                            if(textLabel == "Bottom") {
-                                assessment = array[9] as? PE_AssessmentInProgress
-                                valueText = footerView.bottomValueTxtFld.text ?? ""
-                            }
-                            let assID = assessment?.assID
-                            if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)) {
-                                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "" , value: Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            }
-                            else{
-                                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "" , value: Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            }
-                        }
-                        self.dropHiddenAndShow()
-                    }
-                }
-                
-                footerView.valueCompletion = { value , textLabel in
-                    if(textLabel == "Top") {
-                        unitValue =  footerView.topTxtFld.text ?? ""
-                        assessment = array[7] as? PE_AssessmentInProgress
-                    }
-                    else if (textLabel == "Middle") {
-                        unitValue =  footerView.middleTxtFld.text ?? ""
-                        assessment = array[8] as? PE_AssessmentInProgress
-                    }
-                    else{
-                        unitValue =  footerView.bottomTxtFld.text ?? ""
-                        assessment = array[9] as? PE_AssessmentInProgress
-                    }
-                    let assID = assessment?.assID
-                    if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(value?.text ?? "") ?? 0.0 ,catID: 1,isCheck: true,isNA: false ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                    }
-                    else{
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(value?.text ?? "") ?? 0.0 ,catID: 1,isCheck: true,isNA: false,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                    }
-                    
-                }
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
-            } else {
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: FrezerFooterViewCell.identifier)as! FrezerFooterViewCell
-                if(btn_NA.isSelected && self.selctedNACategoryArray.contains(78)) {
-                    footerView.contentView.alpha = 0.3
-                } else {
-                    footerView.contentView.alpha = 1
-                    
-                }
-                
-                footerView.textFieldView.text  = self.peNewAssessment.refrigeratorNote ?? ""
-                footerView.noteCompletion = { textLabel in
-                    
-                    self.peNewAssessment.refrigeratorNote = textLabel ?? ""
-                    UserDefaults.standard.set(textLabel ?? "", forKey:"re_note")
-                    UserDefaults.standard.set(self.selectedCategory?.serverAssessmentId ,forKey:"assIID")
-                    CoreDataHandlerPE().updateDraftRefriNoteAssessmentInProgress(text: textLabel ?? "")
-                }
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
+        guard isRefrigeratorFooterSection() else { return UIView() }
+        
+        let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
+        refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+        let array = CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber, peNewAssessment: self.peNewAssessment)
+        
+        switch section {
+        case 0:
+				return setupFirstFooterSection(tableView, array: array as! [Any])
+        case 1:
+				return setupSecondFooterSection(tableView, array: array as! [Any])
+        default:
+            return setupDefaultFooterSection(tableView)
+        }
+    }
+    
+    private func isRefrigeratorFooterSection() -> Bool {
+        return selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr
+    }
+    
+    private func setupFirstFooterSection(_ tableView: UITableView, array: [Any]) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier) as! RefrigatorTempProbeCell
+        configureFirstFooterSection(footerView)
+        setupFirstFooterSectionData(footerView, array: array)
+        setupFirstFooterSectionCompletions(footerView, array: array)
+        return footerView
+    }
+    
+    private func configureFirstFooterSection(_ footerView: RefrigatorTempProbeCell) {
+        footerView.topValueTxtFld.delegate = self
+        footerView.middleValueTxtFld.delegate = self
+        footerView.bottomValueTxtFld.delegate = self
+        footerView.mainTempUnit.isHidden = false
+        resetFooterTextFields(footerView)
+        updateFooterAlpha(footerView)
+    }
+    
+    private func resetFooterTextFields(_ footerView: RefrigatorTempProbeCell) {
+        footerView.topValueTxtFld.text = ""
+        footerView.middleValueTxtFld.text = ""
+        footerView.bottomValueTxtFld.text = ""
+    }
+    
+    private func updateFooterAlpha(_ footerView: RefrigatorTempProbeCell) {
+        footerView.contentView.alpha = (btn_NA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1
+    }
+    
+    private func setupFirstFooterSectionData(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        guard refrigtorProbeArray.count > 0 else { return }
+        
+        for i in 2...4 {
+            guard let ar = array[i] as? PE_AssessmentInProgress else { continue }
+            for j in 0..<refrigtorProbeArray.count-1 {
+                guard ar.assID == refrigtorProbeArray[j].id else { continue }
+                updateFooterField(footerView, index: i, probe: refrigtorProbeArray[j])
             }
         }
         
+        updateMainUnitField(footerView)
+    }
+    
+    private func updateFooterField(_ footerView: RefrigatorTempProbeCell, index: Int, probe: PE_Refrigators) {
+        switch index {
+        case 2:
+            footerView.topTxtFld.text = probe.unit ?? ""
+            if probe.value != 0.0 {
+                footerView.topValueTxtFld.text = "\(probe.value ?? 0.0)"
+            }
+        case 3:
+            footerView.middleTxtFld.text = probe.unit ?? ""
+            if probe.value != 0.0 {
+                footerView.middleValueTxtFld.text = "\(probe.value ?? 0.0)"
+            }
+        case 4:
+            footerView.bottomTxtFld.text = probe.unit ?? ""
+            if probe.value != 0.0 {
+                footerView.bottomValueTxtFld.text = "\(probe.value ?? 0.0)"
+            }
+        default:
+            break
+        }
+    }
+    
+    private func updateMainUnitField(_ footerView: RefrigatorTempProbeCell) {
+        for probe in refrigtorProbeArray {
+            if let unit = probe.unit, !unit.isEmpty {
+                footerView.main_UnitTextFld.text = unit
+                break
+            }
+        }
+    }
+    
+    private func setupFirstFooterSectionCompletions(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        setupMainTempUnitCompletion(footerView)
+        setupUnitCompletion(footerView, array: array)
+        setupValueCompletion(footerView, array: array)
+        footerView.setGraddientAndLayerQcCountextFieldView()
+    }
+    
+    private func setupMainTempUnitCompletion(_ footerView: RefrigatorTempProbeCell) {
+        footerView.mainTempUnitCompletion = { [weak self] sender, txtfld, textLabel in
+            guard let self = self else { return }
+            let unitArray = ["Celsius", "Fahrenheit"]
+            if !unitArray.isEmpty {
+                self.dropDownVIewNew(arrayData: unitArray, kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) { selectedVal, index in
+                    txtfld.text = selectedVal
+                    CoreDataHandlerPE().updateUnitDraftRefrigatorInDB(Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0, unit: txtfld.text ?? "")
+                    self.refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    self.tableview.reloadData()
+                }
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    private func setupUnitCompletion(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        footerView.unitCompletion = { [weak self] sender, txtfld, textLabel in
+            guard let self = self else { return }
+            let unitArray = ["Fahrenheit", "Celsius"]
+            if !unitArray.isEmpty {
+                self.handleUnitSelection(sender, txtfld, textLabel, array: array, footerView: footerView)
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    private func handleUnitSelection(_ sender: UIButton?, _ txtfld: UITextField, _ textLabel: String, array: [Any], footerView: RefrigatorTempProbeCell) {
+        self.dropDownVIewNew(arrayData: ["Fahrenheit", "Celsius"], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) { [weak self] selectedVal, index in
+            guard let self = self else { return }
+            txtfld.text = selectedVal
+            
+            let (assessment, valueText) = self.getAssessmentAndValueText(textLabel, array: array, footerView: footerView)
+            let assID = assessment?.assID
+            
+            if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "", value: Double(valueText) ?? 0.0, catID: 1, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            } else {
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "", value: Double(valueText) ?? 0.0, catID: 1, isCheck: true, isNA: false, schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            }
+            self.tableview.reloadData()
+        }
+    }
+    
+    private func getAssessmentAndValueText(_ textLabel: String, array: [Any], footerView: RefrigatorTempProbeCell) -> (PE_AssessmentInProgress?, String) {
+        var assessment: PE_AssessmentInProgress?
+        var valueText = ""
         
-        return UIView()
+        switch textLabel {
+        case "Top":
+            assessment = array[2] as? PE_AssessmentInProgress
+            valueText = footerView.topValueTxtFld.text ?? ""
+        case "Middle":
+            assessment = array[3] as? PE_AssessmentInProgress
+            valueText = footerView.middleValueTxtFld.text ?? ""
+        case "Bottom":
+            assessment = array[4] as? PE_AssessmentInProgress
+            valueText = footerView.bottomValueTxtFld.text ?? ""
+        default:
+            break
+        }
+        
+        return (assessment, valueText)
+    }
+    
+    private func setupValueCompletion(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        footerView.valueCompletion = { [weak self] value, textLabel in
+            guard let self = self else { return }
+            self.handleValueCompletion(value, textLabel, array: array, footerView: footerView)
+        }
+    }
+    
+    private func handleValueCompletion(_ value: UITextField?, _ textLabel: String, array: [Any], footerView: RefrigatorTempProbeCell) {
+        let (unitValue, assessment) = getUnitValueAndAssessment(textLabel, array: array, footerView: footerView)
+        let assID = assessment?.assID
+        
+        if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
+            CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValue, value: Double(value?.text ?? "0.0") ?? 0.0, catID: self.selectedCategory?.catID as! NSNumber, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+        } else {
+            CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValue, value: Double(value?.text ?? "0.0") ?? 0.0, catID: self.selectedCategory?.catID as! NSNumber, isCheck: true, isNA: false, schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+        }
+        self.tableview.reloadData()
+    }
+    
+    private func getUnitValueAndAssessment(_ textLabel: String, array: [Any], footerView: RefrigatorTempProbeCell) -> (String, PE_AssessmentInProgress?) {
+        var unitValue = ""
+        var assessment: PE_AssessmentInProgress?
+        
+        switch textLabel {
+        case "Top":
+            unitValue = footerView.topTxtFld.text ?? ""
+            assessment = array[2] as? PE_AssessmentInProgress
+        case "Middle":
+            unitValue = footerView.middleTxtFld.text ?? ""
+            assessment = array[3] as? PE_AssessmentInProgress
+        case "Bottom":
+            unitValue = footerView.bottomTxtFld.text ?? ""
+            assessment = array[4] as? PE_AssessmentInProgress
+        default:
+            break
+        }
+        
+        return (unitValue, assessment)
+    }
+    
+    private func setupSecondFooterSection(_ tableView: UITableView, array: [Any]) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier) as! RefrigatorTempProbeCell
+        configureSecondFooterSection(footerView)
+        setupSecondFooterSectionData(footerView, array: array)
+        setupSecondFooterSectionCompletions(footerView, array: array)
+        return footerView
+    }
+    
+    private func configureSecondFooterSection(_ footerView: RefrigatorTempProbeCell) {
+        footerView.mainTempUnit.isHidden = true
+        footerView.topValueTxtFld.delegate = self
+        footerView.middleValueTxtFld.delegate = self
+        footerView.bottomValueTxtFld.delegate = self
+        resetFooterTextFields(footerView)
+        updateFooterAlpha(footerView)
+    }
+    
+    private func setupSecondFooterSectionData(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        guard refrigtorProbeArray.count > 0 else { return }
+        
+        for i in 7...9 {
+            guard let ar = array[i] as? PE_AssessmentInProgress else { continue }
+            for j in 0..<refrigtorProbeArray.count {
+                guard ar.assID == refrigtorProbeArray[j].id else { continue }
+                updateFooterField(footerView, index: i, probe: refrigtorProbeArray[j])
+            }
+        }
+    }
+    
+    private func setupSecondFooterSectionCompletions(_ footerView: RefrigatorTempProbeCell, array: [Any]) {
+        setupUnitCompletion(footerView, array: array)
+        setupValueCompletion(footerView, array: array)
+        footerView.setGraddientAndLayerQcCountextFieldView()
+    }
+    
+    private func setupDefaultFooterSection(_ tableView: UITableView) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: FrezerFooterViewCell.identifier) as! FrezerFooterViewCell
+        updateFrezerFooterAlpha(footerView)
+        setupDefaultFooterSectionData(footerView)
+        return footerView
+    }
+    
+    private func updateFrezerFooterAlpha(_ footerView: FrezerFooterViewCell) {
+        footerView.contentView.alpha = (btn_NA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1
+    }
+    
+    private func setupDefaultFooterSectionData(_ footerView: FrezerFooterViewCell) {
+        footerView.textFieldView.text = self.peNewAssessment.refrigeratorNote ?? ""
+        footerView.noteCompletion = { [weak self] textLabel in
+            guard let self = self else { return }
+            self.peNewAssessment.refrigeratorNote = textLabel ?? ""
+            UserDefaults.standard.set(textLabel ?? "", forKey: "re_note")
+            UserDefaults.standard.set(self.selectedCategory?.serverAssessmentId, forKey: "assIID")
+            CoreDataHandlerPE().updateDraftRefriNoteAssessmentInProgress(text: textLabel ?? "")
+        }
+        footerView.setGraddientAndLayerQcCountextFieldView()
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -4471,8 +4090,8 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn2)
             headerView.txtAntiBioticCompletion = {[unowned self] ( txtAntiBioTic) in
                 self.peNewAssessment.hatcheryAntibioticsDoaSText = txtAntiBioTic
-                PEInfoDAO.sharedInstance.saveData(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , isExtendedPE: infoObj?.isExtendedPE ?? false, assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", date: nil, subcutaneousTxt: txtAntiBioTic, dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic)
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true,fromDraft:true)
+                PEInfoDAO.sharedInstance.saveData(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , isExtendedPE: infoObj?.isExtendedPE ?? false, assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", date: nil, subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt, dayOfAgeTxt: txtAntiBioTic)
+                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoa: true,fromDraft:true)
             }
             handleAddCompletionSetPEHeaderDayOfAgeS(headerView)
             handleMinusCompletionSetPEHeaderDayOfAgeS(headerView)
@@ -4647,12 +4266,12 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewIDPE", for: indexPath as IndexPath) as! PECategoryCell
         cell.imageview.image = UIImage(named: "tabUnselect")!
         let category = catArrayForCollectionIs[indexPath.row]
-        if let isSelected = selectedCategory?.catISSelected,
-           selectedCategory?.sequenceNo == category.sequenceNo {
-            if isSelected == 1 {
-                cell.imageview.image =  UIImage(named: "tabSelect")!
-            }
+        
+        if let isSelected = selectedCategory?.catISSelected, selectedCategory?.sequenceNo == category.sequenceNo, isSelected == 1 {
+            cell.imageview.image = UIImage(named: "tabSelect")!
         }
+
+        
         
         cell.categoryLabel.text = category.catName ?? ""
         return cell
@@ -4806,11 +4425,12 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
             if let boolStatus = self.assessmentNoteCountValidation(assessment: assessment) {
                 return boolStatus
             }
-        } else if assessment?.assStatus == 1 && assessment?.assID == 9 {
-            if let boolStatus = self.validateAssessmentnoteCountThawingTimeStr(assessment: assessment) {
-                return boolStatus
-            }
         }
+        else if assessment?.assStatus == 1 && assessment?.assID == 9, let boolStatus = self.validateAssessmentnoteCountThawingTimeStr(assessment: assessment) {
+            return boolStatus
+        }
+
+        
         return nil
     }
     func checkNoteForEveryQuestion() -> Bool {
@@ -5390,4 +5010,3 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
         return true
     }
 }
-

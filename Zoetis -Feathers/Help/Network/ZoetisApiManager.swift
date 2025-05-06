@@ -21,8 +21,8 @@ extension Notification.Name {
 
 enum ZoetisApiManager {
     
-    static func POST(showHud: Bool,
-                     showHudText: String,
+    static func POST(   _ showHud: Bool,
+                     _ showHudText: String,
                      endPoint: String,
                      parameters: JSONDictionary = [:],
                      imageData: Data = Data(),
@@ -34,8 +34,8 @@ enum ZoetisApiManager {
                 imageKey: imageKey, success: success, failure: failure)
     }
     
-    static func GET(showHud: Bool,
-                    showHudText: String,
+    static func GET(  _ showHud: Bool,
+                      _ showHudText: String,
                     endPoint: String,
                     parameters: JSONDictionary = [:],
                     success : @escaping SuccessBlock,
@@ -44,8 +44,8 @@ enum ZoetisApiManager {
         request(URLString: endPoint, httpMethod: .get, parameters: parameters, success: success, failure: failure)
     }
     
-    static func PUT(showHud: Bool,
-                    showHudText: String,
+    static func PUT(  _ showHud: Bool,
+                 
                     endPoint: String,
                     parameters: JSONDictionary = [:],
                     imageData: Data = Data(),
@@ -57,8 +57,8 @@ enum ZoetisApiManager {
                 imageKey: imageKey, success: success, failure: failure)
     }
     
-    static func PATCH(showHud: Bool,
-                      showHudText: String,
+    static func PATCH(  _ showHud: Bool,
+                       
                       endPoint: String,
                       parameters: JSONDictionary = [:],
                       imageData: Data = Data(),
@@ -70,11 +70,11 @@ enum ZoetisApiManager {
                 imageKey: imageKey, success: success, failure: failure)
     }
     
-    static func DELETE(showHud: Bool,
-                       showHudText: String,
+    static func DELETE(  _ showHud: Bool,
+                         _ showHudText: String,
                        endPoint: String,
                        parameters: JSONDictionary = [:],
-                       headers: JSONDictionary = [:],
+                   
                        success : @escaping SuccessBlock,
                        failure : @escaping ErrorBlock) {
         

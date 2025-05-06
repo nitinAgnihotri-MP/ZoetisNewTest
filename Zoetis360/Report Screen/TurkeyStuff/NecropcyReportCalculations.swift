@@ -170,7 +170,7 @@ class NecropcyReportCalculations: NSObject {
         }
     }
     
-    fileprivate func productionNewObservation(_ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Liver_Granuloma: inout Float, _ Septicemia: inout Float, _ Active_Bursa: inout Float) {
+    fileprivate func productionNewObservation(_ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Liver_Granuloma: inout Float, _ Septicemia: inout Float, _ Active_Bursa: inout Float , _ Cellulitis: inout Float) {
         if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2030 {
             let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
             Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
@@ -189,6 +189,12 @@ class NecropcyReportCalculations: NSObject {
         if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
             let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
             Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2037 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
         }
     }
     
@@ -388,7 +394,7 @@ class NecropcyReportCalculations: NSObject {
                 
             }else {
                 
-                productionNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa)
+                productionNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
 
             }
             

@@ -335,14 +335,54 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(resp.observationId!),measure: trimmed,quickLink: resp.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId! ,actualText: resp.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "Resp",
+                            obsName: resp.observationField!,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            index: j,
+                            obsId: Int(resp.observationId!),
+                            measure: trimmed,
+                            quickLink: resp.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: resp.refId ?? 0,
+                            actualText: resp.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+                        
+                        
+                        
                         
                     }  else {
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(resp.observationId!),measure: trimmed,quickLink: resp.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "" )
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "Resp",
+                               obsName: resp.observationField ?? "",
+                               formName: formName,
+                               obsVisibility: false,
+                               birdNo: NSNumber(value: j + 1),
+                               obsPoint: Int(array[0]) ?? 0,
+                               index: j,
+                               obsId: Int(resp.observationId!),
+                               measure: trimmed,
+                               quickLink: resp.quicklinks ?? 0,
+                               necId: necId as NSNumber,
+                               isSync: true,
+                               lngId: lngId as NSNumber,
+                               refId: resp.refId ?? 0,
+                               actualText: resp.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+                        
                     }
                 }
             }
@@ -363,7 +403,26 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         
         let newResult = Float(result).rounded(toPlaces: 3)
         
-        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: newResult , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+        
+        let immuneData = CoreDataHandlerTurkeyModels.imumneSwithcCaptureData(
+            catName: "Immune",
+              obsName: immune.observationField!,
+              formName: formName,
+              obsVisibility: false,
+              birdNo: j + 1 as NSNumber,
+              obsPoint: newResult,
+              index: j,
+              obsId: Int(immune.observationId!),
+              measure: trimmed,
+              quickLink: immune.quicklinks!,
+              necId: necId as NSNumber,
+              isSync: true,
+              lngId: lngId as NSNumber,
+              refId: immune.refId!,
+              actualText: immune.measure ?? ""
+        )
+
+        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(data: immuneData)
     }
     
     fileprivate func setBirdSex(_ immune: ImmuneTurkey, _ formName: String, _ j: Int, _ necId: Int) {
@@ -371,7 +430,27 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if immune.observationField == Constants.maleFemaleStr
         {
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName: "Immune", obsName: immune.observationField!, formName: formName, obsVisibility: false, birdNo:  j + 1 as NSNumber, obsPoint: 1, index: j, obsId: Int(immune.observationId!), measure: trimmed, quickLink: immune.quicklinks!, necId: necId as NSNumber, isSync: true, lngId: lngId as NSNumber, refId: immune.refId!, actualText: "0")
+            
+            let data = CoreDataHandlerTurkeyModels.turkeySexNecropsyData(
+                catName: "Immune",
+                  obsName: immune.observationField!,
+                  formName: formName,
+                  obsVisibility: false,
+                  birdNo: NSNumber(value: j + 1),
+                  obsPoint: 1,
+                  index: j,
+                  obsId: Int(immune.observationId!),
+                  measure: trimmed,
+                  quickLink: immune.quicklinks!,
+                  necId: necId as NSNumber,
+                  isSync: true,
+                  lngId: lngId as NSNumber,
+                  refId: immune.refId!,
+                  actualText: "0"
+            )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(data: data)
+            
         }
     }
     
@@ -380,11 +459,47 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         let array = (trimmed.components(separatedBy: ",") as [String])
         if immune.refId == 58 {
             
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "" )
+            
+            let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                    catName: "Immune",
+                   obsName: immune.observationField!,
+                   formName: formName,
+                   obsVisibility: false,
+                   birdNo: NSNumber(value: j + 1),
+                   obsPoint: Int(array[3])!,
+                   index: j,
+                   obsId: Int(immune.observationId!),
+                   measure: trimmed,
+                   quickLink: immune.quicklinks!,
+                   necId: necId as NSNumber,
+                   isSync: true,
+                   lngId: lngId as NSNumber,
+                   refId: immune.refId!,
+                   actualText: immune.measure ?? ""
+            )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
             
         } else {
-            
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+            let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                  catName: "Immune",
+                  obsName: immune.observationField!,
+                  formName: formName,
+                  obsVisibility: false,
+                  birdNo: j + 1 as NSNumber,
+                  obsPoint: Int(array[0])!,
+                  index: j,
+                  obsId: Int(immune.observationId!),
+                  measure: trimmed,
+                  quickLink: immune.quicklinks!,
+                  necId: necId as NSNumber,
+                  isSync: true,
+                  lngId: lngId as NSNumber,
+                  refId: immune.refId!,
+                  actualText: immune.measure ?? ""
+            )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
             
         }
     }
@@ -413,7 +528,25 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     if immune.measure! == "Y,N" {
                         let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "Immune",
+                              obsName: immune.observationField!,
+                              formName: formName,
+                              obsVisibility: false,
+                              birdNo: NSNumber(value: j + 1),
+                              obsPoint: 0,
+                              index: j,
+                              obsId: Int(immune.observationId!),
+                              measure: trimmed,
+                              quickLink: immune.quicklinks!,
+                              necId: necId as NSNumber,
+                              isSync: true,
+                              lngId: lngId as NSNumber,
+                              refId: immune.refId!,
+                              actualText: immune.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
                         
                     }
                     else if ( immune.measure! == "Actual"){
@@ -456,14 +589,51 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     if skleta.measure! == "Y,N" ||  skleta.measure! == "Actual" {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(skleta.observationId!),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "skeltaMuscular",
+                            obsName: skleta.observationField!,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            index: j,
+                            obsId: Int(skleta.observationId!),
+                            measure: trimmed,
+                            quickLink: skleta.quicklinks!,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: skleta.refId!,
+                            actualText: skleta.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+                        
                     }
                     
                     else {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(skleta.observationId!),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                                catName: "skeltaMuscular",
+                                obsName: skleta.observationField!,
+                                formName: formName,
+                                obsVisibility: false,
+                                birdNo: NSNumber(value: j + 1),
+                                obsPoint: Int(array[0])!,
+                                index: j,
+                                obsId: Int(skleta.observationId!),
+                                measure: trimmed,
+                                quickLink: skleta.quicklinks!,
+                                necId: necId as NSNumber,
+                                isSync: true,
+                                lngId: lngId as NSNumber,
+                                refId: skleta.refId!,
+                                actualText: skleta.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
                         
                     }
                 }
@@ -493,13 +663,52 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     if cocoiDis.measure! == "Y,N" || cocoiDis.measure! == "Actual"  {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(cocoiDis.observationId!),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
+                        
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                                catName: "Coccidiosis",
+                                obsName: cocoiDis.observationField!,
+                                formName: formName,
+                                obsVisibility: false,
+                                birdNo: NSNumber(value: j + 1),
+                                obsPoint: 0,
+                                index: j,
+                                obsId: Int(cocoiDis.observationId!),
+                                measure: trimmed,
+                                quickLink: cocoiDis.quicklinks!,
+                                necId: necId as NSNumber,
+                                isSync: true,
+                                lngId: lngId as NSNumber,
+                                refId: cocoiDis.refId!,
+                                actualText: cocoiDis.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+                        
                     }
                      else {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(cocoiDis.observationId!),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
+                         
+                         let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "Coccidiosis",
+                                obsName: cocoiDis.observationField!,
+                                formName: formName,
+                                obsVisibility: false,
+                                birdNo: NSNumber(value: j + 1),
+                                obsPoint: Int(array[0])!,
+                                index: j,
+                                obsId: Int(cocoiDis.observationId!),
+                                measure: trimmed,
+                                quickLink: cocoiDis.quicklinks!,
+                                necId: necId as NSNumber,
+                                isSync: true,
+                                lngId: lngId as NSNumber,
+                                refId: cocoiDis.refId!,
+                                actualText: cocoiDis.measure ?? ""
+                         )
+
+                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
                     }
                 }
             }
@@ -509,10 +718,48 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
     fileprivate func setGiTrectObservation(_ gitract: GITractTurkey, _ formName: String, _ j: Int, _ necId: Int) {
         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if gitract.observationField == "Feed in Crop"{
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: true, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+            
+            let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                catName: "GITract",
+                obsName: gitract.observationField!,
+                formName: formName,
+                obsVisibility: true,
+                birdNo: NSNumber(value: j + 1),
+                obsPoint: 0,
+                index: j,
+                obsId: Int(gitract.observationId!),
+                measure: trimmed,
+                quickLink: gitract.quicklinks!,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId as NSNumber,
+                refId: gitract.refId!,
+                actualText: gitract.measure ?? ""
+            )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+            
         }
         else {
-            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+            let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                catName: "GITract",
+                obsName: gitract.observationField!,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: NSNumber(value: j + 1),
+                obsPoint: 0,
+                index: j,
+                obsId: Int(gitract.observationId!),
+                measure: trimmed,
+                quickLink: gitract.quicklinks!,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId as NSNumber,
+                refId: gitract.refId!,
+                actualText: gitract.measure ?? ""
+            )
+
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
         }
     }
     
@@ -542,13 +789,50 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                         
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "GITract",
+                            obsName: gitract.observationField!,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            index: j,
+                            obsId: Int(gitract.observationId!),
+                            measure: trimmed,
+                            quickLink: gitract.quicklinks!,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: gitract.refId!,
+                            actualText: gitract.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
                     }
                     else {
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+                        let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
+                            catName: "GITract",
+                               obsName: gitract.observationField!,
+                               formName: formName,
+                               obsVisibility: false,
+                               birdNo: NSNumber(value: j + 1),
+                               obsPoint: Int(array[0])!,
+                               index: j,
+                               obsId: Int(gitract.observationId!),
+                               measure: trimmed,
+                               quickLink: gitract.quicklinks!,
+                               necId: necId as NSNumber,
+                               isSync: true,
+                               lngId: lngId as NSNumber,
+                               refId: gitract.refId!,
+                               actualText: gitract.measure ?? ""
+                        )
+
+                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
+                        
                     }
                 }
             }
@@ -821,8 +1105,38 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementIdTurkey")
         
-        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necId as NSNumber, age: self.ageLbl
-            .text ?? "", farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text ?? "", flockId: flockIdTextField.text ?? "", houseNo: houseNoTxtFld.text ?? "", noOfBirds: noOfBirdsLbl.text ?? "", sick: asb as NSNumber,necId: necId as NSNumber,compexName:complexName ?? "" ,complexDate:complexDate ?? "" ,complexId:complexId as NSNumber,custmerId:custMid as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStamp1,actualTimeStamp:timeStamp1 ,lngId:1,farmWeight: farmWeightTextField.text ?? "",abf: abfLbl.text ?? "",breed: breedString,sex: sexString,farmId:countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId), count: count as NSNumber , genName: genLbl.text ?? "" , genId: geneId as NSNumber)
+        let necropsyData = CoreDataHandlerTurkeyModels.saveTurkeyNecropsyStep1Data(
+              postingId: necId as NSNumber,
+              age: self.ageLbl.text ?? "",
+              farmName: appendfeedProgramwithCount,
+              feedProgram: feedProgramDisplayLabel.text ?? "",
+              flockId: flockIdTextField.text ?? "",
+              houseNo: houseNoTxtFld.text ?? "",
+              noOfBirds: noOfBirdsLbl.text ?? "",
+              sick: asb as NSNumber,
+              necId: necId as NSNumber,
+              compexName: complexName ?? "",
+              complexDate: complexDate ?? "",
+              complexId: complexId as NSNumber,
+              customerId: custMid as NSNumber,
+              feedId: feedId as NSNumber,
+              isSync: true,
+              timeStamp: timeStamp1,
+              actualTimeStamp: timeStamp1,
+              lngId: 1,
+              farmWeight: farmWeightTextField.text ?? "",
+              abf: abfLbl.text ?? "",
+              breed: breedString,
+              sex: sexString,
+              farmId: countFarmId as NSNumber,
+              imageId: NSNumber(value: imageAutoIncrementId),
+              count: count as NSNumber,
+              genName: genLbl.text ?? "",
+              genId: geneId as NSNumber
+        )
+
+        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necropsyData)
+        
         
         let numberofbirds = Int(noOfBirdsLbl.text!)
         self.saveSkeletonCat(appendfeedProgramwithCount, numberofBirds: numberofbirds ?? 0)

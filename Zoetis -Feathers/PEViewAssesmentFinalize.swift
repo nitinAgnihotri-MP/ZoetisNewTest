@@ -953,34 +953,21 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
 
     // Helper 3: Configure NA state
     private func configureCellNAState(_ cell: RefrigatorQuesCell, assesmentArray: [PE_AssessmentInProgress], indexPath: IndexPath) {
-        if refrigtorProbeArray.count > 0 {
-            for refri in refrigtorProbeArray {
-                if refri.id == assesmentArray[indexPath.row].assID {
-                    if refri.isNA ?? false {
-                        cell.btn_NA.isSelected = true
-                        cell.contentView.alpha = 0.3
-                        cell.btn_Switch.isUserInteractionEnabled = false
-                        cell.btn_Info.isUserInteractionEnabled = false
-                        cell.btn_Camera.isUserInteractionEnabled = false
-                        cell.btn_Comment.isUserInteractionEnabled = false
-                    } else {
-                        cell.btn_NA.isSelected = false
-                        cell.contentView.alpha = 1
-                        cell.btn_Switch.isUserInteractionEnabled = true
-                        cell.btn_Info.isUserInteractionEnabled = true
-                        cell.btn_Camera.isUserInteractionEnabled = true
-                        cell.btn_Comment.isUserInteractionEnabled = true
-                    }
-                    if refri.isCheck ?? false {
-                        cell.switchClicked(status: true)
-                        cell.btn_Switch.setOn(true, animated: false)
-                    } else {
-                        cell.switchClicked(status: false)
-                        cell.btn_Switch.setOn(false, animated: false)
-                    }
-                }
-            }
-        }
+		if refrigtorProbeArray.count > 0 {
+			for refri in refrigtorProbeArray {
+				if refri.id == assesmentArray[indexPath.row].assID {
+					let refNaStatus = refri.isNA ?? false
+					cell.btn_NA.isSelected = refNaStatus
+					cell.contentView.alpha = 0.3
+					cell.btn_Switch.isUserInteractionEnabled = !refNaStatus
+					cell.btn_Info.isUserInteractionEnabled = !refNaStatus
+					cell.btn_Camera.isUserInteractionEnabled = !refNaStatus
+					cell.btn_Comment.isUserInteractionEnabled = !refNaStatus
+					cell.switchClicked(status: refNaStatus)
+					cell.btn_Switch.setOn(refNaStatus, animated: false)
+				}
+			}
+		}
     }
 
     // Helper 4: Configure cell background
@@ -1569,9 +1556,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             certificateData.id = id
             self.certificateData.append(certificateData)
             DispatchQueue.main.async {
-                UIView.performWithoutAnimation {
-                    self.tableview.reloadData()
-                }
+                self.reloadTableViewWithoutAnimation()
             }
         }
         headerView.minusCompletion = { [unowned self] error in
@@ -1590,6 +1575,12 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
         }
         return headerView
+    }
+    
+    private func reloadTableViewWithoutAnimation() {
+        UIView.performWithoutAnimation {
+            self.tableview.reloadData()
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -2410,6 +2401,8 @@ extension PEViewAssesmentFinalize{
             serverAssessmentId = Int64(serverId) ?? 0
         }
 
+        debugPrint(assessmentId)
+        debugPrint(saveType)
         let docId = ""
         let visitId = dict.visitID
         let customerId = dict.customerId
@@ -2484,7 +2477,9 @@ extension PEViewAssesmentFinalize{
     // Helper 1: Get assessment identifiers
     private func getAssessmentIdentifiers(_ dict: PENewAssessment) -> (String, Int, Int) {
         var uniID = dict.dataToSubmitID ?? ""
-        if uniID == "" { uniID = dict.draftID ?? "" }
+        if uniID == "" {
+            uniID = dict.draftID ?? ""
+        }
         var assessmentId = dict.dataToSubmitNumber ?? 0
         var saveType = 1
         saveTypeString.append(11)
@@ -2661,9 +2656,8 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id) ?? 0
         }
-        var DisplayId = dictArray.evaluationDate
     
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         let HatcheryAntibioticsInt = inovojectData.invoHatchAntibiotic
         var HatcheryAntibiotics = false
@@ -2726,7 +2720,7 @@ extension PEViewAssesmentFinalize{
             "BagSizeType":inovojectData.bagSizeType,
             "Device_Id": deviceIDFORSERVER,
             "DiluentMfg": inovojectData.vaccineMan,
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "HatcheryAntibiotics": HatcheryAntibiotics,
             "ManufacturerId":  ManufacturerId == 0 ? "" : ManufacturerId,
             "ModuleAssessmentCatId": dictArray.catID,
@@ -2755,7 +2749,6 @@ extension PEViewAssesmentFinalize{
     // MARK: Create Sync request for DOA
     func createSyncRequestForDOA(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -2766,10 +2759,8 @@ extension PEViewAssesmentFinalize{
         if AssessmentId == 0 {
             AssessmentId = dictArray.draftNumber ?? 0
         }
-     
-        var DisplayId = dictArray.evaluationDate
-        
-        DisplayId = "C-" + UniID
+             
+        var DisplayId = "C-" + UniID
         
         let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoa
         var HatcheryAntibiotics = false
@@ -2813,7 +2804,6 @@ extension PEViewAssesmentFinalize{
             ManufacturerId = vManufacutrerIDArray[indexOfe] as? Int ?? 0
         }
         
-        let timestamp = Date().currentTimeMillis()
       
         let unique = "\(deviceIDFORSERVER)_\(dayOfAgeData.id)_iOS_"
         
@@ -2840,7 +2830,7 @@ extension PEViewAssesmentFinalize{
             "DayOfBagHatcheryAntibiotics": HatcheryAntibiotics,
             "Device_Id": deviceIDFORSERVER,
             "DiluentMfg": dictArray.dCS,
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "ModuleAssessmentCatId": dictArray.catID,
             "DayOfAgeDosage": dayOfAgeData.dosage,
             "StrUniqueId":unique,
@@ -3059,9 +3049,8 @@ extension PEViewAssesmentFinalize{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
 
-        var DisplayId = "C-" + UniID
+        let DisplayId = "C-" + UniID
         
-        let timestamp = Date().currentTimeMillis()
         let unique = "\(deviceIDFORSERVER)_\(dictArray.residue)_iOS_"
         
         
@@ -3188,6 +3177,7 @@ extension PEViewAssesmentFinalize{
 
         let idArr = tempArr.compactMap { "\($0["AssessmentId"] as? Int64 ?? 0)" }.filter { $0 != "0" }
         let sanitationArr = idArr.flatMap {
+           
             SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(
                 userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: $0
             )
@@ -3335,7 +3325,6 @@ extension PEViewAssesmentFinalize{
             if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
                 deviceIDFORSERVER = dict.assDetail2 ?? ""
             }
-            AssessmentId = dict.draftNumber ?? 0
             saveTypeString.append(00)
         }
         if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
@@ -3800,7 +3789,9 @@ extension PEViewAssesmentFinalize{
 
     private func getOfflineAssessments() -> [PENewAssessment] {
         let count = peNewAssessment.dataToSubmitNumber ?? 0
-        if count == 0 { return [] }
+        if count == 0 {
+            return []
+        }
 
         CoreDataHandlerPE().updateOfflineStatus(assessment: peNewAssessment)
         return CoreDataHandlerPE().getOfflineAssessmentArray(id: peNewAssessment.dataToSubmitID ?? "")
@@ -3808,7 +3799,9 @@ extension PEViewAssesmentFinalize{
 
     private func getDraftAssessments() -> [PENewAssessment] {
         let count = peNewAssessment.draftNumber ?? 0
-        if count == 0 { return [] }
+        if count == 0 {
+            return []
+        }
 
         return CoreDataHandlerPE().getDraftAssessmentArray(id: count)
     }
@@ -3889,7 +3882,7 @@ extension PEViewAssesmentFinalize{
             guard let self = self else { return }
             self.callRequest4Int -= 1
 
-            if let error = error {
+            if let _ = error {
                 self.handleSyncError()
                 return
             }

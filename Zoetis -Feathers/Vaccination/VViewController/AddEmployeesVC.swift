@@ -675,8 +675,6 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        
-        let currentString: NSString = textField.text! as NSString
         var result = true
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
@@ -824,15 +822,45 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
 
     private func validateCertificationFields() -> Bool {
-        guard let cert = curentCertification else { return false }
-        if cert.fsmName == nil || cert.fsmName == "" { return false }
-        if isSafetyCertification && (cert.selectedFsmId == nil || cert.selectedFsmId == "") { return false }
-        if cert.siteId == nil || cert.siteId == "" { return false }
-        if cert.customerId == nil || cert.customerId == "" { return false }
+        guard let cert = curentCertification else
+        { return false
+        }
+        if cert.fsmName == nil || cert.fsmName == "" {
+            return false
+        }
+        if isSafetyCertification && (cert.selectedFsmId == nil || cert.selectedFsmId == "") {
+            return false
+        }
+        if cert.siteId == nil || cert.siteId == "" { return false
+        }
+        if cert.customerId == nil || cert.customerId == "" {
+            return false
+        }
         return true
     }
 
-    private func validateEmployeeInfo() -> Bool {
+	fileprivate func handleValidationsEmployeesAddedArr() -> Bool {
+		for emp in employeesAddedArr {
+			if emp.firstName == nil || emp.firstName == "" {
+				return false
+			}
+			if emp.lastName == nil || emp.lastName == "" {
+				return false
+			}
+			if emp.selectedTshirtId == nil || emp.selectedTshirtId == "" {
+				return false
+			}
+			if emp.selectedLangId == nil || emp.selectedLangId == "" {
+				return false
+			}
+			if emp.selectedRolesStr == nil || emp.selectedRolesStr == "" {
+				return false
+			}
+		}
+		return true
+	}
+	
+	private func validateEmployeeInfo() -> Bool {
         if employeesAddedArr.isEmpty {
             if isSafetyCertification || curentCertification?.certificationCategoryId == "1" {
                 return true
@@ -841,14 +869,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
                 return false
             }
         }
-        for emp in employeesAddedArr {
-            if emp.firstName == nil || emp.firstName == "" { return false }
-            if emp.lastName == nil || emp.lastName == "" { return false }
-            if emp.selectedTshirtId == nil || emp.selectedTshirtId == "" { return false }
-            if emp.selectedLangId == nil || emp.selectedLangId == "" { return false }
-            if emp.selectedRolesStr == nil || emp.selectedRolesStr == "" { return false }
-        }
-        return true
+		return handleValidationsEmployeesAddedArr()
     }
 
     private func handleCertificationCategoryChecks() {

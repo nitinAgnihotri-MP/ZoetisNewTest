@@ -241,7 +241,22 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = skeletaObject.measure
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
-            CoreDataHandler().updateSettingDataSkelta(skeletaObject.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataSkeletaArray,obsId:observationId,measure: measure!,isSync: true,lngId: lngIdValue!,refId:refId!)
+            
+            let settingData = chickenCoreDataHandlerModels.updateSkeletaSettingData(
+                strObservationField: skeletaObject.observationField!,
+                  visibilityCheck: vsibilityValue,
+                  quicklinks: sender.isSelected,
+                  strInformation: "xyz",
+                  index: sender.tag,
+                  dbArray: dataSkeletaArray,
+                  obsId: observationId,
+                  measure: measure!,
+                  isSync: true,
+                  lngId: lngIdValue!,
+                  refId: refId!
+            )
+            CoreDataHandler().updateSettingDataSkelta(settingData)
+            
         }
         else if  btnTag == 1{
             
@@ -251,7 +266,24 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
-            CoreDataHandler().updateSettingDataCocoii(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataCocoiiArray,obsId: observationId,measure: measure!,isSync: true,lngId: lngIdValue!,refId: refId!)
+            
+            let settingData = chickenCoreDataHandlerModels.updateCoccidiosisSettingData(
+                strObservationField: cocoii.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataCocoiiArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataCocoii(settingData)
+            
+            
         }
         else if  btnTag == 2 {
             let skeletaObject : GITract = dataGiTractArray.object(at: sender.tag) as! GITract
@@ -261,7 +293,22 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
             
-            CoreDataHandler().updateSettingDataGitract(skeletaObject.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataGiTractArray,obsId: observationId,measure:measure!,isSync:true,lngId: lngIdValue!,refId:refId! )
+            let settingData = chickenCoreDataHandlerModels.updateGITractSettingData(
+                strObservationField: skeletaObject.observationField!,
+                  visibilityCheck: vsibilityValue,
+                  quicklinks: sender.isSelected,
+                  strInformation: "xyz",
+                  index: sender.tag,
+                  dbArray: dataGiTractArray,
+                  obsId: observationId,
+                  measure: measure!,
+                  isSync: true,
+                  lngId: lngIdValue!,
+                  refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataGitract(settingData: settingData)
+            
         }
         else if  btnTag == 3{
             
@@ -272,7 +319,23 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
-            CoreDataHandler().updateSettingDataResp(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataRespiratoryArray,obsId: observationId,measure:measure!,isSync:true,lngId: lngIdValue! ,refId:refId!)
+            
+            let updateSettings = chickenCoreDataHandlerModels.updateRespiratorySettings(
+                strObservationField: cocoii.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataRespiratoryArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataResp(updateSettings)
+            
         }
         else if  btnTag == 4{
             
@@ -282,7 +345,21 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
-            CoreDataHandler().updateSettingDataImmune(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true, lngId: lngIdValue!,refId:refId! )
+            
+            let immuneData = chickenCoreDataHandlerModels.ImmuneUpdateData(
+                strObservationField: cocoii.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    strInformation: "xyz",
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataImmune(immuneData, index: sender.tag, dbArray: dataImmuneArray)
+            
         }
     }
     
@@ -488,23 +565,105 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             }
             
             if  btnTag == 0 {
-                CoreDataHandler().saveSettingsSkeletaInDatabase(strObservationField,visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataSkeletaArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId:refId, quicklinkIndex: quickLinkIndex)
+                
+                let settings = chickenCoreDataHandlerModels.saveSkeletaSettingsInDB(
+                    strObservationField: strObservationField,
+                      visibilityCheck: isVisibilityCheck,
+                      quicklinks: isQuicklinksCheck,
+                      strInformation: "xyz",
+                      index: i,
+                      dbArray: dataSkeletaArray,
+                      obsId: obsId,
+                      measure: measure,
+                      isSync: false,
+                      lngId: lngIdValue,
+                      refId: refId,
+                      quicklinkIndex: quickLinkIndex
+                )
+                CoreDataHandler().saveSettingsSkeletaInDatabase(settings)
                 
             }
             else if btnTag == 1{
                 
-                CoreDataHandler().saveSettingsCocoiiInDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataCocoiiArray,obsId:obsId,measure:measure,isSync: false,lngId: lngIdValue,refId: refId, quicklinkIndex: quickLinkIndex)
+
+                let settingData = chickenCoreDataHandlerModels.saveCoccidiosisSettingDB(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataCocoiiArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex
+                )
+
+                CoreDataHandler().saveSettingsCocoiiInDatabase(settingData)
+                
             }
             else if btnTag == 2{
                 
-                CoreDataHandler().saveSettingsGITractDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataGiTractArray,obsId:obsId,measure:measure,isSync: false,lngId: lngIdValue,refId:refId, quicklinkIndex: quickLinkIndex )
+                
+                let settingData = chickenCoreDataHandlerModels.saveGITractSettingData(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataGiTractArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex
+                )
+
+                CoreDataHandler().saveSettingsGITractDatabase(settingData: settingData)
             }
             else if btnTag == 3{
                 
-                CoreDataHandler().saveSettingsRespiratoryDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataRespiratoryArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId: refId, quicklinkIndex: quickLinkIndex)
+                
+                let settings = chickenCoreDataHandlerModels.saveRespiratorySettings(
+                    strObservationField: strObservationField,
+                      visibilityCheck: isVisibilityCheck,
+                      quicklinks: isQuicklinksCheck,
+                      strInformation: "xyz",
+                      index: i,
+                      dbArray: dataRespiratoryArray,
+                      obsId: obsId,
+                      measure: measure,
+                      isSync: false,
+                      lngId: lngIdValue,
+                      refId: refId,
+                      quicklinkIndex: quickLinkIndex
+                )
+
+                CoreDataHandler().saveSettingsRespiratoryDatabase(settings: settings)
+                
             }
             else{
-                CoreDataHandler().saveSettingsImmuneDatabase(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataImmuneArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId:refId, quicklinkIndex: quickLinkIndex )
+                
+                let settings = chickenCoreDataHandlerModels.saveImmuneSettings(
+                       strObservationField: strObservationField,
+                       visibilityCheck: isVisibilityCheck,
+                       quicklinks: isQuicklinksCheck,
+                       strInformation: "xyz",
+                       index: i,
+                       dbArray: dataImmuneArray,
+                       obsId: obsId,
+                       measure: measure,
+                       isSync: false,
+                       lngId: lngIdValue,
+                       refId: refId,
+                       quicklinkIndex: quickLinkIndex
+                )
+
+                CoreDataHandler().saveSettingsImmuneDatabase(settings)
+                
             }
         }
     }
@@ -588,7 +747,20 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let  refId = skeletaObject.refId
-            CoreDataHandler().updateSettingDataSkelta(skeletaObject.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataSkeletaArray,obsId:observationId ,measure: measure!,isSync: true,lngId:lngIdValue!,refId:refId!)
+            let settingData = chickenCoreDataHandlerModels.updateSkeletaSettingData(
+                strObservationField: skeletaObject.observationField!,
+                    visibilityCheck: sender.isOn,
+                    quicklinks: quicklinksValue,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataSkeletaArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+            CoreDataHandler().updateSettingDataSkelta(settingData)
         }
         else if btnTag == 1{
             
@@ -597,8 +769,21 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
-            
-            CoreDataHandler().updateSettingDataCocoii(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataCocoiiArray,obsId:observationId,measure: measure!,isSync: true,lngId:lngIdValue!,refId:refId! )
+            let settingData = chickenCoreDataHandlerModels.updateCoccidiosisSettingData(
+                   strObservationField: cocoii.observationField!,
+                    visibilityCheck: sender.isOn,
+                    quicklinks: quicklinksValue,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataCocoiiArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataCocoii(settingData)
         }
         
         else if btnTag == 2{
@@ -607,7 +792,23 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
-            CoreDataHandler().updateSettingDataGitract(skeletaObject.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataGiTractArray,obsId:observationId,measure: measure!,isSync:true,lngId:lngIdValue!,refId:refId!)
+            
+            let settingData = chickenCoreDataHandlerModels.updateGITractSettingData(
+                strObservationField: skeletaObject.observationField!,
+                   visibilityCheck: sender.isOn,
+                   quicklinks: quicklinksValue,
+                   strInformation: "xyz",
+                   index: sender.tag,
+                   dbArray: dataGiTractArray,
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataGitract(settingData: settingData)
+            
         }
         else if btnTag == 3{
             let cocoii : Respiratory = dataRespiratoryArray.object(at: sender.tag) as! Respiratory
@@ -615,7 +816,23 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
-            CoreDataHandler().updateSettingDataResp(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataRespiratoryArray,obsId:observationId,measure:measure!,isSync:true,lngId:lngIdValue!,refId:refId!)
+            
+            let updateSettings = chickenCoreDataHandlerModels.updateRespiratorySettings(
+                strObservationField: cocoii.observationField!,
+                    visibilityCheck: sender.isOn,
+                    quicklinks: quicklinksValue,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataRespiratoryArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataResp(updateSettings)
+            
         }
         else if btnTag == 4{
             let cocoii : Immune = dataImmuneArray.object(at: sender.tag) as! Immune
@@ -623,7 +840,20 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
-            CoreDataHandler().updateSettingDataImmune(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true,lngId:lngIdValue!,refId:refId! )
+            
+            let immuneData = chickenCoreDataHandlerModels.ImmuneUpdateData(
+                strObservationField: cocoii.observationField!,
+                   visibilityCheck: sender.isOn,
+                   quicklinks: quicklinksValue,
+                   strInformation: "xyz",
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+
+            CoreDataHandler().updateSettingDataImmune(immuneData, index: sender.tag, dbArray: dataImmuneArray)
             
         }
     }

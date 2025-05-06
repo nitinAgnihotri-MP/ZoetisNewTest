@@ -53,9 +53,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
 
         if WebClass.sharedInstance.connected() {
-            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let Url = "PostingSession/GetTutorial"
-            
+            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!            
             let newUrl = ZoetisWebServices.EndPoint.getTutorial.latestUrl
             
             ZoetisWebServices.shared.getTutorialResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in

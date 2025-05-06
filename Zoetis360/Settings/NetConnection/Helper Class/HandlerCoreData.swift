@@ -125,57 +125,77 @@ class CoreDataHandler : NSObject  {
     
     /********* Add Vacination *******************************************/
     // MARK: 🟠 Save Hatchery Vaccination in Database
-    func saveHatcheryVacinationInDatabase(_ type : String, strain : String, route : String, age : String, index : Int, dbArray: NSArray,postingId : NSNumber,vaciProgram: String,sessionId : NSNumber, isSync : Bool,lngId:NSNumber , routeID : Int) {
+    
+    func saveHatcheryVacinationInDatabase(details: chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails, index: Int, dbArray: NSArray) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        
         let managedContext = appDelegate!.managedObjectContext
         dataArray = dbArray
+        
         if dataArray.count > 0 {
-            
             if let objTable: HatcheryVac = dataArray[index] as? HatcheryVac {
-                
-                objTable.setValue(type, forKey:"type")
-                objTable.setValue(strain, forKey:"strain")
-                objTable.setValue(route, forKey:"route")
-                objTable.setValue(age, forKey:"age")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(vaciProgram, forKey:"vaciNationProgram")
-                objTable.setValue(sessionId, forKey:"loginSessionId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(routeID, forKey:"routeId")
+                objTable.setValue(details.type, forKey: "type")
+                objTable.setValue(details.strain, forKey: "strain")
+                objTable.setValue(details.route, forKey: "route")
+                objTable.setValue(details.age, forKey: "age")
+                objTable.setValue(details.postingId, forKey: "postingId")
+                objTable.setValue(details.vaciProgram, forKey: "vaciNationProgram")
+                objTable.setValue(details.sessionId, forKey: "loginSessionId")
+                objTable.setValue(details.isSync, forKey: "isSync")
+                objTable.setValue(details.lngId, forKey: "lngId")
+                objTable.setValue(details.routeID, forKey: "routeId")
             }
-            do
-            {
-                try managedContext.save()
-            }
-            catch{
-            }
-        } else {
             
-            let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(type, forKey:"type")
-            person.setValue(strain, forKey:"strain")
-            person.setValue(route, forKey:"route")
-            person.setValue(age, forKey:"age")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(vaciProgram, forKey:"vaciNationProgram")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(routeID, forKey:"routeId")
             do {
                 try managedContext.save()
+            } catch {
+                // Handle error if needed
             }
-            catch
-            {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            
+            person.setValue(details.type, forKey: "type")
+            person.setValue(details.strain, forKey: "strain")
+            person.setValue(details.route, forKey: "route")
+            person.setValue(details.age, forKey: "age")
+            person.setValue(details.postingId, forKey: "postingId")
+            person.setValue(details.vaciProgram, forKey: "vaciNationProgram")
+            person.setValue(details.sessionId, forKey: "loginSessionId")
+            person.setValue(details.isSync, forKey: "isSync")
+            person.setValue(details.lngId, forKey: "lngId")
+            person.setValue(details.routeID, forKey: "routeId")
+            
+            do {
+                try managedContext.save()
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
-            
-            hatcheryVaccinationObject.append(person)
         }
     }
+
+    private func createNewHatcheryVac(type: String, strain: String, route: String, age: String, postingId: NSNumber, vaciProgram: String, sessionId: NSNumber, isSync: Bool, lngId: NSNumber, routeID: Int, in context: NSManagedObjectContext) {
+        guard let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: context) else { return }
+        let person = NSManagedObject(entity: entity, insertInto: context)
+        
+        person.setValue(type, forKey: "type")
+        person.setValue(strain, forKey: "strain")
+        person.setValue(route, forKey: "route")
+        person.setValue(age, forKey: "age")
+        person.setValue(postingId, forKey: "postingId")
+        person.setValue(vaciProgram, forKey: "vaciNationProgram")
+        person.setValue(sessionId, forKey: "loginSessionId")
+        person.setValue(isSync, forKey: "isSync")
+        person.setValue(lngId, forKey: "lngId")
+        person.setValue(routeID, forKey: "routeId")
+        
+        do {
+            try context.save()
+            hatcheryVaccinationObject.append(person)
+        } catch {
+            print("Error saving managed object: \(error)")
+        }
+    }
+ 
     // MARK: 🟠 Fetch Saved Vaccination Data
     func fetchAddvacinationDataAll() -> NSArray {
         
@@ -280,6 +300,611 @@ class CoreDataHandler : NSObject  {
     }
     // MARK: 🟠 Fetch Saved Field Strain Data  *******************************************/
     
+    fileprivate func handleFieldStrain1Validation(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute1Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge1"), forKey:"age")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleFieldStrain2(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute2Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge2"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleFieldStrain3Validation(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute3Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge3"), forKey:"age")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain4(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute4Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge4"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain5(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute5Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge5"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain6(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute6Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge6"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain7(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute7Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge7"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain8(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute8Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge8"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain9(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute9Id") as? Int {
+            
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge9"), forKey:"age")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain10(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute10Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge10"), forKey:"age")
+        
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handlefieldStrain11(_ dict: NSDictionary, _ person: inout NSManagedObject) {
+        switch dict.value(forKey: "fieldRoute11Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        
+        person.setValue(dict.value(forKey: "fieldAge11"), forKey:"age")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
     func getHatcheryDataFromServer(_ dict : NSDictionary) {
         let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: backgroundContext)
         
@@ -287,621 +912,58 @@ class CoreDataHandler : NSObject  {
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
         for j in 0..<allkeyArr.count {
-            let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
+            var person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
             let stringValidate = allkeyArr.object(at: j) as! String
             
-            if (stringValidate == "fieldStrain1") {
+            switch stringValidate {
+            case "fieldStrain1":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute1Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge1"), forKey:"age")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if(stringValidate == "fieldStrain2") {
+                handleFieldStrain1Validation(dict, &person)
+            case "fieldStrain2":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute2Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge2"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain3")  {
+                handleFieldStrain2(dict, &person)
+            case "fieldStrain3":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute3Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge3"), forKey:"age")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain4")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute4Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge4"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain5")  {
+                handleFieldStrain3Validation(dict, &person)
+            case "fieldStrain4":
+                handlefieldStrain4(person, dict)
+            case "fieldStrain5":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute5Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge5"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain6")  {
+                handlefieldStrain5(dict, &person)
+            case "fieldStrain6":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute6Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge6"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain7")  {
+                handlefieldStrain6(dict, &person)
+            case "fieldStrain7":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute7Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge7"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain8") {
+                handlefieldStrain7(dict, &person)
+            case "fieldStrain8":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute8Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge8"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            } else if (stringValidate == "fieldStrain9") {
+                handlefieldStrain8(dict, &person)
+            case "fieldStrain9":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute9Id") as? Int {
-                    
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge9"), forKey:"age")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-                
-            } else if (stringValidate == "fieldStrain10") {
+                handlefieldStrain9(dict, &person)
+            case "fieldStrain10":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute10Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "fieldAge10"), forKey:"age")
-                
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-                
-            } else if (stringValidate == "fieldStrain11") {
+                handlefieldStrain10(dict, &person)
+            case "fieldStrain11":
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute11Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                
-                person.setValue(dict.value(forKey: "fieldAge11"), forKey:"age")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
+                handlefieldStrain11(dict, &person)
+            default:
+                break
             }
-            do
-            {
+            do {
                 try backgroundContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             hatcheryVaccinationObject.append(person)
@@ -909,6 +971,700 @@ class CoreDataHandler : NSObject  {
         
     }
     // MARK: 🟢 Get Field Strain for specific Posting ID
+    fileprivate func handlefieldStrain1GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBDV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute1Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge1"), forKey:"age")
+        person.setValue(postingId, forKey:"postingId")
+        
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain2GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBDV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute2Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge2"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain3GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute3Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge3"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain4GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute4Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge4"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain5GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("TRT", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute5Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge5"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain6GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("TRT", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute6Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge6"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain7GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("NDV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute7Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        
+        person.setValue(dict.value(forKey: "fieldAge7"), forKey:"age")
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain8GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("NDV", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute8Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge8"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain9GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("ST", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute9Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "fieldAge9"), forKey:"age")
+        
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain10GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("E.coli", forKey:"type")
+        person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
+        switch dict.value(forKey: "fieldRoute10Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        
+        person.setValue(dict.value(forKey: "fieldAge10"), forKey:"age")
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handlefieldStrain11GetHatcheryDataFromServer(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("Other", forKey:"type")
+        switch dict.value(forKey: "fieldRoute11Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        
+        person.setValue(dict.object(forKey: "fieldStrain11"), forKey:"strain")
+        person.setValue(dict.object(forKey: "fieldAge11"), forKey:"age")
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.object(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.object(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        try? managedContext.save()
+        
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
     func getHatcheryDataFromServerSingleFromDeviceId(_ dict : NSDictionary,postingId:NSNumber)  {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -916,1978 +1672,1356 @@ class CoreDataHandler : NSObject  {
         
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
-        for  j in 0..<allkeyArr.count {
+        for j in 0..<allkeyArr.count {
             
             let stringValidate = allkeyArr.object(at: j) as! String
             let str = "hatchery"
             let index = stringValidate.index(stringValidate.startIndex, offsetBy: 8)
             let mySubstring = stringValidate[..<index]
-            if  mySubstring != str {
+            if mySubstring != str {
                 
-                if  (stringValidate == "fieldStrain1") {
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute1Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge1"), forKey:"age")
-                    person.setValue(postingId, forKey:"postingId")
-                    
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if(stringValidate == "fieldStrain2")   {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute2Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge2"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if (stringValidate == "fieldStrain3")  {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute3Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge3"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain4")  {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute4Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge4"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain5")  {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("TRT", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute5Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge5"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain6")  {
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("TRT", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute6Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge6"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain7")  {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("NDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute7Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    
-                    person.setValue(dict.value(forKey: "fieldAge7"), forKey:"age")
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain8") {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("NDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute8Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge8"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if (stringValidate == "fieldStrain9") {
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("ST", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute9Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(dict.value(forKey: "fieldAge9"), forKey:"age")
-                    
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "fieldStrain10") {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("E.coli", forKey:"type")
-                    person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
-                    switch dict.value(forKey: "fieldRoute10Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    
-                    person.setValue(dict.value(forKey: "fieldAge10"), forKey:"age")
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if (stringValidate == "fieldStrain11") {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
-                    
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("Other", forKey:"type")
-                    switch dict.value(forKey: "fieldRoute11Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    
-                    person.setValue(dict.object(forKey: "fieldStrain11"), forKey:"strain")
-                    person.setValue(dict.object(forKey: "fieldAge11"), forKey:"age")
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.object(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.object(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    try? managedContext.save()
-
-                    
-                    hatcheryVaccinationObject.append(person)
+                switch stringValidate {
+                case "fieldStrain1":
+                    handlefieldStrain1GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain2":
+                    handlefieldStrain2GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain3":
+                    handlefieldStrain3GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain4":
+                    handlefieldStrain4GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain5":
+                    handlefieldStrain5GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain6":
+                    handlefieldStrain6GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain7":
+                    handlefieldStrain7GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain8":
+                    handlefieldStrain8GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain9":
+                    handlefieldStrain9GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain10":
+                    handlefieldStrain10GetHatcheryDataFromServer(managedContext, dict, postingId)
+                case "fieldStrain11":
+                    handlefieldStrain11GetHatcheryDataFromServer(managedContext, dict, postingId)
+                default:
+                    break
                 }
             }
         }
     }
     // MARK: 🟢**********************************  get Field Data From Server /
     
+    fileprivate func handlehatcheryStrain1GetFieldDataFromServer1(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute1Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain2(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain3(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute3Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain4(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute4Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain5(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute5Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain6(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute6Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain7(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute7Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain8(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
+        
+        switch dict.value(forKey: "hatcheryRoute8Id") as? Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain9(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
+        
+        switch dict.value(forKey: "hatcheryRoute9Id") as? Int {
+            
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
+    fileprivate func handleGetFieldDataFromServerhatcheryStrain10(_ person: NSManagedObject, _ dict: NSDictionary) {
+        person.setValue("", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
+        
+        switch dict.value(forKey: "hatcheryRoute10Id") as? Int {
+            
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+    }
+    
     func getFieldDataFromServer(_ dict : NSDictionary)  {
         
-        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: backgroundContext)
+        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: backgroundContext)
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
-        for  j in 0..<allkeyArr.count{
+        for j in 0..<allkeyArr.count {
             let person  = NSManagedObject(entity: entity!, insertInto: backgroundContext)
             
             let stringValidate = allkeyArr.object(at: j) as! String
             
-            if  (stringValidate == "hatcheryStrain1") {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute1Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
+            switch stringValidate {
+            case "hatcheryStrain1":
+                handlehatcheryStrain1GetFieldDataFromServer1(person, dict)
+            case "hatcheryStrain2":
+                handleGetFieldDataFromServerhatcheryStrain2(person, dict)
+            case "hatcheryStrain3":
+                handleGetFieldDataFromServerhatcheryStrain3(person, dict)
+            case "hatcheryStrain4":
+                handleGetFieldDataFromServerhatcheryStrain4(person, dict)
+            case "hatcheryStrain5":
+                handleGetFieldDataFromServerhatcheryStrain5(person, dict)
+            case "hatcheryStrain6":
+                handleGetFieldDataFromServerhatcheryStrain6(person, dict)
+            case "hatcheryStrain7":
+                handleGetFieldDataFromServerhatcheryStrain7(person, dict)
+            case "hatcheryStrain8":
+                handleGetFieldDataFromServerhatcheryStrain8(person, dict)
+            case "hatcheryStrain9":
+                handleGetFieldDataFromServerhatcheryStrain9(person, dict)
+            case "hatcheryStrain10":
+                handleGetFieldDataFromServerhatcheryStrain10(person, dict)
+            default:
+                break
             }
-            else if(stringValidate == "hatcheryStrain2")   {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain3")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute3Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain4")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute4Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain5")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute5Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain6")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute6Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain7")  {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute7Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "hatcheryStrain8") {
-                
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
-                
-                switch dict.value(forKey: "hatcheryRoute8Id") as? Int {
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            
-            else if (stringValidate == "hatcheryStrain9") {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
-                
-                switch dict.value(forKey: "hatcheryRoute9Id") as? Int {
-                    
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            
-            else if (stringValidate == "hatcheryStrain10") {
-                person.setValue("", forKey:"type")
-                person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
-                
-                switch dict.value(forKey: "hatcheryRoute10Id") as? Int {
-                    
-                case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 3:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 4:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 5:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 6:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
-                case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
-                case 14:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 15:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 16:
-                    person.setValue("Subcutaneous", forKey:"route")
-                case 17:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
-                case 20:
-                    person.setValue(Constants.aguaDeBebida, forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 19:
-                    person.setValue(Constants.membranaDaAsa, forKey:"route")
-                case 25:
-                    person.setValue("Ocular", forKey:"route")
-                case 23:
-                    person.setValue(Constants.Subcutânea, forKey:"route")
-
-                default:
-                    person.setValue(" ", forKey:"route")
-                }
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                person.setValue(false, forKey:"isSync")
-            }
-            do
-            {
+            do {
                 try backgroundContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             hatcheryVaccinationObject.append(person)
         }
     }
     // MARK: 🟢 Get Field Vaccination Data for specific Posting ID
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain1(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
+        person.setValue("Marek", forKey:"type")
+        switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain2(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBDV", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain3(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("IBV", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain4(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("TRT", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain5(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("NDV", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain6(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("POX", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain7(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("Reo", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain8(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("ST", forKey:"type")
+        let d = dict.mutableCopy() as! NSMutableDictionary
+        let s = d.object(forKey: "hatcheryStrain8") as! String
+        person.setValue(s, forKey:"strain")
+        
+        person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
+        
+        switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain9(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("E.coli", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
+        switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
+            
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        }
+        catch
+        {
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
+    fileprivate func handleGetFieldDataFromServerSingledataHatcheryStrain10(_ managedContext: NSManagedObjectContext, _ dict: NSDictionary, _ postingId: NSNumber) {
+        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue("Others", forKey:"type")
+        person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
+        
+        switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
+        case 1:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 2:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 3:
+            person.setValue(Constants.spray, forKey:"route")
+        case 4:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 5:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 6:
+            person.setValue("Intramuscular", forKey:"route")
+        case 7:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 12:
+            person.setValue(Constants.wingWeb, forKey:"route")
+        case 13:
+            person.setValue(Constants.drinkingWater, forKey:"route")
+        case 14:
+            person.setValue(Constants.spray, forKey:"route")
+        case 15:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 16:
+            person.setValue("Subcutaneous", forKey:"route")
+        case 17:
+            person.setValue("Intramuscular", forKey:"route")
+        case 18:
+            person.setValue(Constants.eyeDrop, forKey:"route")
+        case 20:
+            person.setValue(Constants.aguaDeBebida, forKey:"route")
+        case 21:
+            person.setValue(Constants.spray, forKey:"route")
+        case 22:
+            person.setValue(Constants.inovo, forKey:"route")
+        case 24:
+            person.setValue("Intramuscular", forKey:"route")
+        case 19:
+            person.setValue(Constants.membranaDaAsa, forKey:"route")
+        case 25:
+            person.setValue("Ocular", forKey:"route")
+        case 23:
+            person.setValue(Constants.Subcutânea, forKey:"route")
+            
+        default:
+            person.setValue(" ", forKey:"route")
+        }
+        person.setValue(postingId, forKey:"postingId")
+        person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
+        person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
+        person.setValue(false, forKey:"isSync")
+        do
+        {
+            try managedContext.save()
+        } catch {
+            
+        }
+        
+        hatcheryVaccinationObject.append(person)
+    }
+    
     func getFieldDataFromServerSingledata(_ dict : NSDictionary,postingId: NSNumber)  {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
-        for  j in 0..<allkeyArr.count{
+        for j in 0..<allkeyArr.count {
             
             let stringValidate = allkeyArr.object(at: j) as! String
             let str = "field"
             let index = stringValidate.index(stringValidate.startIndex, offsetBy: 8)
             let mySubstring = stringValidate[..<index]
             
-            if  mySubstring != str {
+            if mySubstring != str {
                 
-                if  (stringValidate == "hatcheryStrain1") {
-                    
-                    let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
-                    person.setValue("Marek", forKey:"type")
-                    switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if(stringValidate == "hatcheryStrain2")   {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if (stringValidate == "hatcheryStrain3")  {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("IBV", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-       
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "hatcheryStrain4")  {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("TRT", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "hatcheryStrain5")  {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("NDV", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "hatcheryStrain6")  {
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("POX", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-            
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                else if (stringValidate == "hatcheryStrain7")  {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("Reo", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                 
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    hatcheryVaccinationObject.append(person)
-                }
-                
-                else if (stringValidate == "hatcheryStrain8") {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("ST", forKey:"type")
-                    let d = dict.mutableCopy() as! NSMutableDictionary
-                    let s = d.object(forKey: "hatcheryStrain8") as! String
-                    person.setValue(s, forKey:"strain")
-                    
-                    person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
-                    
-                    switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                  
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    hatcheryVaccinationObject.append(person)
-                    
-                }
-                else if (stringValidate == "hatcheryStrain9") {
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("E.coli", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
-                    switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
-                        
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                   
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
-                }
-                
-                else if (stringValidate == "hatcheryStrain10") {
-                    let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue("Others", forKey:"type")
-                    person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
-                    
-                    switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
-                    case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 3:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 4:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 5:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 6:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
-                    case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
-                    case 14:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 15:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 16:
-                        person.setValue("Subcutaneous", forKey:"route")
-                    case 17:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
-                    case 20:
-                        person.setValue(Constants.aguaDeBebida, forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 19:
-                        person.setValue(Constants.membranaDaAsa, forKey:"route")
-                    case 25:
-                        person.setValue("Ocular", forKey:"route")
-                    case 23:
-                        person.setValue(Constants.Subcutânea, forKey:"route")
-                  
-                    default:
-                        person.setValue(" ", forKey:"route")
-                    }
-                    person.setValue(postingId, forKey:"postingId")
-                    person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-                    person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-                    person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    hatcheryVaccinationObject.append(person)
+                switch stringValidate {
+                case "hatcheryStrain1":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain1(managedContext, dict, postingId)
+                case "hatcheryStrain2":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain2(managedContext, dict, postingId)
+                case "hatcheryStrain3":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain3(managedContext, dict, postingId)
+                case "hatcheryStrain4":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain4(managedContext, dict, postingId)
+                case "hatcheryStrain5":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain5(managedContext, dict, postingId)
+                case "hatcheryStrain6":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain6(managedContext, dict, postingId)
+                case "hatcheryStrain7":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain7(managedContext, dict, postingId)
+                case "hatcheryStrain8":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain8(managedContext, dict, postingId)
+                case "hatcheryStrain9":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain9(managedContext, dict, postingId)
+                case "hatcheryStrain10":
+                    handleGetFieldDataFromServerSingledataHatcheryStrain10(managedContext, dict, postingId)
+                default:
+                    break
                 }
             }
         }
@@ -2895,56 +3029,47 @@ class CoreDataHandler : NSObject  {
     
     /************************/
     // MARK: 🟢 Save Field Vaccination Data in Database
-    func saveFieldVacinationInDatabase(_ type : String, strain : String, route : String, index : Int, dbArray: NSArray,postingId : NSNumber,vaciProgram: String,sessionId : NSNumber,isSync : Bool,lngId:NSNumber , routeID : Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    
+    func saveFieldVacinationInDatabase(details: chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         FieldVaccindataArray = dbArray
+        
         if FieldVaccindataArray.count > 0 {
-            
             if let objTable: FieldVaccination = FieldVaccindataArray[index] as? FieldVaccination {
-                objTable.setValue(type, forKey:"type")
-                objTable.setValue(strain, forKey:"strain")
-                objTable.setValue(route, forKey:"route")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(vaciProgram, forKey:"vaciNationProgram")
-                objTable.setValue(sessionId, forKey:"loginSessionId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(routeID, forKey: "routeId")
+                objTable.setValue(details.type, forKey: "type")
+                objTable.setValue(details.strain, forKey: "strain")
+                objTable.setValue(details.route, forKey: "route")
+                objTable.setValue(details.postingId, forKey: "postingId")
+                objTable.setValue(details.vaciProgram, forKey: "vaciNationProgram")
+                objTable.setValue(details.sessionId, forKey: "loginSessionId")
+                objTable.setValue(details.isSync, forKey: "isSync")
+                objTable.setValue(details.lngId, forKey: "lngId")
+                objTable.setValue(details.routeID, forKey: "routeId")
             }
-            do
-            {
-                try managedContext.save()
-            }
-            catch{
-            }
-        }
-        else {
-            
-            let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
-            let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(type, forKey:"type")
-            person.setValue(strain, forKey:"strain")
-            person.setValue(route, forKey:"route")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(vaciProgram, forKey:"vaciNationProgram")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(routeID, forKey: "routeId")
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(details.type, forKey: "type")
+            person.setValue(details.strain, forKey: "strain")
+            person.setValue(details.route, forKey: "route")
+            person.setValue(details.postingId, forKey: "postingId")
+            person.setValue(details.vaciProgram, forKey: "vaciNationProgram")
+            person.setValue(details.sessionId, forKey: "loginSessionId")
+            person.setValue(details.isSync, forKey: "isSync")
+            person.setValue(details.lngId, forKey: "lngId")
+            person.setValue(details.routeID, forKey: "routeId")
             
             hatcheryVaccinationObject.append(person)
         }
+
+        do {
+            try managedContext.save()
+        } catch {
+            print(appDelegateObj.testFuntion())
+        }
     }
+
     // MARK: 🟢Fetch All Saved Field Vacciantion Data
     func fetchFieldAddvacinationDataAll() -> NSArray
     {
@@ -3098,59 +3223,88 @@ class CoreDataHandler : NSObject  {
     
     // MARK: 🟠 *****************************  Setting data Base ********************************************************/
     // MARK: 🟠 *************** save data Skleta ************************************************************************/
-    func saveSettingsSkeletaInDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber, quicklinkIndex: Int)
-    {
+    
+    func saveSettingsSkeletaInDatabase(_ settingsData: chickenCoreDataHandlerModels.saveSkeletaSettingsInDB) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        dataSkeletaArray = dbArray
+        dataSkeletaArray = settingsData.dbArray
         
-        if  dataSkeletaArray.count > 0 {
-            
-            if let objTable: Skeleta = dataSkeletaArray[index] as? Skeleta {
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
+        if dataSkeletaArray.count > 0 {
+            if let objTable: Skeleta = dataSkeletaArray[settingsData.index] as? Skeleta {
+                objTable.setValue(settingsData.strObservationField, forKey:"observationField")
+                objTable.setValue(NSNumber(value: settingsData.visibilityCheck), forKey:"visibilityCheck")
+                objTable.setValue(NSNumber(value: settingsData.quicklinks), forKey:"quicklinks")
+                objTable.setValue(settingsData.strInformation, forKey:"information")
+                objTable.setValue(settingsData.obsId, forKey:"observationId")
+                objTable.setValue(settingsData.measure, forKey:"measure")
+                objTable.setValue(settingsData.lngId, forKey:"lngId")
+                objTable.setValue(settingsData.refId, forKey:"refId")
+                objTable.setValue(settingsData.isSync, forKey:"isSync")
+                objTable.setValue(settingsData.quicklinkIndex, forKey:"quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                print("Error saving context")
             }
-            catch{
-            }
-        }
-        else {
-            let entity   = NSEntityDescription.entity(forEntityName: "Skeleta", in: managedContext)
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "Skeleta", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            do
-            {
+            
+            person.setValue(settingsData.strObservationField, forKey:"observationField")
+            person.setValue(NSNumber(value: settingsData.visibilityCheck), forKey:"visibilityCheck")
+            person.setValue(NSNumber(value: settingsData.quicklinks), forKey:"quicklinks")
+            person.setValue(settingsData.strInformation, forKey:"information")
+            person.setValue(settingsData.obsId, forKey:"observationId")
+            person.setValue(settingsData.measure, forKey:"measure")
+            person.setValue(settingsData.isSync, forKey:"isSync")
+            person.setValue(settingsData.lngId, forKey:"lngId")
+            person.setValue(settingsData.refId, forKey:"refId")
+            person.setValue(settingsData.quicklinkIndex, forKey:"quicklinkIndex")
+            
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
+            } catch {
+                print("Error saving new context")
             }
             
             settingsSkeletaObject.append(person)
         }
     }
+
     // MARK: 🟠 Update Setting for Skelta
+    
+    func updateSettingDataSkelta(_ settingData: chickenCoreDataHandlerModels.updateSkeletaSettingData) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Skeleta")
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settingData.refId)
+        
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
+                    let objTable: Skeleta = (fetchedResult![i] as? Skeleta)!
+                    objTable.setValue(NSNumber(value: settingData.visibilityCheck), forKey: "visibilityCheck")
+                    objTable.setValue(NSNumber(value: settingData.quicklinks), forKey: "quicklinks")
+                    objTable.setValue(settingData.strInformation, forKey: "information")
+                    objTable.setValue(settingData.isSync, forKey: "isSync")
+                    do {
+                        try managedContext.save()
+                    } catch {
+                        // Handle error
+                    }
+                }
+            }
+        } catch {
+            appDelegateObj.testFuntion()
+        }
+    }
+
+    
+    /*
     func updateSettingDataSkelta (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
@@ -3187,6 +3341,7 @@ class CoreDataHandler : NSObject  {
             appDelegateObj.testFuntion()
         }
     }
+    */
     // MARK: 🟢 *************** Fetch Settings data for Skleta *********************************************
     
     func fetchAllSeettingdata() -> NSArray
@@ -3246,6 +3401,54 @@ class CoreDataHandler : NSObject  {
     
     // MARK: 🟢 *************************** Save Setting  Data Cocoii Data ***********************************************/
     
+    func saveSettingsCocoiiInDatabase(_ settingData: chickenCoreDataHandlerModels.saveCoccidiosisSettingDB) {
+        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let managedContext = appDelegate!.managedObjectContext
+        dataCociiaArray = settingData.dbArray
+        
+        if dataCociiaArray.count > 0 {
+            if let objTable: Coccidiosis = dataCociiaArray[settingData.index] as? Coccidiosis {
+                objTable.setValue(settingData.strObservationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settingData.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settingData.quicklinks), forKey: "quicklinks")
+                objTable.setValue(settingData.strInformation, forKey: "information")
+                objTable.setValue(settingData.obsId, forKey: "observationId")
+                objTable.setValue(settingData.measure, forKey: "measure")
+                objTable.setValue(settingData.lngId, forKey: "lngId")
+                objTable.setValue(settingData.isSync, forKey: "isSync")
+                objTable.setValue(settingData.refId, forKey: "refId")
+                objTable.setValue(settingData.quicklinkIndex, forKey: "quicklinkIndex")
+            }
+            do {
+                try managedContext.save()
+            } catch {
+                // Handle error
+            }
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "Coccidiosis", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(settingData.strObservationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settingData.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settingData.quicklinks), forKey: "quicklinks")
+            person.setValue(settingData.strInformation, forKey: "information")
+            person.setValue(settingData.obsId, forKey: "observationId")
+            person.setValue(settingData.measure, forKey: "measure")
+            person.setValue(settingData.isSync, forKey: "isSync")
+            person.setValue(settingData.lngId, forKey: "lngId")
+            person.setValue(settingData.refId, forKey: "refId")
+            person.setValue(settingData.quicklinkIndex, forKey: "quicklinkIndex")
+            
+            do {
+                try managedContext.save()
+            } catch {
+                // Handle error
+            }
+            settingsCocoii.append(person)
+        }
+    }
+
+    
+   /*
     func saveSettingsCocoiiInDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -3295,40 +3498,39 @@ class CoreDataHandler : NSObject  {
             settingsCocoii.append(person)
         }
     }
+    */
     // MARK: 🟠 Update Settings for Coccidiosis Category
-    func updateSettingDataCocoii (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber) {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    
+    func updateSettingDataCocoii(_ settingData: chickenCoreDataHandlerModels.updateCoccidiosisSettingData) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Coccidiosis")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Coccidiosis")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
-        
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settingData.refId)
+
         do {
-            
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: Coccidiosis = (fetchedResult![i] as? Coccidiosis)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
+
+            if let fetchedResult = fetchedResult, fetchedResult.count > 0 {
+                for obj in fetchedResult {
+                    if let objTable = obj as? Coccidiosis {
+                        objTable.setValue(NSNumber(value: settingData.visibilityCheck), forKey: "visibilityCheck")
+                        objTable.setValue(NSNumber(value: settingData.quicklinks), forKey: "quicklinks")
+                        objTable.setValue(settingData.isSync, forKey: "isSync")
+                        
+                        do {
+                            try managedContext.save()
+                        } catch {
+                            // Handle error
+                        }
                     }
                 }
             }
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
     }
+
     // MARK: 🟠 Update Quick Link for All observation Category
     func updateSettingDataQuickIndex(_ strObservationField: String, obsId: NSNumber, quicklinkIndex: Int, entityName: String) {
         
@@ -3459,100 +3661,84 @@ class CoreDataHandler : NSObject  {
     }
     
     // MARK: 🟠 ***************************** Saving data Of GiTract********************************************/
-    
-    func saveSettingsGITractDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsGITractDatabase(settingData: chickenCoreDataHandlerModels.saveGITractSettingData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        dataGiTractArray = dbArray
+        dataGiTractArray = settingData.dbArray
         
-        if  dataGiTractArray.count > 0 {
-            
-            if let objTable: GITract = dataGiTractArray[index] as? GITract {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
+        if dataGiTractArray.count > 0 {
+            if let objTable: GITract = dataGiTractArray[settingData.index] as? GITract {
+                objTable.setValue(settingData.strObservationField, forKey:"observationField")
+                objTable.setValue(NSNumber(value: settingData.visibilityCheck as Bool), forKey:"visibilityCheck")
+                objTable.setValue(NSNumber(value: settingData.quicklinks as Bool), forKey:"quicklinks")
+                objTable.setValue(settingData.strInformation, forKey:"information")
+                objTable.setValue(settingData.obsId, forKey:"observationId")
+                objTable.setValue(settingData.measure, forKey:"measure")
+                objTable.setValue(settingData.lngId, forKey:"lngId")
+                objTable.setValue(settingData.isSync, forKey:"isSync")
+                objTable.setValue(settingData.refId, forKey:"refId")
+                objTable.setValue(settingData.quicklinkIndex, forKey:"quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                print("Failed to save updated GITract settings")
             }
-            catch{
-            }
-        }
-        else {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "GITract", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(settingData.strObservationField, forKey:"observationField")
+            person.setValue(NSNumber(value: settingData.visibilityCheck as Bool), forKey:"visibilityCheck")
+            person.setValue(NSNumber(value: settingData.quicklinks as Bool), forKey:"quicklinks")
+            person.setValue(settingData.strInformation, forKey:"information")
+            person.setValue(settingData.obsId, forKey:"observationId")
+            person.setValue(settingData.measure, forKey:"measure")
+            person.setValue(settingData.isSync, forKey:"isSync")
+            person.setValue(settingData.lngId, forKey:"lngId")
+            person.setValue(settingData.refId, forKey:"refId")
+            person.setValue(settingData.quicklinkIndex, forKey:"quicklinkIndex")
             
-            let entity         = NSEntityDescription.entity(forEntityName: "GITract", in: managedContext)
-            let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do
-            {
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
+            } catch {
+                print("Failed to save new GITract settings")
             }
             
             settingsGITract.append(person)
         }
     }
+
     // MARK: 🟠 Update Settings data for Gitract
-    func updateSettingDataGitract (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
+    
+    func updateSettingDataGitract(settingData: chickenCoreDataHandlerModels.updateGITractSettingData) {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITract")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settingData.refId)
         
-        do
-            
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
                     let objTable: GITract = (fetchedResult![i] as? GITract)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
+                    objTable.setValue(NSNumber(value: settingData.visibilityCheck), forKey:"visibilityCheck")
+                    objTable.setValue(NSNumber(value: settingData.quicklinks), forKey:"quicklinks")
+                    objTable.setValue(settingData.isSync, forKey:"isSync")
+                    
+                    do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error if needed
                     }
                 }
             }
-            
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
     }
+
     // MARK: 🟠 ************ Fetch data Of GiTract* ***************************************/
     
     func fetchAllGITractData() -> NSArray
@@ -3643,98 +3829,80 @@ class CoreDataHandler : NSObject  {
     
     // MARK: 🟢****************** Saving data Of Respiratory *********************************/
     
-    func saveSettingsRespiratoryDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync: Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsRespiratoryDatabase(settings: chickenCoreDataHandlerModels.saveRespiratorySettings) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        dataRespiratoryArray = dbArray
-        
-        if  dataRespiratoryArray.count > 0 {
-            if let objTable: Respiratory = dataRespiratoryArray[index] as? Respiratory {
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-                
+        dataRespiratoryArray = settings.dbArray
+
+        if dataRespiratoryArray.count > 0 {
+            if let objTable: Respiratory = dataRespiratoryArray[settings.index] as? Respiratory {
+                objTable.setValue(settings.strObservationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                objTable.setValue(settings.strInformation, forKey: "information")
+                objTable.setValue(settings.obsId, forKey: "observationId")
+                objTable.setValue(settings.measure, forKey: "measure")
+                objTable.setValue(settings.lngId, forKey: "lngId")
+                objTable.setValue(settings.isSync, forKey: "isSync")
+                objTable.setValue(settings.refId, forKey: "refId")
+                objTable.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                // Handle error
             }
-            catch{
-            }
-        }
-        else {
-            
-            
-            let entity  = NSEntityDescription.entity(forEntityName: "Respiratory", in: managedContext)
-            
-            let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-            
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do
-            {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "Respiratory", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(settings.strObservationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+            person.setValue(settings.strInformation, forKey: "information")
+            person.setValue(settings.obsId, forKey: "observationId")
+            person.setValue(settings.measure, forKey: "measure")
+            person.setValue(settings.isSync, forKey: "isSync")
+            person.setValue(settings.lngId, forKey: "lngId")
+            person.setValue(settings.refId, forKey: "refId")
+            person.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
+            } catch {
+                // Handle error
             }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
-            
+
             settingsRespiratory.append(person)
         }
     }
+
     // MARK: 🟠 Update Settings Data for Respiratory
-    func updateSettingDataResp (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    
+    func updateSettingDataResp(_ settings: chickenCoreDataHandlerModels.updateRespiratorySettings) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Respiratory")
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Respiratory")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
-        do
-            
-        {
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settings.refId)
+
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: Respiratory = (fetchedResult![i] as? Respiratory)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
+            if let result = fetchedResult, result.count > 0 {
+                for obj in result {
+                    if let objTable = obj as? Respiratory {
+                        objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                        objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                        objTable.setValue(settings.isSync, forKey: "isSync")
                     }
                 }
+                try managedContext.save()
             }
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
     }
+
     // MARK: 🟠************ Fetch all Respiratory details* ***************************************/
     func fetchAllRespiratory() -> NSArray
     {
@@ -3790,94 +3958,79 @@ class CoreDataHandler : NSObject  {
     
     
     // MARK: 🟢***************************** Saving data Of immune ********************************************/
-    
-    func saveSettingsImmuneDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsImmuneDatabase(_ settings: chickenCoreDataHandlerModels.saveImmuneSettings) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        dataImmuneArray = dbArray
-        
-        if  dataImmuneArray.count > 0 {
-            
-            if let objTable: Immune = dataImmuneArray[index] as? Immune {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
+        dataImmuneArray = settings.dbArray
+
+        if dataImmuneArray.count > 0 {
+            if let objTable: Immune = dataImmuneArray[settings.index] as? Immune {
+                objTable.setValue(settings.strObservationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                objTable.setValue(settings.strInformation, forKey: "information")
+                objTable.setValue(settings.obsId, forKey: "observationId")
+                objTable.setValue(settings.measure, forKey: "measure")
+                objTable.setValue(settings.lngId, forKey: "lngId")
+                objTable.setValue(settings.isSync, forKey: "isSync")
+                objTable.setValue(settings.refId, forKey: "refId")
+                objTable.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
             }
-            catch{
-            }
-        }
-        else {
-            
+        } else {
             let entity = NSEntityDescription.entity(forEntityName: "Immune", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            do
-            {
+            person.setValue(settings.strObservationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+            person.setValue(settings.strInformation, forKey: "information")
+            person.setValue(settings.obsId, forKey: "observationId")
+            person.setValue(settings.measure, forKey: "measure")
+            person.setValue(settings.isSync, forKey: "isSync")
+            person.setValue(settings.lngId, forKey: "lngId")
+            person.setValue(settings.refId, forKey: "refId")
+            person.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
+
             settingsImmune.append(person)
         }
     }
+
     // MARK: 🟠 Update Settings Data for Immune
-    func updateSettingDataImmune (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateSettingDataImmune(_ updateData: chickenCoreDataHandlerModels.ImmuneUpdateData, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Immune")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Immune")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
-        do
-            
-        {
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, updateData.refId)
+
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: Immune = (fetchedResult![i] as? Immune)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(strInformation, forKey:"information")
-                    
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
+
+            if let fetchedResult = fetchedResult, fetchedResult.count > 0 {
+                for obj in fetchedResult {
+                    if let objTable = obj as? Immune {
+                        objTable.setValue(NSNumber(value: updateData.visibilityCheck), forKey: "visibilityCheck")
+                        objTable.setValue(NSNumber(value: updateData.quicklinks), forKey: "quicklinks")
+                        objTable.setValue(updateData.strInformation, forKey: "information")
+
+                        do {
+                            try managedContext.save()
+                        } catch {
+                            // Handle error if needed
+                        }
                     }
                 }
             }
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
     }
@@ -4983,54 +5136,6 @@ class CoreDataHandler : NSObject  {
         
     }
     
-    // MARK: 🟢 /******************* Save Login *******************************************************/
-    func LoginDatabase(_ userTypeId : NSNumber, userId: NSNumber ,userName: String,status: NSNumber,signal:String,loginId:NSNumber,dbArray :NSArray ,index : Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let managedContext = appDelegate!.managedObjectContext
-        loginArray = dbArray
-        
-        if  loginArray.count > 0 {
-            
-            if let objTable: Login = loginArray[index] as? Login {
-                objTable.setValue(userTypeId, forKey:"userTypeId")
-                objTable.setValue(userId, forKey:"userId")
-                objTable.setValue(status, forKey:"status")
-                objTable.setValue(userName, forKey:"username")
-                objTable.setValue(signal, forKey:"signal")
-                objTable.setValue(loginId, forKey:"loginId")
-            }
-            do
-            {
-                try managedContext.save()
-            }
-            catch{
-            }
-        }
-        else {
-            
-            let entity = NSEntityDescription.entity(forEntityName: "Login", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(userTypeId, forKey:"userTypeId")
-            person.setValue(userId, forKey:"userId")
-            person.setValue(status, forKey:"status")
-            person.setValue(userName, forKey:"username")
-            person.setValue(signal, forKey:"signal")
-            person.setValue(loginId, forKey:"loginId")
-            
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
-            
-            loginType.append(person)
-        }
-    }
     
     // MARK: 🟢************** Fetch  Login Detail *******************************************/
     func fetchLoginType() -> NSArray
@@ -5587,138 +5692,133 @@ class CoreDataHandler : NSObject  {
         
     }
     ///////////////// ** Posting Session Data Save In Add Vacination Button **///////
-    
-    func PostingSessionDb(_ antobotic: String,birdBreesId:NSNumber,birdbreedName:String,birdBreedType:String,birdSize:String,birdSizeId:NSNumber,cocciProgramId:NSNumber,cociiProgramName: String,complexId:NSNumber,complexName: String,convential:String,customerId:NSNumber,customerName:String,customerRepId:NSNumber,customerRepName:String,imperial:String,metric:String,notes:String,salesRepId:NSNumber,salesRepName:String,sessiondate:String,sessionTypeId:NSNumber,sessionTypeName:String,vetanatrionName:String,veterinarianId: NSNumber,loginSessionId:NSNumber,postingId:NSNumber,mail: String,female: String,finilize: NSNumber,isSync : Bool,timeStamp:String,lngId:NSNumber,productionTypName:String,productionTypId:NSNumber  ,avgAge:String ,avgWeight:String ,outTime:String ,FCR:String ,Livability:String ,mortality:String){
-        
+   
+    func PostingSessionDb(_ postingData: chickenCoreDataHandlerModels.chickenPostingSessionData) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        self.deleteDataWithPostingId(postingId)
+        
+        self.deleteDataWithPostingId(postingData.postingId)
+        
         let entity = NSEntityDescription.entity(forEntityName: "PostingSession", in: managedContext)
         let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
-        contact1.setValue(convential, forKey:"convential")
-        contact1.setValue(antobotic, forKey:"antiboitic")
-        contact1.setValue(0, forKey:"birdBreedId")
-        contact1.setValue(birdbreedName, forKey:"birdBreedName")
-        contact1.setValue(birdBreedType, forKey:"birdBreedType")
-        contact1.setValue(birdSize, forKey:"birdSize")
-        contact1.setValue(birdSizeId, forKey:"birdSizeId")
-        contact1.setValue(cocciProgramId, forKey:"cocciProgramId")
-        contact1.setValue(cociiProgramName, forKey:"cociiProgramName")
-        contact1.setValue(complexId, forKey:"complexId")
-        contact1.setValue(complexName, forKey:"complexName")
-        contact1.setValue(customerId, forKey:"customerId")
-        contact1.setValue(customerName, forKey:"customerName")
-        contact1.setValue(customerRepId, forKey:"customerRepId")
-        contact1.setValue(customerRepName, forKey:"customerRepName")
-        contact1.setValue(imperial, forKey:"imperial")
-        contact1.setValue(metric, forKey:"metric")
-        contact1.setValue(notes, forKey:"notes")
-        contact1.setValue(salesRepId, forKey:"salesRepId")
-        contact1.setValue(salesRepName, forKey:"salesRepName")
-        contact1.setValue(sessiondate, forKey:"sessiondate")
-        contact1.setValue(sessionTypeId, forKey:"sessionTypeId")
-        contact1.setValue(sessionTypeName, forKey:"sessionTypeName")
-        contact1.setValue(vetanatrionName, forKey:"vetanatrionName")
-        contact1.setValue(veterinarianId, forKey:"veterinarianId")
-        contact1.setValue(loginSessionId, forKey:"loginSessionId")
-        contact1.setValue(postingId, forKey:"postingId")
-        contact1.setValue(mail, forKey:"mail")
-        contact1.setValue(female, forKey:"female")
-        contact1.setValue(finilize, forKey:"finalizeExit")
-        contact1.setValue(true, forKey:"isSync")
-        contact1.setValue(timeStamp, forKey:"timeStamp")
-        contact1.setValue(lngId, forKey:"lngId")
-        contact1.setValue(productionTypId, forKey:"productionTypeId")
-        contact1.setValue(productionTypName, forKey:"productionTypeName")
-        contact1.setValue(mortality, forKey:"dayMortality")
-        contact1.setValue(FCR, forKey:"fcr")
-        contact1.setValue(outTime, forKey:"outTime")
-        contact1.setValue(Livability, forKey:"livability")
-        contact1.setValue(avgAge, forKey:"avgAge")
-        contact1.setValue(avgWeight, forKey:"avgWeight")
         
-        do
-        {
+        contact1.setValue(postingData.convential, forKey:"convential")
+        contact1.setValue(postingData.antiboitic, forKey:"antiboitic")
+        contact1.setValue(0, forKey:"birdBreedId")
+        contact1.setValue(postingData.birdbreedName, forKey:"birdBreedName")
+        contact1.setValue(postingData.birdBreedType, forKey:"birdBreedType")
+        contact1.setValue(postingData.birdSize, forKey:"birdSize")
+        contact1.setValue(postingData.birdSizeId, forKey:"birdSizeId")
+        contact1.setValue(postingData.cocciProgramId, forKey:"cocciProgramId")
+        contact1.setValue(postingData.cociiProgramName, forKey:"cociiProgramName")
+        contact1.setValue(postingData.complexId, forKey:"complexId")
+        contact1.setValue(postingData.complexName, forKey:"complexName")
+        contact1.setValue(postingData.customerId, forKey:"customerId")
+        contact1.setValue(postingData.customerName, forKey:"customerName")
+        contact1.setValue(postingData.customerRepId, forKey:"customerRepId")
+        contact1.setValue(postingData.customerRepName, forKey:"customerRepName")
+        contact1.setValue(postingData.imperial, forKey:"imperial")
+        contact1.setValue(postingData.metric, forKey:"metric")
+        contact1.setValue(postingData.notes, forKey:"notes")
+        contact1.setValue(postingData.salesRepId, forKey:"salesRepId")
+        contact1.setValue(postingData.salesRepName, forKey:"salesRepName")
+        contact1.setValue(postingData.sessiondate, forKey:"sessiondate")
+        contact1.setValue(postingData.sessionTypeId, forKey:"sessionTypeId")
+        contact1.setValue(postingData.sessionTypeName, forKey:"sessionTypeName")
+        contact1.setValue(postingData.vetanatrionName, forKey:"vetanatrionName")
+        contact1.setValue(postingData.veterinarianId, forKey:"veterinarianId")
+        contact1.setValue(postingData.loginSessionId, forKey:"loginSessionId")
+        contact1.setValue(postingData.postingId, forKey:"postingId")
+        contact1.setValue(postingData.mail, forKey:"mail")
+        contact1.setValue(postingData.female, forKey:"female")
+        contact1.setValue(postingData.finilize, forKey:"finalizeExit")
+        contact1.setValue(true, forKey:"isSync")
+        contact1.setValue(postingData.timeStamp, forKey:"timeStamp")
+        contact1.setValue(postingData.lngId, forKey:"lngId")
+        contact1.setValue(postingData.productionTypId, forKey:"productionTypeId")
+        contact1.setValue(postingData.productionTypName, forKey:"productionTypeName")
+        contact1.setValue(postingData.mortality, forKey:"dayMortality")
+        contact1.setValue(postingData.FCR, forKey:"fcr")
+        contact1.setValue(postingData.outTime, forKey:"outTime")
+        contact1.setValue(postingData.Livability, forKey:"livability")
+        contact1.setValue(postingData.avgAge, forKey:"avgAge")
+        contact1.setValue(postingData.avgWeight, forKey:"avgWeight")
+        
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
         
         postingSession.append(contact1)
-        
     }
+
     /************* Update Posting session *****************/
     
-    func updatePostingSessionForNextButton(_ postingId : NSNumber,antobotic: String,birdBreesId:NSNumber,birdbreedName:String,birdBreedType:String,birdSize:String,birdSizeId:NSNumber,cocciProgramId:NSNumber,cociiProgramName: String,complexId:NSNumber,complexName: String,convential:String,customerId:NSNumber,customerName:String,customerRepId:NSNumber,customerRepName:String,imperial:String,metric:String,notes:String,salesRepId:NSNumber,salesRepName:String,sessiondate:String,sessionTypeId:NSNumber,sessionTypeName:String,vetanatrionName:String,veterinarianId: NSNumber,loginSessionId:NSNumber,mail: String,female: String,finilize: NSNumber,isSync : Bool,timeStamp:String,lngId:NSNumber,productionTypName:String,productionTypId:NSNumber,avgAge:String ,avgWeight:String ,outTime:String ,FCR:String ,Livability:String ,mortality:String)
     
-    {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+    func updatePostingSessionForNextButton(postingData: chickenCoreDataHandlerModels.updatePostingSessionData) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format:Constants.postincIdPredicate, postingId)
-        do
-        { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if fetchedResult!.count > 0
-            {
-                let objTable: PostingSession = (fetchedResult![0] as? PostingSession)!
-                objTable.setValue(convential, forKey:"convential")
-                objTable.setValue(antobotic, forKey:"antiboitic")
-                objTable.setValue(0, forKey:"birdBreedId")
-                objTable.setValue(birdbreedName, forKey:"birdBreedName")
-                objTable.setValue(birdBreedType, forKey:"birdBreedType")
-                objTable.setValue(birdSize, forKey:"birdSize")
-                objTable.setValue(birdSizeId, forKey:"birdSizeId")
-                objTable.setValue(cocciProgramId, forKey:"cocciProgramId")
-                objTable.setValue(cociiProgramName, forKey:"cociiProgramName")
-                objTable.setValue(complexId, forKey:"complexId")
-                objTable.setValue(complexName, forKey:"complexName")
-                objTable.setValue(customerId, forKey:"customerId")
-                objTable.setValue(customerName, forKey:"customerName")
-                objTable.setValue(customerRepId, forKey:"customerRepId")
-                objTable.setValue(customerRepName, forKey:"customerRepName")
-                objTable.setValue(imperial, forKey:"imperial")
-                objTable.setValue(metric, forKey:"metric")
-                objTable.setValue(notes, forKey:"notes")
-                objTable.setValue(salesRepId, forKey:"salesRepId")
-                objTable.setValue(salesRepName, forKey:"salesRepName")
-                objTable.setValue(sessiondate, forKey:"sessiondate")
-                objTable.setValue(sessionTypeId, forKey:"sessionTypeId")
-                objTable.setValue(sessionTypeName, forKey:"sessionTypeName")
-                objTable.setValue(vetanatrionName, forKey:"vetanatrionName")
-                objTable.setValue(veterinarianId, forKey:"veterinarianId")
-                objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(mail, forKey:"mail")
-                objTable.setValue(female, forKey:"female")
-                objTable.setValue(finilize, forKey:"finalizeExit")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(timeStamp, forKey:"timeStamp")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(productionTypId, forKey:"productionTypeId")
-                objTable.setValue(productionTypName, forKey:"productionTypeName")
-                objTable.setValue(mortality, forKey:"dayMortality")
-                objTable.setValue(FCR, forKey:"fcr")
-                objTable.setValue(outTime, forKey:"outTime")
-                objTable.setValue(Livability, forKey:"livability")
-                objTable.setValue(avgAge, forKey:"avgAge")
-                objTable.setValue(avgWeight, forKey:"avgWeight")
-                do
-                {
+        fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingData.postingId)
+
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let objTable = fetchedResult?.first as? PostingSession {
+                objTable.setValue(postingData.convential, forKey: "convential")
+                objTable.setValue(postingData.antiboitic, forKey: "antiboitic")
+                objTable.setValue(0, forKey: "birdBreedId")
+                objTable.setValue(postingData.birdbreedName, forKey: "birdBreedName")
+                objTable.setValue(postingData.birdBreedType, forKey: "birdBreedType")
+                objTable.setValue(postingData.birdSize, forKey: "birdSize")
+                objTable.setValue(postingData.birdSizeId, forKey: "birdSizeId")
+                objTable.setValue(postingData.cocciProgramId, forKey: "cocciProgramId")
+                objTable.setValue(postingData.cociiProgramName, forKey: "cociiProgramName")
+                objTable.setValue(postingData.complexId, forKey: "complexId")
+                objTable.setValue(postingData.complexName, forKey: "complexName")
+                objTable.setValue(postingData.customerId, forKey: "customerId")
+                objTable.setValue(postingData.customerName, forKey: "customerName")
+                objTable.setValue(postingData.customerRepId, forKey: "customerRepId")
+                objTable.setValue(postingData.customerRepName, forKey: "customerRepName")
+                objTable.setValue(postingData.imperial, forKey: "imperial")
+                objTable.setValue(postingData.metric, forKey: "metric")
+                objTable.setValue(postingData.notes, forKey: "notes")
+                objTable.setValue(postingData.salesRepId, forKey: "salesRepId")
+                objTable.setValue(postingData.salesRepName, forKey: "salesRepName")
+                objTable.setValue(postingData.sessiondate, forKey: "sessiondate")
+                objTable.setValue(postingData.sessionTypeId, forKey: "sessionTypeId")
+                objTable.setValue(postingData.sessionTypeName, forKey: "sessionTypeName")
+                objTable.setValue(postingData.vetanatrionName, forKey: "vetanatrionName")
+                objTable.setValue(postingData.veterinarianId, forKey: "veterinarianId")
+                objTable.setValue(postingData.loginSessionId, forKey: "loginSessionId")
+                objTable.setValue(postingData.postingId, forKey: "postingId")
+                objTable.setValue(postingData.mail, forKey: "mail")
+                objTable.setValue(postingData.female, forKey: "female")
+                objTable.setValue(postingData.finilize, forKey: "finalizeExit")
+                objTable.setValue(postingData.isSync, forKey: "isSync")
+                objTable.setValue(postingData.timeStamp, forKey: "timeStamp")
+                objTable.setValue(postingData.lngId, forKey: "lngId")
+                objTable.setValue(postingData.productionTypId, forKey: "productionTypeId")
+                objTable.setValue(postingData.productionTypName, forKey: "productionTypeName")
+                objTable.setValue(postingData.mortality, forKey: "dayMortality")
+                objTable.setValue(postingData.FCR, forKey: "fcr")
+                objTable.setValue(postingData.outTime, forKey: "outTime")
+                objTable.setValue(postingData.Livability, forKey: "livability")
+                objTable.setValue(postingData.avgAge, forKey: "avgAge")
+                objTable.setValue(postingData.avgWeight, forKey: "avgWeight")
+
+                do {
                     try managedContext.save()
-                }
-                catch{
+                } catch {
+                    // Handle error
                 }
             }
-        }
-        catch
-        {
-            appDelegateObj.testFuntion()
+        } catch {
+            // Handle error
         }
     }
-    
+
     /************* Update Posting on DashBoard session *****************/
     func updatePostingSessionOndashBoard(_ postingId : NSNumber,vetanatrionName:String,veterinarianId: NSNumber,captureNec: NSNumber)
     {
@@ -6489,63 +6589,35 @@ class CoreDataHandler : NSObject  {
     }
     
     func fetchAllPostingSessionWithisSyncisTrue(_ isSync : Bool) -> NSArray
-    
+   
     {
-        
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if let results = fetchedResult
-            {
-                postingArray  = results as NSArray
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        return postingArray
+        return fetchPostingSession(Sync: isSync)
     }
+    
+    
+    private func fetchPostingSession(Sync: Bool) -> NSArray {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PostingSession")
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(value: Sync))
+
+        do {
+            let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            return results as NSArray? ?? []
+        } catch {
+            print(appDelegateObj.testFuntion())
+            return []
+        }
+    }
+
+    
     
     func fetchPostingSessionWithisSyncisTrue(_ isSync : Bool) -> NSArray
     {
         
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                postingArray  = results as NSArray
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        return postingArray
+        return fetchPostingSession(Sync: isSync)
     }
     func fetchAllPostingExistingSession() -> NSArray    {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
@@ -7137,8 +7209,7 @@ class CoreDataHandler : NSObject  {
             }
             
         }
-        catch
-        {print(appDelegateObj.testFuntion())}
+        catch{print(appDelegateObj.testFuntion())}
         return AntiboticArray
     }
     
@@ -7409,128 +7480,113 @@ class CoreDataHandler : NSObject  {
         
     }
     
-    /********************************* Save data in to AntiboticArray *************************************/
-    func saveAntiboticDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId : NSNumber,feedProgram: String,formName: String,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lblDate:String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveAntiboticDatabase(feedData: chickenCoreDataHandlerModels.saveChknAntibioticFeedData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        AntiboticArray = dbArray
         
+        let antibioticArray = feedData.dbArray
         
-        
-        if  AntiboticArray.count > 0 {
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
-            
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
+        if antibioticArray.count > 0 {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AntiboticFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedData.feedId)
             
-            do
-            {
+            do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                if fetchedResult!.count > 0
-                {
-                    if (fetchedResult?.count <= index)
-                    {
-                        let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
-                        let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(feedId , forKey:"feedId")
-                        person.setValue(feedProgram , forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lblDate, forKey:"feedDate")
+                if let fetchedResult = fetchedResult, fetchedResult.count > 0 {
+                    if fetchedResult.count <= feedData.index {
+                        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
+                        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                        
+                        person.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+                        person.setValue(feedData.postingId, forKey: "postingId")
+                        person.setValue(feedData.molecule, forKey: "molecule")
+                        person.setValue(feedData.dosage, forKey: "dosage")
+                        person.setValue(feedData.fromDays, forKey: "fromDays")
+                        person.setValue(feedData.toDays, forKey: "toDays")
+                        person.setValue(feedData.feedId, forKey: "feedId")
+                        person.setValue(feedData.feedProgram, forKey: "feedProgram")
+                        person.setValue(feedData.isSync, forKey: "isSync")
+                        person.setValue(feedData.feedType, forKey: "feedType")
+                        person.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+                        person.setValue(feedData.lngId, forKey: "lngId")
+                        person.setValue(feedData.lblDate, forKey: "feedDate")
+                        
                         try? managedContext.save()
                         
                         cocciAntibotic.append(person)
-                    }
-                    
-                    else{
-                        let objTable: AntiboticFeed = (fetchedResult![index] as? AntiboticFeed)!
+                    } else {
+                        let objTable: AntiboticFeed = fetchedResult[feedData.index] as! AntiboticFeed
                         
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(feedId , forKey:"feedId")
-                        objTable.setValue(feedProgram , forKey:"feedProgram")
-                        objTable.setValue(formName , forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lblDate, forKey:"feedDate")
+                        objTable.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+                        objTable.setValue(feedData.postingId, forKey: "postingId")
+                        objTable.setValue(feedData.molecule, forKey: "molecule")
+                        objTable.setValue(feedData.dosage, forKey: "dosage")
+                        objTable.setValue(feedData.fromDays, forKey: "fromDays")
+                        objTable.setValue(feedData.toDays, forKey: "toDays")
+                        objTable.setValue(feedData.feedId, forKey: "feedId")
+                        objTable.setValue(feedData.feedProgram, forKey: "feedProgram")
+                        objTable.setValue(feedData.formName, forKey: "formName")
+                        objTable.setValue(feedData.isSync, forKey: "isSync")
+                        objTable.setValue(feedData.feedType, forKey: "feedType")
+                        objTable.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+                        objTable.setValue(feedData.lngId, forKey: "lngId")
+                        objTable.setValue(feedData.lblDate, forKey: "feedDate")
+                        
                         try? managedContext.save()
                     }
-                }
-                else{
+                } else {
+                    let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
+                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
                     
-                    let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
-                    
-                    let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(feedId , forKey:"feedId")
-                    person.setValue(feedProgram , forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lblDate, forKey:"feedDate")
+                    person.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+                    person.setValue(feedData.postingId, forKey: "postingId")
+                    person.setValue(feedData.molecule, forKey: "molecule")
+                    person.setValue(feedData.dosage, forKey: "dosage")
+                    person.setValue(feedData.fromDays, forKey: "fromDays")
+                    person.setValue(feedData.toDays, forKey: "toDays")
+                    person.setValue(feedData.feedId, forKey: "feedId")
+                    person.setValue(feedData.feedProgram, forKey: "feedProgram")
+                    person.setValue(feedData.isSync, forKey: "isSync")
+                    person.setValue(feedData.feedType, forKey: "feedType")
+                    person.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+                    person.setValue(feedData.lngId, forKey: "lngId")
+                    person.setValue(feedData.lblDate, forKey: "feedDate")
                     
                     try? managedContext.save()
                     
                     cocciAntibotic.append(person)
                 }
+            } catch {
+                // Handle the error
             }
-            catch
-            {
-                
-            }
-        }
-        
-        else
-        {
-            let entity  = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(feedId , forKey:"feedId")
-            person.setValue(feedProgram , forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lblDate, forKey:"feedDate")
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            
+            person.setValue(feedData.loginSessionId, forKey: "loginSessionId")
+            person.setValue(feedData.postingId, forKey: "postingId")
+            person.setValue(feedData.molecule, forKey: "molecule")
+            person.setValue(feedData.dosage, forKey: "dosage")
+            person.setValue(feedData.fromDays, forKey: "fromDays")
+            person.setValue(feedData.toDays, forKey: "toDays")
+            person.setValue(feedData.feedId, forKey: "feedId")
+            person.setValue(feedData.feedProgram, forKey: "feedProgram")
+            person.setValue(feedData.isSync, forKey: "isSync")
+            person.setValue(feedData.feedType, forKey: "feedType")
+            person.setValue(feedData.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(feedData.lngId, forKey: "lngId")
+            person.setValue(feedData.lblDate, forKey: "feedDate")
             
             try? managedContext.save()
             
             cocciAntibotic.append(person)
         }
     }
-    
+
+    /********************************* Save data in to AntiboticArray *************************************/
+
     /********************************* Get Api from server for antoboitic *************************************/
     
     
@@ -8228,60 +8284,53 @@ class CoreDataHandler : NSObject  {
     }
     
     /************************** Feed Program *******************************************************/
-    func SaveFeedProgram(_ postingId : NSNumber, sessionId: NSNumber ,feedProgrameName: String,feedId: NSNumber,dbArray :NSArray ,index : Int,formName: String,isSync : Bool,lngId:NSNumber)
-    {
-        feedprogramArray = dbArray
+    
+    
+    func SaveFeedProgram(_ feedData: chickenCoreDataHandlerModels.saveChickenFeedProgramData) {
+        feedprogramArray = feedData.dbArray
         
-        if  feedprogramArray.count > 0 {
+        if feedprogramArray.count > 0 {
+            let objTable: FeedProgram = (feedprogramArray[feedData.index] as? FeedProgram)!
             
-            let objTable: FeedProgram = (feedprogramArray[index] as? FeedProgram)!
-            
-            do{
-                if objTable.feedId == feedId {
-                    objTable.setValue(feedProgrameName, forKey:"feddProgramNam")
-                    objTable.setValue(feedId, forKey:"feedId")
-                    objTable.setValue(sessionId, forKey:"loginSessionId")
-                    objTable.setValue(postingId, forKey:"postingId")
-                    objTable.setValue(formName, forKey:"formName")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    objTable.setValue(lngId, forKey:"lngId")
+            do {
+                if objTable.feedId == feedData.feedId {
+                    objTable.setValue(feedData.feedProgrameName, forKey:"feddProgramNam")
+                    objTable.setValue(feedData.feedId, forKey:"feedId")
+                    objTable.setValue(feedData.sessionId, forKey:"loginSessionId")
+                    objTable.setValue(feedData.postingId, forKey:"postingId")
+                    objTable.setValue(feedData.formName, forKey:"formName")
+                    objTable.setValue(feedData.isSync, forKey:"isSync")
+                    objTable.setValue(feedData.lngId, forKey:"lngId")
                     
-                    do
-                    {
+                    do {
                         try backgroundContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error
                     }
                 }
             }
             return
-        }
-        else {
-            
+        } else {
             let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: backgroundContext)
             let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
-            person.setValue(feedProgrameName, forKey:"feddProgramNam")
-            person.setValue(feedId, forKey:"feedId")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(formName, forKey:"formName")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
+            person.setValue(feedData.feedProgrameName, forKey:"feddProgramNam")
+            person.setValue(feedData.feedId, forKey:"feedId")
+            person.setValue(feedData.sessionId, forKey:"loginSessionId")
+            person.setValue(feedData.postingId, forKey:"postingId")
+            person.setValue(feedData.formName, forKey:"formName")
+            person.setValue(feedData.isSync, forKey:"isSync")
+            person.setValue(feedData.lngId, forKey:"lngId")
             
-            do
-            {
+            do {
                 try backgroundContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             
             FeddProgram.append(person)
         }
-        
     }
-    
+
     func updateFeedProgram(_ feedId: NSNumber,isSync : Bool,feedProgrameName:String,formName: String)
     {
         
@@ -8391,6 +8440,45 @@ class CoreDataHandler : NSObject  {
     
     /*************** Create database capture necropsy step 1 *************************************/
     
+    func SaveNecropsystep1(data: chickenCoreDataHandlerModels.saveNecropsyStep1Data) {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "CaptureNecropsyData", in: backgroundContext)
+        
+        let contact = CaptureNecropsyData(entity: entityDescription!, insertInto: backgroundContext)
+        contact.age = data.age
+        contact.farmName = data.farmName
+        contact.feedProgram = data.feedProgram
+        contact.flockId = data.flockId
+        contact.sick = data.sick
+        contact.houseNo = data.houseNo
+        contact.noOfBirds = data.noOfBirds
+        contact.postingId = data.postingId
+        contact.necropsyId = data.necId
+        contact.complexName = data.compexName
+        contact.complexDate = data.complexDate
+        contact.complexId = data.complexId
+        contact.custmerId = data.custmerId
+        contact.feedId = data.feedId
+        contact.isChecked = false
+        contact.isSync = data.isSync as NSNumber
+        contact.timeStamp = data.timeStamp
+        contact.actualTimeStamp = data.actualTimeStamp
+        contact.lngId = data.lngId
+        contact.farmId = data.farmId
+        contact.imageId = data.imageId
+        contact.farmcount = data.count
+        
+        do {
+            try backgroundContext.save()
+        } catch {
+            fatalError("Failure to save context: \(error)")
+        }
+        
+        necrpsystep1.append(contact)
+    }
+
+    
+    
+   /*
     func SaveNecropsystep1(_ postingId : NSNumber, age: String ,farmName: String,feedProgram: String,flockId: String,houseNo: String,noOfBirds: String,sick: NSNumber,necId:NSNumber,compexName : String,complexDate: String,complexId: NSNumber,custmerId: NSNumber,feedId:NSNumber,isSync:Bool,timeStamp :String,actualTimeStamp: String,lngId:NSNumber,farmId:NSNumber,imageId :NSNumber,count:NSNumber)
     {
         
@@ -8431,46 +8519,41 @@ class CoreDataHandler : NSObject  {
         
         necrpsystep1.append(contact)
     }
-    
-    
-    func SaveNecropsystep1SingleData(_ postingId : NSNumber, age: String ,farmName: String,feedProgram: String,flockId: String,houseNo: String,noOfBirds: String,sick: NSNumber,necId:NSNumber,compexName : String,complexDate: String,complexId: NSNumber,custmerId: NSNumber,feedId:NSNumber,isSync:Bool,timeStamp :String,actualTimeStamp: String,necIdSingle:NSNumber,farmId: NSNumber,imgId:NSNumber)
-    {
-        
-        let entityDescription =
-        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: backgroundContext)
-        
-        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: backgroundContext)
-        contact.age = age
-        contact.farmName = farmName
-        contact.feedProgram = feedProgram
-        contact.flockId = flockId
-        contact.sick = sick
-        contact.houseNo = houseNo
-        contact.noOfBirds = noOfBirds
-        contact.postingId = necIdSingle
-        contact.necropsyId = necIdSingle
-        contact.complexName = compexName
-        contact.complexDate = complexDate
-        contact.complexId = complexId
-        contact.custmerId = custmerId
-        contact.feedId = feedId
+    */
+    func SaveNecropsystep1SingleData(data: chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData) {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "CaptureNecropsyData", in: backgroundContext)
+        let contact = CaptureNecropsyData(entity: entityDescription!, insertInto: backgroundContext)
+
+        contact.age = data.age
+        contact.farmName = data.farmName
+        contact.feedProgram = data.feedProgram
+        contact.flockId = data.flockId
+        contact.sick = data.sick
+        contact.houseNo = data.houseNo
+        contact.noOfBirds = data.noOfBirds
+        contact.postingId = data.necIdSingle
+        contact.necropsyId = data.necIdSingle
+        contact.complexName = data.compexName
+        contact.complexDate = data.complexDate
+        contact.complexId = data.complexId
+        contact.custmerId = data.custmerId
+        contact.feedId = data.feedId
         contact.isChecked = false
-        contact.isSync = isSync as NSNumber
-        contact.timeStamp = timeStamp
-        contact.actualTimeStamp = actualTimeStamp
-        contact.farmId = farmId
-        contact.imageId = imgId
-        
+        contact.isSync = data.isSync as NSNumber
+        contact.timeStamp = data.timeStamp
+        contact.actualTimeStamp = data.actualTimeStamp
+        contact.farmId = data.farmId
+        contact.imageId = data.imgId
+
         do {
             try backgroundContext.save()
-            
         } catch {
-            
             fatalError("Failure to save context: \(error)")
         }
-        
+
         necrpsystep1.append(contact)
     }
+
     /************************ Fetch Data Of Necropsy data 1 *******************************/
     func FetchNecropsystep1(_ postingId : NSNumber) -> NSArray
     {
@@ -9761,6 +9844,39 @@ class CoreDataHandler : NSObject  {
     }
     // MARK: 🟢 Save Captured Necropsy Detail
     
+    func saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(data: chickenCoreDataHandlerModels.updateSkeletaSingleSyncSkeletaData) {
+        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let managedContext = appDelegate!.managedObjectContext
+        let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewData", in: managedContext)
+        
+        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
+        person.setValue(data.catName, forKey: "catName")
+        person.setValue(data.birdNo, forKey: "birdNo")
+        person.setValue(data.formName, forKey: "formName")
+        person.setValue(data.obsId, forKey: "obsID")
+        person.setValue(data.obsName, forKey: "obsName")
+        person.setValue(data.obsPoint, forKey: "obsPoint")
+        person.setValue(NSNumber(value: data.obsVisibility as Bool), forKey: "objsVisibilty")
+        person.setValue(data.measure, forKey: "measure")
+        person.setValue(data.quickLink, forKey: "quickLink")
+        person.setValue(data.necIdSingle, forKey: "necropsyId")
+        person.setValue(data.isSync, forKey: "isSync")
+        person.setValue(data.lngId, forKey: "lngId")
+        person.setValue(data.refId, forKey: "refId")
+        person.setValue(data.actualText, forKey: "actualText")
+        
+        do {
+            try managedContext.save()
+        } catch {
+            print(appDelegateObj.testFuntion())
+        }
+        
+        captureSkeletaObject.append(person)
+    }
+
+    
+    
+    /*
     func saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,necIdSingle:NSNumber,lngId:NSNumber,refId:NSNumber,actualText:String)
     {
         
@@ -9795,7 +9911,7 @@ class CoreDataHandler : NSObject  {
         
         captureSkeletaObject.append(person)
     }
-   
+   */
     // MARK: - 🔴 Delete Step 2 data for Captured Necropsy
     func deleteDataWithStep2data (_ necId: NSNumber)
     {
@@ -9820,39 +9936,41 @@ class CoreDataHandler : NSObject  {
     }
   
     // MARK: 🟠 Update captured Necropsy Sync Status and Bird Weight
-
-    func updateCaptureSkeletaInDatabaseOnActualClick(_ catName : String,obsName : String,formName : String,   birdNo : NSNumber , actualName :String, index : Int , necId : NSNumber , isSync : Bool,refId:NSNumber)
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    func updateCaptureSkeletaInDatabaseOnActualClick(data: chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@ AND refId == %@", birdNo,catName,formName,necId,refId)
         
-        do
-        {
+        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@ AND refId == %@", data.birdNo, data.catName, data.formName, data.necId, data.refId)
+        
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            let objTable: CaptureNecropsyViewData = (fetchedResult![0] as? CaptureNecropsyViewData)!
-            objTable.setValue(actualName, forKey:"actualText")
-            objTable.setValue(isSync, forKey:"isSync")
-            do
-            {
-                try objTable.managedObjectContext!.save()
+            if let objTable = fetchedResult?.first as? CaptureNecropsyViewData {
+                objTable.setValue(data.actualName, forKey: "actualText")
+                objTable.setValue(data.isSync, forKey: "isSync")
+                
+                do {
+                    try objTable.managedObjectContext?.save()
+                } catch {
+                    print("Failed to save data.")
+                }
             }
-            catch{
-            }
+        } catch {
+            print("Error fetching data: \(error)")
         }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
     }
- 
+
     // MARK: 🟠 Update captured Necropsy status for Skeletan Category
 
     func updateisSyncOnCaptureSkeletaInDatabase(_ necId : NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
+        let status = updateIsSyncForEntity(
+            entityName: "CaptureNecropsyViewData",
+            predicateFormat: Constants.necIdPredicate,
+            predicateValue: necId as CVarArg,
+            isSync: isSync
+        )
+     /*
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
@@ -9886,46 +10004,77 @@ class CoreDataHandler : NSObject  {
         {
             
         }
+        */
     }
 
     // MARK: 🟠 update captured Necropsy Sync Status
 
     func updateisSyncOnCaptureInDatabase(_ necId : NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
+        let status = updateIsSyncForEntity(
+            entityName: "CaptureNecropsyViewData",
+            predicateFormat: Constants.necIdPredicate,
+            predicateValue: necId as CVarArg,
+            isSync: isSync
+        )
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: CaptureNecropsyViewData = (fetchedResult![i] as? CaptureNecropsyViewData)!
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
-                        try objTable.managedObjectContext!.save()
-                    }
-                    catch{
-                    }
-                }
-                
-                completion(true)
-            }
-            else{
-                completion(true)
-            }
-        }
-        catch
-        {
-            
-        }
+//        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+//        let managedContext = appDelegate!.managedObjectContext
+//        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
+//        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
+//        
+//        do
+//        {
+//            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//            if fetchedResult!.count > 0
+//            {
+//                for i in 0..<fetchedResult!.count
+//                {
+//                    let objTable: CaptureNecropsyViewData = (fetchedResult![i] as? CaptureNecropsyViewData)!
+//                    objTable.setValue(isSync, forKey:"isSync")
+//                    do
+//                    {
+//                        try objTable.managedObjectContext!.save()
+//                    }
+//                    catch{
+//                    }
+//                }
+//                
+//                completion(true)
+//            }
+//            else{
+//                completion(true)
+//            }
+//        }
+//        catch
+//        {
+//            
+//        }
     }
+    func updateIsSyncForEntity(entityName: String, predicateFormat: String, predicateValue: CVarArg, isSync: Bool) -> Bool {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let managedContext = appDelegate!.managedObjectContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        
+        // Ensure predicateValue is properly cast to CVarArg type
+        fetchRequest.predicate = NSPredicate(format: predicateFormat, argumentArray: [predicateValue])
+
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let fetchedResult = fetchedResult, fetchedResult.count > 0 {
+                for obj in fetchedResult {
+                    obj.setValue(isSync, forKey: "isSync")
+                    try obj.managedObjectContext?.save()
+                }
+                return true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        return false
+    }
+
+    
 
     // MARK: 🟠 Update Observation's Points in Captured Necropsy
 
@@ -10024,7 +10173,45 @@ class CoreDataHandler : NSObject  {
     }
  
     // MARK: 🟠 Update Captured Necropsy View Details
+    
+    func updateCaptureSkeletaInDatabaseOnSwitchCase(_ data: chickenCoreDataHandlerModels.updateSkeletalSwitchCaseCaptureData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.managedObjectContext
+        let imageData = data.cameraImage.jpegData(compressionQuality: 0.5)
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID,
+                                             data.birdNo, data.catName, data.formName, data.necId)
+        
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let results = fetchedResult {
+                fecthPhotoArray = results as NSArray
+                let descriptor = NSSortDescriptor(key: "obsName", ascending: true)
+                let sortedResults = fecthPhotoArray.sortedArray(using: [descriptor])
+                
+                if let objTable = (sortedResults as NSArray)[data.index] as? CaptureNecropsyViewData {
+                    objTable.setValue(NSNumber(value: data.obsVisibility), forKey: "objsVisibilty")
+                    objTable.setValue(imageData, forKey: "cameraImage")
+                    objTable.setValue(data.obsPoint, forKey: "obsPoint")
+                    objTable.setValue(data.birdNo, forKey: "birdNo")
+                    objTable.setValue(data.formName, forKey: "formName")
+                    objTable.setValue(data.isSync, forKey: "isSync")
+                    
+                    do {
+                        try objTable.managedObjectContext?.save()
+                    } catch {
+                        print("Failed to save context")
+                    }
+                }
+            }
+        } catch {
+            print(appDelegateObj.testFuntion())
+        }
+    }
 
+    
+/*
     func updateCaptureSkeletaInDatabaseOnSwithCase(_ catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,camraImage :UIImage,obsPoint:NSInteger, index : Int,obsId: NSInteger , necId : NSNumber,isSync : Bool)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -10065,7 +10252,7 @@ class CoreDataHandler : NSObject  {
         }
     }
     
-    
+    */
     // MARK: - 🔴 Delete Captured Necropsy View Data
     func deleteCaptureNecropsyViewData ()
     {
@@ -10174,52 +10361,53 @@ class CoreDataHandler : NSObject  {
     }
 
     // MARK: 🟠 Save Captured Birds Photo's for Necropsy
- 
-    func saveCaptureSkeletaImageInDatabase(_ catName : String,obsName : String,formName : String,   birdNo : NSNumber,camraImage :UIImage,obsId: NSInteger , necropsyId : NSNumber , isSync : Bool, viewController: CaptureNecropsyDataViewController)
-    {
-        
+    
+    func saveCaptureSkeletaImageInDatabase(data: chickenCoreDataHandlerModels.saveSkeletalBirdPhotoCaptureData) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
         let managedContext = appDelegate!.managedObjectContext
-       
-        viewController.showtoast(message: "Image Conversion")
         
-        viewController.showtoast(message: "Image Converted")
-        let entity   = NSEntityDescription.entity(forEntityName: "BirdPhotoCapture", in: managedContext)
+        data.viewController.showtoast(message: "Image Conversion")
         
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
-        viewController.showtoast(message: "Data Saving")
-        person.setValue(formName, forKey:"farmName")
-        viewController.showtoast(message: "farm Saved")
-        person.setValue(catName, forKey:"catName")
-        viewController.showtoast(message: "catName Saved")
-        person.setValue(birdNo, forKey:"birdNum")
-        viewController.showtoast(message: "birdNum Saved")
-        person.setValue(obsName, forKey:"obsName")
-        viewController.showtoast(message: "obsName Saved")
-        person.setValue(obsId, forKey:"obsId")
-        viewController.showtoast(message: "obsId Saved")
-        var  imageData = Data(camraImage.jpegData(compressionQuality: 1.0) ?? Data())
-        person.setValue(imageData, forKey:"photo")
-        viewController.showtoast(message: "photo Saved")
-        person.setValue(necropsyId, forKey:"necropsyId")
-        viewController.showtoast(message: "necropsyId Saved")
-        person.setValue(isSync, forKey:"isSync")
-        viewController.showtoast(message: "Data Saved")
+        data.viewController.showtoast(message: "Image Converted")
         
-        do
-        {
+        let entity = NSEntityDescription.entity(forEntityName: "BirdPhotoCapture", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        data.viewController.showtoast(message: "Data Saving")
+        person.setValue(data.formName, forKey: "farmName")
+        data.viewController.showtoast(message: "farm Saved")
+        
+        person.setValue(data.catName, forKey: "catName")
+        data.viewController.showtoast(message: "catName Saved")
+        
+        person.setValue(data.birdNo, forKey: "birdNum")
+        data.viewController.showtoast(message: "birdNum Saved")
+        
+        person.setValue(data.obsName, forKey: "obsName")
+        data.viewController.showtoast(message: "obsName Saved")
+        
+        person.setValue(data.obsId, forKey: "obsId")
+        data.viewController.showtoast(message: "obsId Saved")
+        
+        var imageData = Data(data.cameraImage.jpegData(compressionQuality: 1.0) ?? Data())
+        person.setValue(imageData, forKey: "photo")
+        data.viewController.showtoast(message: "photo Saved")
+        
+        person.setValue(data.necropsyId, forKey: "necropsyId")
+        data.viewController.showtoast(message: "necropsyId Saved")
+        
+        person.setValue(data.isSync, forKey: "isSync")
+        data.viewController.showtoast(message: "Data Saved")
+        
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         
         capturePhotoObject.append(person)
-        
     }
-   
+
     // MARK: 🟠 Update Captured photo's for Birds in Necropsy
    
     func updateisSyncOnBirdPhotoCaptureDatabase(_ necId : NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
@@ -10438,34 +10626,30 @@ class CoreDataHandler : NSObject  {
         captureBirdWithNotesObject.append(person)
         
     }
-    
+ 
     // MARK: 🟠 Save Number of birds with Notes for single Data
-    func saveNoofBirdWithNotesSingledata(_ catName : String,notes : String,formName : String,   birdNo : NSNumber, index : Int , necId : NSNumber , isSync : Bool,necIdSingle:NSNumber)
-    {
-        
+    func saveNoofBirdWithNotesSingledata(_ birdData: chickenCoreDataHandlerModels.BirdNotesData) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        let entity   = NSEntityDescription.entity(forEntityName: "NotesBird", in: managedContext)
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
-        person.setValue(formName, forKey:"formName")
-        person.setValue(catName, forKey:"catName")
-        person.setValue(notes, forKey:"notes")
-        person.setValue(birdNo, forKey:"noofBirds")
-        person.setValue(necIdSingle, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
+        let entity = NSEntityDescription.entity(forEntityName: "NotesBird", in: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
-        do
-        {
+        person.setValue(birdData.formName, forKey:"formName")
+        person.setValue(birdData.catName, forKey:"catName")
+        person.setValue(birdData.notes, forKey:"notes")
+        person.setValue(birdData.birdNo, forKey:"noofBirds")
+        person.setValue(birdData.necIdSingle, forKey:"necropsyId")
+        person.setValue(birdData.isSync, forKey:"isSync")
+        
+        do {
             try managedContext.save()
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         
         captureBirdWithNotesObject.append(person)
-        
     }
+
     // MARK: 🟠 Save Molecule data
     func saveMoleCule(_ catId : Int,decscMolecule : String,moleculeId : Int, lngId : Int)
     {

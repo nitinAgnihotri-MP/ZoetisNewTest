@@ -116,32 +116,34 @@ class CoreDataHandlerMicro: NSObject {
             }
         }
     }
-    
-    func saveFeatherPulpSampleInfoDataInDB(_ plateIdGenerated: String ,plateId : Int,flockId:String,houseNo:String ,sampleDescriptiopn:String , additionalTests : String , checkMark:String, microsporeCheck: String, sessionId : Int, timeStamp: String, isSessionPlate: Bool) {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+
+    func saveFeatherPulpSampleInfoDataInDB(_ data: CoreDataHandlerMicrodataModels.FeatherPulpSampleInfoDataSave) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(plateIdGenerated, forKey: "plateIdGenerated")
-        person.setValue(plateId, forKey: "plateId")
-        person.setValue(flockId, forKey: "flockId")
-        person.setValue(houseNo, forKey: "houseNo")
-        person.setValue(sampleDescriptiopn, forKey: "sampleDescription")
-        person.setValue(additionalTests, forKey: "additionalTests")
-        person.setValue(checkMark, forKey: "checkMark")
-        person.setValue(sessionId, forKey: "sessionId")
-        person.setValue(microsporeCheck, forKey: "microsporeCheckMark")
-        person.setValue(timeStamp, forKey: "timeStamp")
-        person.setValue(isSessionPlate, forKey: "isSessionPlate")
+
+        person.setValue(data.plateIdGenerated, forKey: "plateIdGenerated")
+        person.setValue(data.plateId, forKey: "plateId")
+        person.setValue(data.flockId, forKey: "flockId")
+        person.setValue(data.houseNo, forKey: "houseNo")
+        person.setValue(data.sampleDescription, forKey: "sampleDescription")
+        person.setValue(data.additionalTests, forKey: "additionalTests")
+        person.setValue(data.checkMark, forKey: "checkMark")
+        person.setValue(data.sessionId, forKey: "sessionId")
+        person.setValue(data.microsporeCheck, forKey: "microsporeCheckMark")
+        person.setValue(data.timeStamp, forKey: "timeStamp")
+        person.setValue(data.isSessionPlate, forKey: "isSessionPlate")
+
         do {
             try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        
+
         CustData.append(person)
-        
     }
+
+    
     
     func saveCustomerDetailsInDBSubmitData(_ details: CoreDataHandlerMicrodataModels.submitDataCustomerDetails) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
@@ -1229,18 +1231,17 @@ class CoreDataHandlerMicro: NSObject {
         var auto = 0
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult {
-                if results.count > 0 {
-                    let ob: Id = results.last as! Id
-                    auto = Int(ob.autoId!)
-                }
+            if let results = fetchedResult, results.count > 0, let ob = results.last as? Id {
+                auto = Int(ob.autoId!)
             }
+            
         } catch {
             print(appDelegateObj.testFuntion())
         }
         
         return auto
     }
+    
     
     
     func updateRequestorBacterialServeyFormDetails(_ sessionId: Int, text: String, forAttribute:String ) {
@@ -1509,64 +1510,6 @@ class CoreDataHandlerMicro: NSObject {
         }
     }
 
-    
-
-    /*
-    func updateSampleInfoHeaderDataInToDB_Enviromental(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, locationType: String, locationTypeId: Int, noOfPlates: Int, section: Int, requisition_Id: String, timeStamp: String, prevSection: Int) {
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.managedObjectContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeadersSubmitted")
-        
-        fetchRequest.predicate = NSPredicate(format: "timeStamp = %@ AND requisition_Id = %@ AND requisitionType = %i AND section = %i", argumentArray: [timeStamp, requisition_Id, requisitionType, section])
-        
-        do {
-            let results = try context.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 {
-                for data in results ?? []{
-                    data.setValue(currentdate, forKey: "currentdate")
-                    data.setValue(customerId, forKey: "customerId")
-                    data.setValue(requisitionType, forKey: "requisitionType")
-                    data.setValue(sessionStatus, forKey: "sessionStatus")
-                    
-                    data.setValue(locationType, forKey: "locationType")
-                    data.setValue(locationTypeId, forKey: "locationTypeId")
-                    data.setValue(noOfPlates, forKey: "noOfPlates")
-                    data.setValue(section, forKey: "section")
-                    data.setValue(requisition_Id, forKey: "requisition_Id")
-                }
-            }else{
-                let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: appDelegate.managedObjectContext)
-                let managedObject = NSManagedObject(entity: entity!, insertInto: context)
-                
-                managedObject.setValue(currentdate, forKey: "currentdate")
-                managedObject.setValue(customerId, forKey: "customerId")
-                managedObject.setValue(requisitionType, forKey: "requisitionType")
-                managedObject.setValue(sessionStatus, forKey: "sessionStatus")
-                
-                managedObject.setValue(locationType, forKey: "locationType")
-                managedObject.setValue(locationTypeId, forKey: "locationTypeId")
-                managedObject.setValue(noOfPlates, forKey: "noOfPlates")
-                managedObject.setValue(section, forKey: "section")
-                managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-                managedObject.setValue(timeStamp, forKey: "timeStamp")
-                
-                do {
-                    try appDelegate.managedObjectContext.save()
-                } catch { }
-            }
-        } catch {
-            //   print("Fetch Failed: \(error)")
-        }
-        
-        do {
-            try context.save()
-        }
-        catch {
-            //   print("Saving Core Data Failed: \(error)")
-        }
-    }
-    */
     
     func deleteHeaderPlates(timeStamp: String, barcode: String, locationId: Int, section: Int){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -2511,81 +2454,6 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
             // Handle save error
         }
     }
-
-    
-    /*
-    class func updateSampleInfoPlateDataInToDB_Enviromental(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, isBacterialChecked: Bool, isMicoscoreChecked: Bool, locationTypeId: Int, locationValue: String, locationValueId: Int, plateId: String, row: Int, sampleDescription: String, section: Int, requisition_Id: String, timeStamp: String, prevSection: Int, mediaTypeValue: String, mediaTypeId: Int, notes: String,samplingMethodTypeId : Int, samplingMethodTypeValue :String) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.managedObjectContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaderPlatesSubmitted")
-        
-        fetchRequest.predicate = NSPredicate(format: "timeStamp = %@ AND requisition_Id = %@ AND requisitionType = %i AND section = %i AND locationTypeId = %i AND row = %i", argumentArray: [timeStamp, requisition_Id, requisitionType, section, locationTypeId, row])
-        
-        do {
-            let results = try context.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                for data in results ?? []{
-                    data.setValue(currentdate, forKey: "currentdate")
-                    data.setValue(customerId, forKey: "customerId")
-                    data.setValue(requisitionType, forKey: "requisitionType")
-                    data.setValue(sessionStatus, forKey: "sessionStatus")
-                    data.setValue(isBacterialChecked, forKey: "isBacterialChecked")
-                    data.setValue(isMicoscoreChecked, forKey: "isMicoscoreChecked")
-                    data.setValue(locationTypeId, forKey: "locationTypeId")
-                    data.setValue(locationValue, forKey: "locationValue")
-                    data.setValue(mediaTypeValue, forKey: "mediaTypeValue")
-                    data.setValue(plateId, forKey: "plateId")
-                    data.setValue(row, forKey: "row")
-                    data.setValue(sampleDescription, forKey: "sampleDescription")
-                    data.setValue(section, forKey: "section")
-                    data.setValue(requisition_Id, forKey: "requisition_Id")
-                    data.setValue(timeStamp, forKey: "timeStamp")
-                    data.setValue(locationValueId, forKey: "locationValueId")
-                    data.setValue(mediaTypeId, forKey: "mediaTypeId")
-                    data.setValue(notes, forKey: "notes")
-                    data.setValue(samplingMethodTypeId, forKey: "samplingMethodTypeId")
-                    data.setValue(samplingMethodTypeValue, forKey: "samplingMethodTypeValue")
-                    
-                }
-            }else{
-                
-                let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: context)
-                let managedObject = NSManagedObject(entity: entity!, insertInto: context)
-                
-                managedObject.setValue(currentdate, forKey: "currentdate")
-                managedObject.setValue(customerId, forKey: "customerId")
-                managedObject.setValue(requisitionType, forKey: "requisitionType")
-                managedObject.setValue(sessionStatus, forKey: "sessionStatus")
-                managedObject.setValue(isMicoscoreChecked, forKey: "isMicoscoreChecked")
-                managedObject.setValue(isBacterialChecked, forKey: "isBacterialChecked")
-                managedObject.setValue(locationTypeId, forKey: "locationTypeId")
-                managedObject.setValue(locationValue, forKey: "locationValue")
-                managedObject.setValue(mediaTypeValue, forKey: "mediaTypeValue")
-                managedObject.setValue(plateId, forKey: "plateId")
-                managedObject.setValue(row, forKey: "row")
-                managedObject.setValue(sampleDescription, forKey: "sampleDescription")
-                managedObject.setValue(section, forKey: "section")
-                managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-                managedObject.setValue(timeStamp, forKey: "timeStamp")
-                managedObject.setValue(locationValueId, forKey: "locationValueId")
-                managedObject.setValue(mediaTypeId, forKey: "mediaTypeId")
-                managedObject.setValue(notes, forKey: "notes")
-                managedObject.setValue(samplingMethodTypeId, forKey: "samplingMethodTypeId")
-                managedObject.setValue(samplingMethodTypeValue, forKey: "samplingMethodTypeValue")
-                
-            }
-        } catch {
-            //   print("Fetch Failed: \(error)")
-        }
-        
-        do {
-            try context.save()
-        }
-        catch {
-            //   print("Saving Core Data Failed: \(error)")
-        }
-    }
-    */
 }
 
 extension Microbial_EnvironmentalLocationTypes{

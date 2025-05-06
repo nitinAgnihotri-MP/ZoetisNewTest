@@ -153,12 +153,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
     }
 
     private func updateRejectedOrDraftSignature(empIndex: Int) {
-        hideShowImgVw(false)
-        if certificateData[empIndex].signatureImg == "" {
-            hideShowImgVw(true)
-        } else {
-            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
-        }
+        updateSignature(for: empIndex)
     }
 
     private func updatePreviousButtonState() {
@@ -238,6 +233,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             hideShowImgVw(true)
         }
     }
+ 
 
     private func updateHatcheryManagerSignature() {
         operatorSignLbl.text = "Hatchery Manager Signature"
@@ -322,14 +318,18 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
     }
 
     private func updateDefaultSignature(empIndex: Int) {
+        updateSignature(for: empIndex)
+    }
+    
+    private func updateSignature(for index: Int) {
         hideShowImgVw(false)
-        if certificateData[empIndex].signatureImg == "" {
+        if certificateData[index].signatureImg == "" {
             hideShowImgVw(true)
         } else {
-            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
-            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[index].signatureImg)
         }
     }
+    
 
     private func updateManagerSignaturePrevious() {
         operatorSignLbl.text = "Manager Signature"

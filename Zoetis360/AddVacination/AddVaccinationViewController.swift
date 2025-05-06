@@ -712,25 +712,157 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         for i in 0..<10 {
             
             if i == 0 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeMarek.text!, strain: marekStrainTextField.text!, route: markLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  markLabel.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                    type: typeMarek.text!,
+                        strain: marekStrainTextField.text!,
+                        route: markLabel.text!,
+                        postingId: postingId,
+                        vaciProgram: coccidiosisControl.text!,
+                        sessionId: 1,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        routeID: markLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             } else if i == 1 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeIbdv.text!, strain: ibdvStrainTextField.text!, route: ibdvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber  , routeID:  ibdvLabel.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                       type: typeIbdv.text!,
+                       strain: ibdvStrainTextField.text!,
+                       route: ibdvLabel.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: ibdvLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             } else if i == 2 {
-                CoreDataHandler().saveFieldVacinationInDatabase(lblIbvTitle.text!, strain: ibvStrainTextField.text!, route: ibvRouteTextField.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  ibvRouteTextField.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                      type: lblIbvTitle.text!,
+                       strain: ibvStrainTextField.text!,
+                      route: ibvRouteTextField.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: ibvRouteTextField.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
             } else if i == 3 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeTrt.text!, strain: trtStrainTextField.text!, route: trtLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  trtLabel.tag)
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                      type: typeTrt.text!,
+                      strain: trtStrainTextField.text!,
+                      route: trtLabel.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: trtLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             } else if i == 4 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeNdv.text!, strain: ndvStrainTextField.text!, route: ndvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  ndvLabel.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                    type: typeNdv.text!,
+                       strain: ndvStrainTextField.text!,
+                       route: ndvLabel.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: ndvLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
             } else if i == 5 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typePox.text!, strain: poxStrainTextField.text!, route: poxLbL.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  poxLbL.tag)
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                        type: typePox.text!,
+                        strain: poxStrainTextField.text!,
+                        route: poxLbL.text!,
+                        postingId: postingId,
+                        vaciProgram: coccidiosisControl.text!,
+                        sessionId: 1,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        routeID: poxLbL.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             } else if i == 6 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeReo.text!, strain: reoStrainTextField.text!, route: reoLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  reoLabel.tag)
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                      type: typeReo.text!,
+                      strain: reoStrainTextField.text!,
+                      route: reoLabel.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: reoLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
             } else if i == 7 {
-                CoreDataHandler().saveFieldVacinationInDatabase(stLabel.text!, strain: stHatcheryaStrainTextField.text!, route: hatcheryStRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  hatcheryStRouteLbl.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                    type: stLabel.text!,
+                      strain: stHatcheryaStrainTextField.text!,
+                      route: hatcheryStRouteLbl.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: hatcheryStRouteLbl.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             } else if i == 8 {
-                CoreDataHandler().saveFieldVacinationInDatabase(ecoliLbl.text!, strain: eColiHatcheryStrainText.text!, route: HatcheryEcoliRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  HatcheryEcoliRouteLbl.tag)
+                
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                       type: ecoliLbl.text!,
+                       strain: eColiHatcheryStrainText.text!,
+                       route: HatcheryEcoliRouteLbl.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: HatcheryEcoliRouteLbl.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
             } else if i == 9 {
-                CoreDataHandler().saveFieldVacinationInDatabase(typeOthers.text!, strain: othersStrainTextField.text!, route: othesLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  othesLabel.tag)
+                let fieldDetails = chickenCoreDataHandlerModels.saveChknFieldVaccinationDetails(
+                    type: typeOthers.text!,
+                      strain: othersStrainTextField.text!,
+                      route: othesLabel.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: othesLabel.tag
+                )
+
+                CoreDataHandler().saveFieldVacinationInDatabase(details: fieldDetails, index: i, dbArray: fieldVaccinatioDataAray)
+                
             }
         }
     }
@@ -739,38 +871,193 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         for i in 0..<11 {
             
             if i == 0 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type0.text!, strain: ibdvTextFieldNew.text!, route: routeLabel1.text!, age:ibdvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1 , isSync: true,lngId:lngId as NSNumber, routeID: routeLabel1.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                        type: type0.text!,
+                        strain: ibdvTextFieldNew.text!,
+                        route: routeLabel1.text!,
+                        age: ibdvAgeTextField.text!,
+                        postingId: postingId,
+                        vaciProgram: coccidiosisControl.text!,
+                        sessionId: 1,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        routeID: routeLabel1.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             else if i == 1 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type1.text!, strain: ibdv2StrainFieldTextField.text!, route: routeLabel2.text!, age: ibdv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel2.tag)
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                       type: type1.text!,
+                       strain: ibdv2StrainFieldTextField.text!,
+                       route: routeLabel2.text!,
+                       age: ibdv2AgeTextField.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: routeLabel2.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
             }
             else if i == 2 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type2.text!, strain: ibvStrainFieldTextField.text!, route: routeLabel3.text!, age: ibvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel3.tag)
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                        type: type2.text!,
+                        strain: ibvStrainFieldTextField.text!,
+                        route: routeLabel3.text!,
+                        age: ibvAgeTextField.text!,
+                        postingId: postingId,
+                        vaciProgram: coccidiosisControl.text!,
+                        sessionId: 1,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        routeID: routeLabel3.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
             }
             else if i == 3 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type3.text!, strain: ibv2StrainFieldTextField.text!, route: routeLabel4.text!, age: ibv2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel4.tag)
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                    type: type3.text!,
+                       strain: ibv2StrainFieldTextField.text!,
+                       route: routeLabel4.text!,
+                       age: ibv2AgeTextField.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: routeLabel4.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             else if i == 4 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type4.text!, strain: TrtFieldNew.text!, route: routeLabel5.text!, age: trtAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel5.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                       type: type4.text!,
+                       strain: TrtFieldNew.text!,
+                       route: routeLabel5.text!,
+                       age: trtAgeTextField.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: routeLabel5.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             else if i == 5 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type5.text!, strain: trt2StrainFieldTextField.text!, route: routeLabel6.text!, age: trt2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel6.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                       type: type5.text!,
+                       strain: trt2StrainFieldTextField.text!,
+                       route: routeLabel6.text!,
+                       age: trt2AgeTextField.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: routeLabel6.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
             }
             else if i == 6 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(type6.text!, strain: ndvNew.text!, route: routeLabel7.text!, age: ndvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber, routeID: routeLabel7.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                    type: type6.text!,
+                     strain: ndvNew.text!,
+                     route: routeLabel7.text!,
+                     age: ndvAgeTextField.text!,
+                     postingId: postingId,
+                     vaciProgram: coccidiosisControl.text!,
+                     sessionId: 1,
+                     isSync: true,
+                     lngId: lngId as NSNumber,
+                     routeID: routeLabel7.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             else if i == 7 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(lblNdvnew2Title.text!, strain: ndvNew2.text!, route: ndv2DisplayLabel.text!, age: ndv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: ndv2DisplayLabel.tag)
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                    type: lblNdvnew2Title.text!,
+                      strain: ndvNew2.text!,
+                      route: ndv2DisplayLabel.text!,
+                      age: ndv2AgeTextField.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: ndv2DisplayLabel.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
             }
             else if i == 8 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(stFieldVaccinationLbl.text!, strain: stStrainTextField.text!, route: stRouteFieldDisplayLbl.text!, age: stAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: stRouteFieldDisplayLbl.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                      type: stFieldVaccinationLbl.text!,
+                      strain: stStrainTextField.text!,
+                      route: stRouteFieldDisplayLbl.text!,
+                      age: stAgeTextField.text!,
+                      postingId: postingId,
+                      vaciProgram: coccidiosisControl.text!,
+                      sessionId: 1,
+                      isSync: true,
+                      lngId: lngId as NSNumber,
+                      routeID: stRouteFieldDisplayLbl.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             else if i == 9 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(ecoliFieldLbl.text!, strain: eColiStrainTextField.text!, route: eColiRouteFieldDisplayLbl.text!, age: ecoliAgeTEXTfield.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: eColiRouteFieldDisplayLbl.tag)
+                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                      type: ecoliFieldLbl.text!,
+                       strain: eColiStrainTextField.text!,
+                       route: eColiRouteFieldDisplayLbl.text!,
+                       age: ecoliAgeTEXTfield.text!,
+                       postingId: postingId,
+                       vaciProgram: coccidiosisControl.text!,
+                       sessionId: 1,
+                       isSync: true,
+                       lngId: lngId as NSNumber,
+                       routeID: eColiRouteFieldDisplayLbl.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
+                
             }
             
-            else if i == 10 {
-                CoreDataHandler().saveHatcheryVacinationInDatabase(lblOthersTitle.text!, strain: otherStrain.text!, route: otherDisplayLabel.text!, age: otherAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: otherDisplayLabel.tag)
+            else if i == 10 {                
+                let details = chickenCoreDataHandlerModels.saveChiknHtchryVacintnDetails(
+                     type: lblOthersTitle.text!,
+                     strain: otherStrain.text!,
+                     route: otherDisplayLabel.text!,
+                     age: otherAgeTextField.text!,
+                     postingId: postingId,
+                     vaciProgram: coccidiosisControl.text!,
+                     sessionId: 1,
+                     isSync: true,
+                     lngId: lngId as NSNumber,
+                     routeID: otherDisplayLabel.tag
+                )
+
+                CoreDataHandler().saveHatcheryVacinationInDatabase(details: details, index: i, dbArray: dataArray)
             }
         }
     }

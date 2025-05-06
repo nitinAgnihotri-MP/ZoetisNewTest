@@ -146,10 +146,9 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         
         let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
-        let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
-        
-        let sessionTypeName = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessionTypeName") as! String : objectArray.value(forKey: "sessionTypeName") as! String
-        
+        let sessiondate = objectArray.value(forKey: "sessiondate") as! String        
+        let sessionTypeName = objectArray.value(forKey: "sessionTypeName") as! String
+
         let typeDate = NSString(format: "%@-%@",UtilityClass.convertDateFormater(sessiondate),sessionTypeName)
         
         reportComposerDaignostic = ReportComposerDaignostic()
@@ -226,10 +225,11 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         }
         
         let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+                
+        let sessiondate = objectArray.value(forKey: "sessiondate") as! String
         
-        let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
-        
-        let sessionTypeName = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessionTypeName") as! String : objectArray.value(forKey: "sessionTypeName") as! String
+        let sessionTypeName = objectArray.value(forKey: "sessionTypeName") as! String
+
         
         let typeDate = NSString(format: "%@-%@",UtilityClass.convertDateFormater(sessiondate),sessionTypeName)
         
@@ -483,7 +483,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         }
         
         farmWithBirdSex = (self.farmNames as String) + " (" + (self.BirdSex as String) + ")" as NSString
-        let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 1 {
             
             let dict = ["FP" : finishedArray[0],"amonia" : finishedArray[1],"mouth" : finishedArray[2],"trac" : finishedArray[3],"FHN" : finishedArray[4],"TD" : finishedArray[5],"Rick" : finishedArray[6],"Bone" : finishedArray[7],"Syno" : finishedArray[8],"Bursa" : finishedArray[9],"IP" : finishedArray[10],"air" : finishedArray[11],"retained" : finishedArray[12],"litter" : finishedArray[13],"ge" : finishedArray[14],"pro" : finishedArray[15],"tape" : finishedArray[16],"round" : finishedArray[17],"feed" : finishedArray[18],"enterties" : finishedArray[19],"Intestinal" : finishedArray[20],"Thin_Intestine" : finishedArray[21],"Muscular" : finishedArray[22],"BLS" : finishedArray[23],"feed_P" : finishedArray[24] ,"pericarditis" : finishedArray[25] , "septicemia" : finishedArray[26], "Liver_Granuloma" : finishedArray[27] ,"Active_Bursa" : finishedArray[28] ,"cellulitis" : finishedArray[29],"meanAge" : self.meanAge,"isSick" : self.isSick,"birds" : self.totalBirds,"farmName" : self.farmWithBirdSex , "sessionDate" : UtilityClass.convertDateFormater(sessionDate as String) , "isCocciHistory" : isCocciHistory]

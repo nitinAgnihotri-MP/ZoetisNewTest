@@ -1159,7 +1159,39 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let genId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "GenerationId") as! Int
             
             let imgId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "ImgId") as! Int
-            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(posttingId as NSNumber, age: ((birdAge as AnyObject).stringValue)!, farmName: farmName, feedProgram:feedProgram, flockId: ((flockId as AnyObject).stringValue) ?? "", houseNo: ((houseNo as AnyObject).stringValue) ?? "", noOfBirds: ((birds as AnyObject).stringValue)!, sick: sick as NSNumber,necId:sessionId as NSNumber,compexName:complexName,complexDate:seesDat,complexId:complexId as NSNumber,custmerId:custId as NSNumber,feedId: feedId as NSNumber,isSync:false,timeStamp:devSessionId,actualTimeStamp:devSessionId, necIdSingle: self.postingId, farmweight: farmweight, abf: abf,sex: sex,breed: breed,farmId:farmId as NSNumber,imgId:imgId as NSNumber , generationName: genName , generationId: genId as NSNumber)
+            
+            let necropsyData = CoreDataHandlerTurkeyModels.singleNecropsyDataTurkey(
+                postingId: postingId as NSNumber,
+                age: (birdAge as AnyObject).stringValue ?? "",
+                farmName: farmName,
+                feedProgram: feedProgram,
+                flockId: (flockId as AnyObject).stringValue ?? "",
+                houseNo: (houseNo as AnyObject).stringValue ?? "",
+                noOfBirds: (birds as AnyObject).stringValue ?? "",
+                sick: sick as NSNumber,
+                necId: sessionId as NSNumber,
+                compexName: complexName,
+                complexDate: seesDat,
+                complexId: complexId as NSNumber,
+                custmerId: custId as NSNumber,
+                feedId: feedId as NSNumber,
+                isSync: false,
+                timeStamp: devSessionId,
+                actualTimeStamp: devSessionId,
+                necIdSingle: postingId, // self.postingId
+                farmweight: farmweight,
+                abf: abf,
+                sex: sex,
+                breed: breed,
+                farmId: farmId as NSNumber,
+                imgId: imgId as NSNumber,
+                generationName: genName,
+                generationId: genId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(data: necropsyData)
+
+            
             UserDefaults.standard.set(farmId as NSNumber, forKey: "farmIdTurkey")
         }
     }
@@ -1327,7 +1359,26 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                                         else if catName == "Skeletal/Muscular/Integumentary" {
                                                             catstr = "skeltaMuscular"
                                                         }
-                                                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(catName: catstr, obsName: obsName, formName: farmName , obsVisibility: chkKey!, birdNo: (m+1) as NSNumber, obsPoint: chkKey1! , index: m, obsId: obsId,measure: measure,quickLink:(quickLink! as AnyObject).integerValue! as NSNumber,necId :seesionId as NSNumber,isSync:false,necIdSingle:self.postingId, lngId: languageId,refId:refId)
+                                                        
+                                                        let captureData = CoreDataHandlerTurkeyModels.singleNecroSwithCaseData(
+                                                               catName: catstr,
+                                                               obsName: obsName,
+                                                               formName: farmName,
+                                                               obsVisibility: chkKey!,
+                                                               birdNo: (m + 1) as NSNumber,
+                                                               obsPoint: chkKey1!,
+                                                               index: m,
+                                                               obsId: obsId,
+                                                               measure: measure,
+                                                               quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
+                                                               necId: seesionId as NSNumber,
+                                                               isSync: false,
+                                                               necIdSingle: self.postingId,
+                                                               lngId: languageId,
+                                                               refId: refId
+                                                        )
+
+                                                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(data: captureData)
                                                     }
                                                 }
                                                 
@@ -1373,7 +1424,19 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                         let birdNotes = ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "Notes")
                         as! String
                         
-                        CoreDataHandlerTurkey().saveNoofBirdWithNotesSingledataTurkey("" , notes: birdNotes, formName: farmName , birdNo: birdNo as NSNumber, index: 0 , necId: sessionId as NSNumber, isSync :false,necIdSingle:self.postingId)
+                        
+                        let turkeyNote = CoreDataHandlerTurkeyModels.saveTurkeyNoteData(
+                            catName: "",  // Empty string for catName
+                             notes: birdNotes,
+                             formName: farmName,
+                             birdNo: birdNo as NSNumber,
+                             necId: sessionId as NSNumber,
+                             isSync: false,
+                             necIdSingle: self.postingId
+                        )
+
+                        CoreDataHandlerTurkey().saveNoofBirdWithNotesSingledataTurkey(turkeyNote)
+                        
                     }
                 }
             }

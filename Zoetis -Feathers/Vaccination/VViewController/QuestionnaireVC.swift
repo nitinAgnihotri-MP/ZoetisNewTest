@@ -1339,9 +1339,8 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                         if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count + 1 {
                            
                             let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
-                            var fullName = firstname ?? ""
                             let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                            fullName = firstname! + " " + (lastName ?? "") ?? ""
+                            var fullName = firstname! + " " + (lastName ?? "") ?? ""
                             cell.deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
                             if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
                                 cell.hideShowImgVw(false)

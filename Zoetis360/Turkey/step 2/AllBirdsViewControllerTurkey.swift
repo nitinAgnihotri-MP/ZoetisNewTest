@@ -725,18 +725,16 @@ extension AllBirdsViewControllerTurkey {
     fileprivate func handleSavedBirdNameArray(_ savedBirdNameArray: NSMutableArray) {
         for (index, bird) in savedBirdNameArray.enumerated() {
             for (birdIndex, obsBird) in obsNameArray.enumerated() {
-                if let obsName = obsBird as? String {
-                    if obsName == bird as? String, index < self.obsNameArray.count {
-                            let movedOBSBird = self.obsNameArray[birdIndex]
-                            self.obsNameArray.removeObject(at: birdIndex)
-                            self.obsNameArray.insert(movedOBSBird, at: index)
-                        
-                    }
+                if let obsName = obsBird as? String, obsName == bird as? String, index < self.obsNameArray.count {
+                    let movedOBSBird = self.obsNameArray[birdIndex]
+                    self.obsNameArray.removeObject(at: birdIndex)
+                    self.obsNameArray.insert(movedOBSBird, at: index)
                 }
-                
             }
         }
     }
+
+    
     
     fileprivate func handleCatNameValidation(_ catName: inout String?) {
         if catName == "skeltaMuscular" {

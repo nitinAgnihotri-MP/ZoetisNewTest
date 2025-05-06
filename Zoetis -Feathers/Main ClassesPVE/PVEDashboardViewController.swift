@@ -1076,7 +1076,6 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     private func buildVaccineInfoArray(from dict: AnyObject, deviceId: String?, userId: Int?) -> [[String: Any]] {
         let id = 0
         let Assessment_Detail_Id = 0
-        let Module_cat_id = 2
         let cat_vaccinInfoDetailArr = dict.value(forKey: "cat_vaccinInfoDetailArr") as? [[String: Any]] ?? []
         var vaccineInfoDetailsViewModelArr = [[String: Any]]()
         for (index, val) in cat_vaccinInfoDetailArr.enumerated() {

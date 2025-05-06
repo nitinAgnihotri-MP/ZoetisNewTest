@@ -229,9 +229,8 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         
         let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
-        let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
-        
-        let sessionTypeName = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessionTypeName") as! String : objectArray.value(forKey: "sessionTypeName") as! String
+        let sessiondate = objectArray.value(forKey: "sessiondate") as! String
+        let sessionTypeName = objectArray.value(forKey: "sessionTypeName") as! String
         
         let typeDate = NSString(format: "%@-%@",UtilityClass.convertDateFormater(sessiondate),sessionTypeName)
         
@@ -246,204 +245,102 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
     }
     
     
-    func callCommonFunctionHistorical(_ catName : NSString)  {
-        
-        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
-        
-       // arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
-        
+    func callCommonFunctionHistorical(_ catName: NSString) {
+        guard let arrayOfIds = AllValidSessions.sharedInstance.allValidSession as? [Int], !arrayOfIds.isEmpty else {
+            return
+        }
+
         let modalObj = GI_Tract_Modal()
-        
         modalObj.delegate = self
-        
         arrayOfItemDict.removeAll()
-        
-        if arrayOfIds.count > 2 {
-            
-              for i in 0..<3 {
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.firstObject as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                var age = Int()
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                    
-                    self.meanAge = NSString(format: "%d",age)
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-                self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-            
-        else if arrayOfIds.count > 1 {
-            
-             for i in 0..<2 {
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-                    
-                    return
-                }
-                
-                let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                var age = Int()
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId : necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-                self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
-        }
-        else{
-            
-            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
-            
-            if lastSessionDataArray.count == 0 {
-                
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-                
+
+        let count = min(arrayOfIds.count, 3)
+
+        for i in 0..<count {
+            let sessionId = arrayOfIds[i]
+            guard let lastSessionDataArray = CoreDataHandler().fetchLastSessionDetails(NSNumber(value: sessionId)) as? [NSDictionary], !lastSessionDataArray.isEmpty else {
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""),
+                                        messageStr: NSLocalizedString(noHistoricData, comment: ""))
                 return
             }
-            
-            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
-            
-            sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
-            
-            let allFarmDataArray = NSMutableArray()
-            
-            var totalBirdsPerFarm : Float = 0
-            
-            var age = Int()
-            
-            for j in 0..<lastSessionDataArray.count {
-                
-                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                
-                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                
-                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                
-                age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                
-                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
-                
-                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+
+            guard let objectArray = CoreDataHandler().fetchAllPostingSession(NSNumber(value: sessionId)) as? [NSDictionary], !objectArray.isEmpty else { continue }
+
+            sessionDate = objectArray.first?["sessiondate"] as? NSString ?? ""
+
+            var allFarmDataArray: [Any] = []
+            var totalBirdsPerFarm: Float = 0
+            var totalAge = 0
+
+            for data in lastSessionDataArray {
+                let farmName = data["farmName"] as? NSString ?? ""
+                let necID = data["necropsyId"] as? NSNumber ?? 0
+                let numberOfBirds = (data["noOfBirds"] as? NSString)?.floatValue ?? 0
+                let age = (data["age"] as? NSNumber)?.intValue ?? 0
+
+                totalAge += age
+                totalBirdsPerFarm += numberOfBirds
+
+                if let lastFarmDataArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID) as? [Any] {
+                    allFarmDataArray.append(contentsOf: lastFarmDataArray)
+                }
             }
-            self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-            self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+
+            meanAge = NSString(format: "%.0f", round(Float(totalAge) / Float(lastSessionDataArray.count)))
+            totalBirds = NSString(format: "%.0f", totalBirdsPerFarm)
+
+            modalObj.setupData(NSMutableArray(array: allFarmDataArray), birdsCount: totalBirdsPerFarm, catName: catName)
         }
-        
-        let objectArray =  CoreDataHandler().fetchCompletePostingSession(arrayOfIds.first as! NSNumber)
-        
-        let complexName = objectArray.value(forKey: "complexName") as! String
-        
-        let customerName = objectArray.value(forKey: "customerName") as! String
-        
-        let vetanatrionName = objectArray.value(forKey: "vetanatrionName") as! String
-        
-        var salesRepName: String = ""
-        
-        if let salesRepNameDummy = objectArray.value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
-        }
-        
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
-        
-        let sessiondate = objectArray.value(forKey: "sessiondate") as! String
-        
-        let sessionTypeName = objectArray.value(forKey: "sessionTypeName") as! String
-        
-        let typeDate = NSString(format: "%@-%@",UtilityClass.convertDateFormater(sessiondate),sessionTypeName)
-        
+
+        loadReportMetaData(arrayOfIds: arrayOfIds)
+    }
+    
+    private func loadReportMetaData(arrayOfIds: [Int]) {
+        guard let sessionId = arrayOfIds.first else { return }
+
+        let objectArray = CoreDataHandler().fetchCompletePostingSession(NSNumber(value: sessionId)) as? NSDictionary ?? [:]
+
+        let complexName = objectArray["complexName"] as? String ?? ""
+        let customerName = objectArray["customerName"] as? String ?? ""
+        let vetanatrionName = objectArray["vetanatrionName"] as? String ?? ""
+        let sessionDate = objectArray["sessiondate"] as? String ?? ""
+        let sessionTypeName = objectArray["sessionTypeName"] as? String ?? ""
+
+        let salesRepNameValue = objectArray["salesRepName"] as? String
+        let salesRepName = salesRepNameValue == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : (salesRepNameValue ?? "")
+
+        let customerRepName = (objectArray["customerRepName"] as? String == NSLocalizedString(appDelegateObj.selectStr, comment: "")) ? "" : (objectArray["customerRepName"] as? String ?? "")
+
+        let typeDate = "\(UtilityClass.convertDateFormater(sessionDate))-\(sessionTypeName)"
+
         reportComposer = ReportComposer()
-        
         reportComposerDaignostic = ReportComposerDaignostic()
-        
-        if self.subjectString as String == NSLocalizedString("Necropsy Historical Report", comment: ""){
-            if let invoiceHTML = reportComposerDaignostic.renderReports(complexName: complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate as String,items : arrayOfItemDict) {
-                
-                wkWebView.loadHTMLString(invoiceHTML, baseURL: Bundle.main.bundleURL)
-                HTMLContent = invoiceHTML
-            }
-        }
-        else{
-            if let invoiceHTML = reportComposer.renderReports(complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate as String,items : arrayOfItemDict) {
-                
-                wkWebView.loadHTMLString(invoiceHTML, baseURL: Bundle.main.bundleURL)
-                HTMLContent = invoiceHTML
-            }
+
+        let isHistorical = "\(self.subjectString)" == NSLocalizedString("Necropsy Historical Report", comment: "")
+        let html = isHistorical
+            ? reportComposerDaignostic.renderReports(complexName: complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate, items: arrayOfItemDict)
+            : reportComposer.renderReports(complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate, items: arrayOfItemDict)
+
+        if let html = html {
+            wkWebView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
+            HTMLContent = html
         }
     }
+    
     @IBAction func exportToPDF(_ sender: AnyObject) {
-        
         reportComposer.exportHTMLContentToPDF(HTMLContent)
-        
         let template = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(self.subjectString as String).pdf")
-        let pdfData: Data = (try! Data.init(contentsOf: URL(fileURLWithPath: reportComposer.pdfFilename)))
-        try? pdfData.write(to: template!, options: [.atomic])
-        let activityViewController = UIActivityViewController(activityItems:[pdfData,self.subjectString], applicationActivities: nil)
-        activityViewController.setValue(self.subjectString, forKey: "subject")
-        activityViewController.popoverPresentationController?.sourceView = self.btnShare
-        self.navigationController?.present(activityViewController, animated: true, completion: {
-            print(appDelegateObj.testFuntion())
-        })
+        if let pdfData: Data = try? Data.init(contentsOf: URL(fileURLWithPath: reportComposer.pdfFilename)) {
+            try? pdfData.write(to: template!, options: [.atomic])
+            let activityViewController = UIActivityViewController(activityItems:[pdfData,self.subjectString], applicationActivities: nil)
+            activityViewController.setValue(self.subjectString, forKey: "subject")
+            activityViewController.popoverPresentationController?.sourceView = self.btnShare
+            self.navigationController?.present(activityViewController, animated: true, completion: {
+                print(appDelegateObj.testFuntion())
+            })
+        }
     }
+    
     func didFinishWithParsing(finishedArray : NSArray){
         
         let frNme1 = self.farmNames as String
@@ -452,21 +349,13 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         if range != nil{
         self.farmNames = String(frNme1[range!.upperBound...]) as NSString
         }
-        
-        
-      
-        // Prince Report Changes
-//        farmWithBirdSex = (self.farmNames as String) + " (" + (self.BirdSex as String) + ")" as NSString
-//        
-//        let dict = ["acer" : finishedArray[0],"mg" : finishedArray[1],"mm" : finishedArray[2],"tg" : finishedArray[3],"meanAge" : self.meanAge,"isSick" : self.isSick,"birds" : self.totalBirds,"farmName" : farmWithBirdSex , "sessionDate" : UtilityClass.convertDateFormater(sessionDate as String) , "isCocciHistory" : isCocciHistory]
-        
+                
         let dict = ["acer" : finishedArray[0],"mg" : finishedArray[1],"mm" : finishedArray[2],"tg" : finishedArray[3],"meanAge" : self.meanAge,"isSick" : self.isSick,"birds" : self.totalBirds,"farmName" : self.farmNames , "sessionDate" : UtilityClass.convertDateFormater(sessionDate as String) , "isCocciHistory" : isCocciHistory]
         
         arrayOfItemDict.append(dict as [String : AnyObject])
-        //print(arrayOfItemDict)
-        
     }
-    func didFinishParsingWithAllSummaryData(_ finishedArray : NSArray){
+    
+    func didFinishParsingWithAllSummaryData(_ finishedArray : NSArray) {
         
         let frNme1 = self.farmNames as String
         let range = frNme1.range(of: ".")
@@ -476,37 +365,31 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         // Prince Report Changes
 //        farmWithBirdSex = (self.farmNames as String) + " (" + (self.BirdSex as String) + ")" as NSString
         
-        let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 1 {
             let dict = ["FP" : finishedArray[0],"amonia" : finishedArray[1],"mouth" : finishedArray[2],"trac" : finishedArray[3],"FHN" : finishedArray[4],"TD" : finishedArray[5],"Rick" : finishedArray[6],"Bone" : finishedArray[7],"Syno" : finishedArray[8],"Bursa" : finishedArray[9],"IP" : finishedArray[10],"air" : finishedArray[11],"retained" : finishedArray[12],"litter" : finishedArray[13],"ge" : finishedArray[14],"pro" : finishedArray[15],"tape" : finishedArray[16],"round" : finishedArray[17],"feed" : finishedArray[18],"enterties" : finishedArray[19],"Intestinal" : finishedArray[20],"Thin_Intestine" : finishedArray[21],"Muscular" : finishedArray[22],"BLS" : finishedArray[23] ,"pericarditis" : finishedArray[24] , "septicemia" : finishedArray[25], "Liver_Granuloma" : finishedArray[26] ,"Active_Bursa" : finishedArray[27],"meanAge" : self.meanAge,"isSick" : self.isSick,"birds" : self.totalBirds,"farmName" : self.farmNames , "sessionDate" : UtilityClass.convertDateFormater(sessionDate as String) , "isCocciHistory" : isCocciHistory]
             
             arrayOfItemDict.append(dict as [String : AnyObject])
-        }
-        else{
+        } else {
             let dict = ["FP" : finishedArray[0],"amonia" : finishedArray[1],"mouth" : finishedArray[2],"trac" : finishedArray[3],"FHN" : finishedArray[4],"TD" : finishedArray[5],"Rick" : finishedArray[6],"Bone" : finishedArray[7],"Syno" : finishedArray[8],"Bursa" : finishedArray[9],"IP" : finishedArray[10],"air" : finishedArray[11],"retained" : finishedArray[12],"litter" : finishedArray[13],"ge" : finishedArray[14],"pro" : finishedArray[15],"tape" : finishedArray[16],"round" : finishedArray[17],"feed" : finishedArray[18],"enterties" : finishedArray[19],"Intestinal" : finishedArray[20],"Thin_Intestine" : finishedArray[21],"Muscular" : finishedArray[22],"BLS" : finishedArray[23] ,"meanAge" : self.meanAge,"isSick" : self.isSick,"birds" : self.totalBirds,"farmName" : self.farmNames , "sessionDate" : UtilityClass.convertDateFormater(sessionDate as String) , "isCocciHistory" : isCocciHistory]
             
             arrayOfItemDict.append(dict as [String : AnyObject])
         }
-
-      
-        
     }
+    
     @IBAction func didSelectOnComplex(_ sender: AnyObject) {
         
         view.endEditing(true)
         
         tableViewpop()
-        
         if complexArr.count < 4 {
-            
             droperTableView.frame = CGRect( x: btnComplex.frame.origin.x, y: btnComplex.frame.origin.y+40, width: 375, height: 130)
-        }
-        else{
+        } else {
             droperTableView.frame = CGRect( x: btnComplex.frame.origin.x, y: btnComplex.frame.origin.y+40, width: 375, height: 190)
-            
         }
         droperTableView.reloadData()
     }
+    
     func tableViewpop()  {
         
         buttonbg.frame = CGRect(x: 0, y: 0, width: 1024, height: 768) // X, Y, width, height

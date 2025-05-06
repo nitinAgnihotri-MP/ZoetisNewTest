@@ -143,47 +143,46 @@ class DataService{
         })
     }
     
-    func getFilledCertObj(certificationId:String, userId:String, siteId:String, customerId:String, fssId: Int = 0 , FsrId: String, trainingId: Int = 0)-> [String:Any]?{
-        let mainCertObj = VaccinationCertificationDetail()
-        let vacStartedCertObj = VaccinationDashboardDAO.sharedInstance.getStartedCertStatusMoObj(userId:userId , certificationId: certificationId)
-        mainCertObj.OperatorInfo = fillOperatorInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId)
-        mainCertObj.QuestionAnswer = fillQuestionAnsData(certificationId:certificationId, userId:userId)
-        if vacStartedCertObj?.certificationCategoryId != "1" {
-            if trainingId != 0 {
-                mainCertObj.VacOperatorFSSgAddress = fillShippingAddressInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId, fssId: fssId , fsrId: FsrId, trainingId: trainingId )
+    fileprivate func handleCertificationsValidations(_ vacObj: VaccinationStartedCertifications, _ mainCertObj: VaccinationCertificationDetail) {
+        if vacObj.certificationStatus == VaccinationCertificationStatus.draft.rawValue{
+            mainCertObj.TrainingStatus = "Draft"
+            mainCertObj.TrainingStatusId = 2
+        }else if vacObj.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+            mainCertObj.IsAcknowledge = true
+            if (UserContext.sharedInstance.userDetailsObj?.roleId?.contains(VaccinationConstants.Roles.ROLE_FSM_ID) ?? false || UserContext.sharedInstance.userDetailsObj?.roleId?.contains(VaccinationConstants.Roles.ROLE_TSR_ID) ?? false ){
+                mainCertObj.TrainingStatus = "Approved"
+                mainCertObj.TrainingStatusId = 4
             } else {
-                mainCertObj.VacOperatorFSSgAddress = fillShippingAddressInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId, fssId: fssId , fsrId: FsrId )
+                if mainCertObj.OperatorCertificate {
+                    mainCertObj.TrainingStatus = "Submitted"
+                    mainCertObj.TrainingStatusId = 3
+                } else {
+                    mainCertObj.TrainingStatus = "Approved"
+                    mainCertObj.TrainingStatusId = 4
+                }
             }
+        }else{
+            mainCertObj.TrainingStatus = "Scheduled"
+            mainCertObj.TrainingStatusId = 1
         }
-        else {
-            mainCertObj.VacOperatorFSSgAddress = []
-        }
-        
-        
-        if let userId = UserContext.sharedInstance.userDetailsObj?.userId, userId != "" {
-            mainCertObj.CreatedBy = Int64(userId)
-        }
-        
-        if certificationId != ""{
-            mainCertObj.Id = Int64(certificationId)
-        }
-        if customerId != ""{
-            mainCertObj.CustomerId = Int64(customerId)
-        }
-        if let  vacObj = vacStartedCertObj{
+    }
+    
+    fileprivate func handleVacStartedObjMainCertObjUserId(_ vacStartedCertObj: VaccinationStartedCertifications?, _ mainCertObj: VaccinationCertificationDetail, _ userId: String) {
+        if let vacObj = vacStartedCertObj{
             if vacObj.siteid != nil {
                 mainCertObj.SiteId = Int64(vacObj.siteid!)
             }
-            if vacObj.certificationCategoryId == "1"{
+            mainCertObj.SiteName = vacObj.siteName
+            mainCertObj.AssignToName = vacObj.assignedName
+            
+            if vacObj.certificationCategoryId == "1" {
                 mainCertObj.OperatorCertificate = false
                 mainCertObj.Cretification_Type_Id = 2
-            }else{
+            } else {
                 mainCertObj.OperatorCertificate = true
                 mainCertObj.Cretification_Type_Id = 1
             }
             
-            mainCertObj.SiteName = vacObj.siteName
-            mainCertObj.AssignToName = vacObj.assignedName
             
             if vacObj.assignedTo != nil &&   vacObj.assignedTo != ""{
                 mainCertObj.AssingToId = Int64(vacObj.assignedTo!)
@@ -196,32 +195,11 @@ class DataService{
             mainCertObj.ExistingSite = vacObj.isExistingSite as? Bool
             if vacObj.certificationCategoryId == "1"{
                 mainCertObj.OperatorCertificate = false
-            } else{
+            } else {
                 mainCertObj.OperatorCertificate = true
             }
             
-            if vacObj.certificationStatus == VaccinationCertificationStatus.draft.rawValue{
-                mainCertObj.TrainingStatus = "Draft"
-                mainCertObj.TrainingStatusId = 2
-            }else if vacObj.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                mainCertObj.IsAcknowledge = true
-                if (UserContext.sharedInstance.userDetailsObj?.roleId?.contains(VaccinationConstants.Roles.ROLE_FSM_ID) ?? false || UserContext.sharedInstance.userDetailsObj?.roleId?.contains(VaccinationConstants.Roles.ROLE_TSR_ID) ?? false ){
-                    mainCertObj.TrainingStatus = "Approved"
-                    mainCertObj.TrainingStatusId = 4
-                }else{
-                    
-                    if mainCertObj.OperatorCertificate{
-                        mainCertObj.TrainingStatus = "Submitted"
-                        mainCertObj.TrainingStatusId = 3
-                    }else{
-                        mainCertObj.TrainingStatus = "Approved"
-                        mainCertObj.TrainingStatusId = 4
-                    }
-                }
-            }else{
-                mainCertObj.TrainingStatus = "Scheduled"
-                mainCertObj.TrainingStatusId = 1
-            }
+            handleCertificationsValidations(vacObj, mainCertObj)
             let dateFormatterObj = DateFormatter()
             
             dateFormatterObj.timeZone = Calendar.current.timeZone
@@ -256,14 +234,12 @@ class DataService{
                 
                 let outputDateFormatter = DateFormatter()
                 outputDateFormatter.dateFormat = Constants.MMddyyyyStr
-    
+                
                 formattedDateString = outputDateFormatter.string(from: date)
                 debugPrint("Formatted Date String: \(formattedDateString)")
             } else {
                 debugPrint("Failed to convert the original date string.")
             }
-            
-            
             
             if vacObj.scheduledDate != nil {
                 mainCertObj.ScheduleDate = formattedDateString // dateFormatterObj.string(from: scheduledDate)
@@ -282,6 +258,34 @@ class DataService{
                 mainCertObj.DeviceId =   vacObj.deviceId
             }
         }
+    }
+    
+    func getFilledCertObj(certificationId:String, userId:String, siteId:String, customerId:String, fssId: Int = 0 , FsrId: String, trainingId: Int = 0)-> [String:Any]?{
+        let mainCertObj = VaccinationCertificationDetail()
+        let vacStartedCertObj = VaccinationDashboardDAO.sharedInstance.getStartedCertStatusMoObj(userId:userId , certificationId: certificationId)
+        mainCertObj.OperatorInfo = fillOperatorInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId)
+        mainCertObj.QuestionAnswer = fillQuestionAnsData(certificationId:certificationId, userId:userId)
+        if vacStartedCertObj?.certificationCategoryId != "1" {
+            if trainingId != 0 {
+                mainCertObj.VacOperatorFSSgAddress = fillShippingAddressInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId, fssId: fssId , fsrId: FsrId, trainingId: trainingId )
+            } else {
+                mainCertObj.VacOperatorFSSgAddress = fillShippingAddressInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId, fssId: fssId , fsrId: FsrId )
+            }
+        } else {
+            mainCertObj.VacOperatorFSSgAddress = []
+        }
+        
+        if let userId = UserContext.sharedInstance.userDetailsObj?.userId, userId != "" {
+            mainCertObj.CreatedBy = Int64(userId)
+        }
+        
+        if certificationId != "" {
+            mainCertObj.Id = Int64(certificationId)
+        }
+        if customerId != ""{
+            mainCertObj.CustomerId = Int64(customerId)
+        }
+        handleVacStartedObjMainCertObjUserId(vacStartedCertObj, mainCertObj, userId)
         
         let jsonEncoder = JSONEncoder()
         let data = try? jsonEncoder.encode(mainCertObj)
@@ -473,80 +477,90 @@ class DataService{
     }
     
     
-    func fillQuestionAnsData(certificationId:String, userId:String) -> [QuestionAnswerDTO]?{
+    fileprivate func handleEmployeesUserIdCatIdValidations(_ employees: [VaccinationEmployeeVM], _ userId: String, _ categoryObj: VaccinationQuestionCategoryVM, _ certificationId: String, _ attendeeDetails: inout [AddAttendeeDetailsDTO]) {
+        for categoryEmp in employees{
+            let attendeeObj =  AddAttendeeDetailsDTO()
+            if userId != nil && userId != ""{
+                attendeeObj.CreatedBy = Int64(userId)
+            }
+            if categoryObj.categoryId != nil && categoryObj.categoryId != ""{
+                attendeeObj.ModuleCatId = Int64(categoryObj.categoryId!)
+            }
+            if certificationId != nil && certificationId != ""{
+                attendeeObj.TrainingId = Int64(certificationId)
+            }
+            if certificationId != nil && certificationId != ""{
+                attendeeObj.TrainingId = Int64(certificationId)
+            }
+            if categoryEmp.employeeId != nil && categoryEmp.employeeId != ""{
+                attendeeObj.OperatorId = Int64(categoryEmp.employeeId!)
+                attendeeObj.OperatorUniqueId = categoryEmp.employeeId
+            }
+            
+            attendeeDetails.append(attendeeObj)
+        }
+    }
+    
+    fileprivate func handleCategoryObjQuestionArrCountValidations(_ categoryObj: VaccinationQuestionCategoryVM, _ certificationId: String, _ moduleAssessmentArr: inout [ModuleAssessmentsCertDTO]) {
+        for questionObj in categoryObj.questionArr! {
+            let  moduleAssObj = ModuleAssessmentsCertDTO()
+            if questionObj.questionId != nil && questionObj.questionId != ""{
+                moduleAssObj.Assessment_Id = Int64( questionObj.questionId!)
+            }
+            if certificationId != ""{
+                moduleAssObj.TrainingScheduleId = Int64(certificationId)
+            }
+            
+            moduleAssObj.Answer = questionObj.selectedResponse
+            moduleAssObj.LocationPhone = questionObj.locationPhone
+            moduleAssObj.SequenceNo = Int( questionObj.sequenceNo ?? 0)
+            if questionObj.categoryId != nil && questionObj.categoryId != ""{
+                moduleAssObj.ModuleCatId = Int64(questionObj.categoryId!)
+            }
+            
+            moduleAssObj.Comments = questionObj.userComments
+            moduleAssessmentArr.append(moduleAssObj)
+        }
+    }
+    
+    fileprivate func handleQuestionTypeObjFillQuestionAnsData(_ qustionTypeObj: VaccinationQuestionTypeVM, _ certificationId: String, _ userId: String, _ questionArr: inout [QuestionAnswerDTO]) {
+        for categoryObj in qustionTypeObj.questionCategories!{
+            let questionAnswerDTO =  QuestionAnswerDTO()
+            if categoryObj.categoryId != nil && categoryObj.categoryId != "" {
+                questionAnswerDTO.catId = Int64(categoryObj.categoryId!)
+            }
+            if categoryObj.typeId != nil && categoryObj.typeId != "" {
+                questionAnswerDTO.TypeId = Int64(categoryObj.typeId!)
+            }
+            
+            questionAnswerDTO.CategorieName = categoryObj.categoryName
+            var moduleAssessmentArr =  [ModuleAssessmentsCertDTO]()
+            if categoryObj.questionArr != nil && categoryObj.questionArr!.count > 0 {
+                handleCategoryObjQuestionArrCountValidations(categoryObj, certificationId, &moduleAssessmentArr)
+            }
+            questionAnswerDTO.ModuleAssessments = moduleAssessmentArr
+            
+            var attendeeDetails = [AddAttendeeDetailsDTO]()
+            if let employees = categoryObj.employees, employees.count > 0 {
+                handleEmployeesUserIdCatIdValidations(employees, userId, categoryObj, certificationId, &attendeeDetails)
+            }
+            questionAnswerDTO.AddAttendeeDetails = attendeeDetails
+            questionArr.append(questionAnswerDTO)
+        }
+    }
+    
+    func fillQuestionAnsData(certificationId:String, userId:String) -> [QuestionAnswerDTO]? {
         var questionArr = [QuestionAnswerDTO]()
         let questionnaireVMObj = UserFilledQuestionnaireDAO.sharedInstance.fetchQuestionnaireData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: certificationId )
         
-        if questionnaireVMObj?.questionTypeObj != nil && (questionnaireVMObj?.questionTypeObj?.count)! > 0{
-            for qustionTypeObj in (questionnaireVMObj?.questionTypeObj)!{
-                if qustionTypeObj.questionCategories != nil && qustionTypeObj.questionCategories!.count > 0{
-                    for categoryObj in qustionTypeObj.questionCategories!{
-                        let questionAnswerDTO =  QuestionAnswerDTO()
-                        if categoryObj.categoryId != nil && categoryObj.categoryId != "" {
-                            questionAnswerDTO.catId = Int64(categoryObj.categoryId!)
-                        }
-                        if categoryObj.typeId != nil && categoryObj.typeId != "" {
-                            questionAnswerDTO.TypeId = Int64(categoryObj.typeId!)
-                        }
-                        
-                        questionAnswerDTO.CategorieName = categoryObj.categoryName
-                        var moduleAssessmentArr =  [ModuleAssessmentsCertDTO]()
-                        if categoryObj.questionArr != nil && categoryObj.questionArr!.count > 0{
-                            for questionObj in categoryObj.questionArr!{
-                                let  moduleAssObj = ModuleAssessmentsCertDTO()
-                                if questionObj.questionId != nil && questionObj.questionId != ""{
-                                    moduleAssObj.Assessment_Id = Int64( questionObj.questionId!)
-                                }
-                                if certificationId != ""{
-                                    moduleAssObj.TrainingScheduleId = Int64(certificationId)
-                                }
-                                
-                                moduleAssObj.Answer = questionObj.selectedResponse
-                                moduleAssObj.LocationPhone = questionObj.locationPhone
-                                moduleAssObj.SequenceNo = Int( questionObj.sequenceNo ?? 0)
-                                if questionObj.categoryId != nil && questionObj.categoryId != ""{
-                                    moduleAssObj.ModuleCatId = Int64(questionObj.categoryId!)
-                                }
-                                
-                                moduleAssObj.Comments = questionObj.userComments
-                                moduleAssessmentArr.append(moduleAssObj)
-                            }
-                        }
-                        questionAnswerDTO.ModuleAssessments = moduleAssessmentArr
-                        
-                        var attendeeDetails = [AddAttendeeDetailsDTO]()
-                        if let employees = categoryObj.employees, employees.count > 0 {
-                        
-                                for categoryEmp in employees{
-                                    let attendeeObj =  AddAttendeeDetailsDTO()
-                                    if userId != nil && userId != ""{
-                                        attendeeObj.CreatedBy = Int64(userId)
-                                    }
-                                    if categoryObj.categoryId != nil && categoryObj.categoryId != ""{
-                                        attendeeObj.ModuleCatId = Int64(categoryObj.categoryId!)
-                                    }
-                                    if certificationId != nil && certificationId != ""{
-                                        attendeeObj.TrainingId = Int64(certificationId)
-                                    }
-                                    if certificationId != nil && certificationId != ""{
-                                        attendeeObj.TrainingId = Int64(certificationId)
-                                    }
-                                    if categoryEmp.employeeId != nil && categoryEmp.employeeId != ""{
-                                        attendeeObj.OperatorId = Int64(categoryEmp.employeeId!)
-                                        attendeeObj.OperatorUniqueId = categoryEmp.employeeId
-                                    }
-                                    
-                                    attendeeDetails.append(attendeeObj)
-                                }
-                            
-                        }
-                        questionAnswerDTO.AddAttendeeDetails = attendeeDetails
-                        questionArr.append(questionAnswerDTO)
-                    }
+        if questionnaireVMObj?.questionTypeObj != nil && (questionnaireVMObj?.questionTypeObj?.count)! > 0 {
+            for qustionTypeObj in (questionnaireVMObj?.questionTypeObj)! {
+                if qustionTypeObj.questionCategories != nil && qustionTypeObj.questionCategories!.count > 0 {
+                    handleQuestionTypeObjFillQuestionAnsData(qustionTypeObj, certificationId, userId, &questionArr)
                 }
             }
         }
-        if questionArr.count > 0{
+        if questionArr.count > 0 {
             return questionArr
         }
         return nil

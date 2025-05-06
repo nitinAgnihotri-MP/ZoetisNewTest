@@ -1060,12 +1060,18 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necId as NSNumber, farmName: farmsName, { (success) in
                     if success == true {
                         
-                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmsName) { (success) in
-                            handleDeleteSuccess(success: success)
-                        }
-                    }})
+                        deleteDataAndHandleSuccess(necId: necId, farmsName: farmsName)
+                    }
+                })
             }})
     }
+    
+    private func deleteDataAndHandleSuccess(necId: NSNumber, farmsName: String) {
+        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId, farmName: farmsName) { success in
+            handleDeleteSuccess(success: success)
+        }
+    }
+    
     
     func handleDeleteSuccess(success: Bool) {
         if success == true {
@@ -1698,16 +1704,32 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                     let birds = farm["birds"].stringValue
                                     let houseNo = farm["houseNo"].stringValue
                                     let flockId = farm["flockId"].stringValue
-                                    
-                                    coreDataHandler.SaveNecropsystep1SingleData(
-                                        necroPostingId as NSNumber, age: birdAge, farmName: farmName, feedProgram: feedProgram,
-                                        flockId: flockId, houseNo: houseNo, noOfBirds: birds, sick: sick as NSNumber,
-                                        necId: sessionId as NSNumber, compexName: complexName, complexDate: seesDat,
-                                        complexId: complexId as NSNumber, custmerId: custId as NSNumber,
-                                        feedId: feedId as NSNumber, isSync: false, timeStamp: devSessionId,
-                                        actualTimeStamp: devSessionId, necIdSingle: self.postingId,
-                                        farmId: farmId as NSNumber, imgId: imgId as NSNumber
+                                                                        
+                                    let data = chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData(
+                                        postingId: necroPostingId as NSNumber,
+                                            age: birdAge,
+                                            farmName: farmName,
+                                            feedProgram: feedProgram,
+                                            flockId: flockId,
+                                            houseNo: houseNo,
+                                            noOfBirds: birds,
+                                            sick: sick as NSNumber,
+                                            necId: sessionId as NSNumber,
+                                            compexName: complexName,
+                                            complexDate: seesDat,
+                                            complexId: complexId as NSNumber,
+                                            custmerId: custId as NSNumber,
+                                            feedId: feedId as NSNumber,
+                                            isSync: false,
+                                            timeStamp: devSessionId,
+                                            actualTimeStamp: devSessionId,
+                                            necIdSingle: self.postingId,
+                                            farmId: farmId as NSNumber,
+                                            imgId: imgId as NSNumber
                                     )
+
+                                    coreDataHandler.SaveNecropsystep1SingleData(data: data)
+
                                     
                                     // ✅ Update UserDefaults
                                     UserDefaults.standard.set(farmId as NSNumber, forKey: "farmId")
@@ -1801,7 +1823,29 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                                     else if catName == "Skeletal/Muscular/Integumentary" {
                                                         catstr = "skeltaMuscular"
                                                     }
-                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(catName: catstr, obsName: obsName, formName: farmName , obsVisibility: chkKey!, birdNo: (m+1) as NSNumber, obsPoint: chkKey1! , index: m, obsId: obsId,measure: measure,quickLink:(quickLink! as AnyObject).integerValue! as NSNumber,necId :seesionId as NSNumber,isSync:false,necIdSingle:self.postingId, lngId: languageId,refId:refId,actualText: chkKey3)
+                                                    
+                                                    let data = chickenCoreDataHandlerModels.updateSkeletaSingleSyncSkeletaData(
+                                                          catName: catstr,
+                                                          obsName: obsName,
+                                                          formName: farmName,
+                                                          obsVisibility: chkKey!,
+                                                          birdNo: (m + 1) as NSNumber,
+                                                          obsPoint: chkKey1!,
+                                                          index: m,
+                                                          obsId: obsId,
+                                                          measure: measure,
+                                                          quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
+                                                          necId: seesionId as NSNumber,
+                                                          isSync: false,
+                                                          necIdSingle: self.postingId,
+                                                          lngId: languageId,
+                                                          refId: refId,
+                                                          actualText: chkKey3
+                                                    )
+
+                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(data: data)
+
+                                                    
                                                 }
                                             }
                                         }
@@ -1845,16 +1889,18 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                        let birdNo = note["birdNumber"].int,
                        let birdNotes = note["Notes"].string {
                         
-                        CoreDataHandler().saveNoofBirdWithNotesSingledata(
-                            "",
-                            notes: birdNotes,
-                            formName: farmName,
-                            birdNo: NSNumber(value: birdNo),
-                            index: 0,
-                            necId: NSNumber(value: sessionId),
-                            isSync: false,
-                            necIdSingle: self.postingId
-                        )
+                        let birdData = chickenCoreDataHandlerModels.BirdNotesData(
+                               catName: "",
+                               notes: birdNotes,
+                               formName: farmName,
+                               birdNo: NSNumber(value: birdNo),
+                               index: 0,
+                               necId: NSNumber(value: sessionId),
+                               isSync: false,
+                               necIdSingle: self.postingId                        )
+
+                        CoreDataHandler().saveNoofBirdWithNotesSingledata(birdData)
+                        
                     }
                 }
             }

@@ -123,294 +123,453 @@ class SingleSyncDataTurkey: NSObject {
     }
     /********************* Save Feed Program data On Server *****************************************************************************************************/
     // MARK: - Get Feed Program with Posting ID
-    func feedprogram(postingId:NSNumber)  {
-        let savedPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
-        let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
-        let necArrWithoutPosting = NSMutableArray()
-        for j in 0..<cNecArr.count
-        {
-            let captureNecropsyData =  cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
-            necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
-                let c =  necArrWithoutPosting.object(at: w)  as! CaptureNecropsyDataTurkey
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
-                    necArrWithoutPosting.remove(c)
-                }
-            }
-        }
-        self.postingIdArr.removeAllObjects()
-        let tempArrTime = NSMutableArray()
-        let actualTmestamp = NSMutableArray()
-        var sessionId = NSNumber()
-        for i in 0..<savedPostingArrWithAllData.count
-        {
-            let pSession =  savedPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
-            var timestamp = pSession.timeStamp!
-            var actualTimestampStr =  pSession.actualTimeStamp
-            if actualTimestampStr == nil {
-                actualTimestampStr = ""
-            }
-            self.postingIdArr.add(sessionId)
-            tempArrTime.add(timestamp)
-            actualTmestamp.add(actualTimestampStr!)
+    
+    func feedprogram(postingId: NSNumber) {
+        let savedSessions = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId)
+        guard let savedPostingSessions = savedSessions as? [PostingSessionTurkey] else { return }
+        
+        let necropsyRaw = CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
+        let necropsyData = deduplicatedNecropsies(from: necropsyRaw)
+        
+        var sessionDataArray: [[String: Any]] = []
+        
+        for session in savedPostingSessions {
+            guard let sessionId = session.postingId else { continue }
+            
+            let cocci = fetchFeeds(from: CoreDataHandlerTurkey().fetchAllCocciControlviaPostingidTurkey(sessionId), categoryId: 5)
+            let antibiotics = fetchFeeds(from: CoreDataHandlerTurkey().fetchAntiboticViaPostingIdTurkey(sessionId), categoryId: 12)
+            let alternatives = fetchFeeds(from: CoreDataHandlerTurkey().fetchAlternativeFeedPostingidTurkey(sessionId), categoryId: 6)
+            let binders = fetchFeeds(from: CoreDataHandlerTurkey().fetchMyBindersViaPostingIdTurkey(sessionId), categoryId: 18)
+            
+            var allFeeds = cocci
+            mergeFeeds(&allFeeds, with: antibiotics)
+            mergeFeeds(&allFeeds, with: alternatives)
+            mergeFeeds(&allFeeds, with: binders)
+            
+            guard !allFeeds.isEmpty else { continue }
+            
+            let sessionDict: [String: Any] = [
+                "deviceSessionId": session.timeStamp ?? "",
+                "sessionId": sessionId,
+                "userId": UserDefaults.standard.integer(forKey: "Id"),
+                "feeds": allFeeds
+            ]
+            sessionDataArray.append(sessionDict)
         }
         
-        let sessionArray = NSMutableArray()
-        var sessionDictMain = NSMutableDictionary()
+        let finalPayload = ["Sessions": sessionDataArray]
         
-        for i in 0..<self.postingIdArr.count {
-            
-            let mainDict = NSMutableDictionary()
-            var FinalArray1 = NSMutableArray()
-            let allCocciControl =  CoreDataHandlerTurkey().fetchAllCocciControlviaPostingidTurkey(self.postingIdArr[i] as! NSNumber)
-            var dataSet = Int()
-            var  index = Int()
-            let mainFeeds = NSMutableArray()
-            var feeds = NSMutableDictionary()
-            for i in 0..<allCocciControl.count {
-                dataSet+=1
-                
-                let mainDict = NSMutableDictionary()
-                let cocciControl =  allCocciControl.object(at: i) as! CoccidiosisControlFeedTurkey
-                let coccidiosisVaccine = cocciControl.coccidiosisVaccine
-                let dosage = cocciControl.dosage
-                let fromDays = cocciControl.fromDays
-                let molecule = cocciControl.molecule
-                let toDays = cocciControl.toDays
-                let moleculeId = cocciControl.dosemoleculeId
-                let cocoId = cocciControl.coccidiosisVaccineId
-                let feedType = cocciControl.feedType
-                let startDate =  cocciControl.feedDate
-                mainDict.setValue(startDate, forKey: "startDate")
-                mainDict.setValue(coccidiosisVaccine, forKey: "coccidiosisVaccine")
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(5, forKey: "feedProgramCategoryId")
-                mainDict.setValue(moleculeId, forKey: "moleculeId")
-                mainDict.setValue(cocoId, forKey: "cocciVaccineId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 7 {
-                    dataSet = 0
-                    
-                    let feedId = cocciControl.feedId as! Int
-                    let feedProgram = cocciControl.feedProgram
-                    
-                    feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : FinalArray1]
-                    FinalArray1 = NSMutableArray()
-                    mainFeeds.add(feeds)
-                    feeds = NSMutableDictionary()
-                }
-            }
-            
-            let fetchAntibotic = CoreDataHandlerTurkey().fetchAntiboticViaPostingIdTurkey(self.postingIdArr[i] as! NSNumber)
-            
-            
-            for i in 0..<fetchAntibotic.count {
-                
-                dataSet+=1
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeedTurkey
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                let startDate =  antiboticFeed.feedDate
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(12, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    
-                    let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
-                    if (tempArray.count > 0) {
-                        tempArray.addObjects(from: FinalArray1 as [AnyObject])
-                        feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
-                    }
-                    mainFeeds.replaceObject(at: index, with: feeds)
-                    index+=1
-                    FinalArray1 = NSMutableArray()
-                    feeds = NSMutableDictionary()
-                }
-            }
-            
-            let fetchAlternative = CoreDataHandlerTurkey().fetchAlternativeFeedPostingidTurkey(self.postingIdArr[i] as! NSNumber)
-            
-            index = 0
-            for i in 0..<fetchAlternative.count {
-                
-                dataSet+=1
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeedTurkey
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let startDate = antiboticFeed.feedDate
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(6, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    
-                    if mainFeeds.count>0 {
-                        
-                        let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
-                        if tempArray.count > 0 {
-                            tempArray.addObjects(from: FinalArray1 as [AnyObject])
-                            feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
-                        }
-                        mainFeeds.replaceObject(at: index, with: feeds)
-                        index+=1
-                        FinalArray1 = NSMutableArray()
-                        feeds = NSMutableDictionary()
-                    }
-                }
-            }
-            
-            let fetchMyBinde = CoreDataHandlerTurkey().fetchMyBindersViaPostingIdTurkey(self.postingIdArr[i] as! NSNumber)
-            
-            index = 0
-            for i in 0..<fetchMyBinde.count {
-                
-                dataSet+=1
-                let mainDict = NSMutableDictionary()
-                let antiboticFeed = fetchMyBinde.object(at: i) as! MyCotoxinBindersFeedTurkey
-                let dosage = antiboticFeed.dosage
-                let feedId = antiboticFeed.feedId as! Int
-                let feedProgram = antiboticFeed.feedProgram
-                let fromDays = antiboticFeed.fromDays
-                let molecule = antiboticFeed.molecule
-                let toDays = antiboticFeed.toDays
-                let feedType = antiboticFeed.feedType
-                let startDate = antiboticFeed.feedDate
-                mainDict.setValue(dosage, forKey: "dose")
-                mainDict.setValue(feedId, forKey: "feedId")
-                mainDict.setValue(feedProgram, forKey: "feedName")
-                mainDict.setValue(fromDays, forKey: "durationFrom")
-                mainDict.setValue(molecule, forKey: "molecule")
-                mainDict.setValue(toDays, forKey: "durationTo")
-                mainDict.setValue(18, forKey: "feedProgramCategoryId")
-                mainDict.setValue(0, forKey: "moleculeId")
-                mainDict.setValue(feedType, forKey: "feedType")
-                
-                FinalArray1.add(mainDict)
-                
-                if dataSet == 6 {
-                    dataSet = 0
-                    if mainFeeds.count>0 {
-                        let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
-                        if tempArray.count > 0 {
-                            tempArray.addObjects(from: FinalArray1 as [AnyObject])
-                            feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
-                        }
-                        mainFeeds.replaceObject(at: index, with: feeds)
-                        index+=1
-                        FinalArray1 = NSMutableArray()
-                        feeds = NSMutableDictionary()
-                    }
-                }
-            }
-            
-            if ( allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0){
-                
-                mainDict.setValue(sessionId, forKey: "sessionId")
-                let data = savedPostingArrWithAllData.object(at: 0) as! PostingSessionTurkey
-                let acttimeStamp = data.timeStamp
-             
-                var  fullData = acttimeStamp!
-                mainDict.setValue(fullData, forKey: "deviceSessionId")
-                
-                let id = UserDefaults.standard.integer(forKey: "Id")
-                mainDict.setValue(id, forKey: "UserId")
-                mainDict.setValue(false, forKey: "finalized")
-               
-                var  sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds] as NSMutableDictionary
-                sessionArray.add(sessionDict)
-                sessionDict.removeAllObjects()
-                sessionDictMain = ["Sessions" : sessionArray]
-            }
+        sendFeedProgramData(postingId: postingId, payload: finalPayload)
+    }
+    
+    
+    func deduplicatedNecropsies(from array: NSArray) -> [CaptureNecropsyDataTurkey] {
+        var seen = Set<String>()
+        var result: [CaptureNecropsyDataTurkey] = []
+
+        for case let item as CaptureNecropsyDataTurkey in array {
+            let idStr = String(describing: item.necropsyId)
+            guard !seen.contains(idStr) else { continue }
+            seen.insert(idStr)
+            result.append(item)
         }
-        do {
+
+        return result
+    }
+
+    
+    func fetchFeeds(from array: NSArray, categoryId: Int) -> [[String: Any]] {
+        var feedDicts: [[String: Any]] = []
+
+        for case let item as NSObject in array {
+            var feed: [String: Any] = [:]
+
+            // Safely read values using KVC
+            let dosage = item.value(forKey: "dosage") as? String ?? ""
+            let feedId = item.value(forKey: "feedId") as? Int ?? 0
+            let feedProgram = item.value(forKey: "feedProgram") as? String ?? ""
+            let fromDays = item.value(forKey: "fromDays") as? Int ?? 0
+            let toDays = item.value(forKey: "toDays") as? Int ?? 0
+            let molecule = item.value(forKey: "molecule") as? String ?? ""
+            let feedType = item.value(forKey: "feedType") as? String ?? ""
+            let startDate = item.value(forKey: "feedDate") as? String ?? ""
+
+            feed["dose"] = dosage
+            feed["feedId"] = feedId
+            feed["feedName"] = feedProgram
+            feed["durationFrom"] = fromDays
+            feed["durationTo"] = toDays
+            feed["molecule"] = molecule
+            feed["feedType"] = feedType
+            feed["startDate"] = startDate
+            feed["feedProgramCategoryId"] = categoryId
+            feed["moleculeId"] = 0 // Default or placeholder unless moleculeId exists
+
+            feedDicts.append(feed)
+        }
+
+        return feedDicts
+    }
+    
+    func buildFeedDict(from item: NSObject, categoryId: Int) -> [String: Any]? {
+        guard let dose = item.value(forKey: "dosage"),
+              let feedId = item.value(forKey: "feedId"),
+              let feedName = item.value(forKey: "feedProgram"),
+              let fromDays = item.value(forKey: "fromDays"),
+              let toDays = item.value(forKey: "toDays"),
+              let molecule = item.value(forKey: "molecule"),
+              let feedType = item.value(forKey: "feedType")
+        else { return nil }
+        
+        var dict: [String: Any] = [
+            "dose": dose,
+            "feedId": feedId,
+            "feedName": feedName,
+            "durationFrom": fromDays,
+            "durationTo": toDays,
+            "molecule": molecule,
+            "feedType": feedType,
+            "feedProgramCategoryId": categoryId,
+            "moleculeId": 0
+        ]
+        
+        if categoryId == 5 {
+            dict["moleculeId"] = item.value(forKey: "dosemoleculeId") ?? 0
+            dict["cocciVaccineId"] = item.value(forKey: "coccidiosisVaccineId") ?? 0
+            dict["coccidiosisVaccine"] = item.value(forKey: "coccidiosisVaccine") ?? ""
+            dict["startDate"] = item.value(forKey: "feedDate") ?? ""
+        }
+        
+        return dict
+    }
+    
+    func mergeFeeds(_ base: inout [[String: Any]], with additions: [[String: Any]]) {
+        for (i, item) in additions.enumerated() {
+            guard i < base.count else { continue }
+            var baseDetails = base[i]["feedProgramDetails"] as? [[String: Any]] ?? []
+            let addDetails = item["feedProgramDetails"] as? [[String: Any]] ?? []
+            baseDetails.append(contentsOf: addDetails)
+            base[i]["feedProgramDetails"] = baseDetails
+        }
+    }
+    
+    func sendFeedProgramData(postingId: NSNumber, payload: [String: Any]) {
+        guard WebClass.sharedInstance.connected() else { return }
+        
+        let urlStr = WebClass.sharedInstance.webUrl + "PostingSession/SaveMultipleFeedsSyncData"
+        guard let url = URL(string: urlStr) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+        
+        if let token = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken) {
+            request.setValue(token, forHTTPHeaderField: Constants.authorization)
+        }
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload, options: [])
+        
+        sessionManager.request(request).responseJSON { response in
+            let statusCode = response.response?.statusCode
             
-            if WebClass.sharedInstance.connected() {
-                
-                let Url = "PostingSession/SaveMultipleFeedsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-                let headerDict = [Constants.authorization:accestoken]
-                
-                let urlString: String = WebClass.sharedInstance.webUrl + Url
-                var request = URLRequest(url: URL(string: urlString)! )
-                request.httpMethod = "POST"
-                request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
-                
-                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        // internet works.
-                        self.addVaccination(postingId:postingId )
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data{
-                            debugPrint(data)
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                                
-                            }  else {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
+            if statusCode == 401 {
+                self.loginMethod(postingId: postingId)
+            } else if [400, 403, 404, 408, 500, 501, 502, 503, 504].contains(statusCode ?? 0) {
+                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+            } else if case .success = response.result {
+                self.addVaccination(postingId: postingId)
+            } else {
+                if let err = response.error as? URLError, err.code == .notConnectedToInternet {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                } else {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode ?? 0)
                 }
             }
         }
     }
+//    func feedprogram(postingId:NSNumber)  {
+//        let savedPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
+//        let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
+//        let necArrWithoutPosting = NSMutableArray()
+//        for j in 0..<cNecArr.count {
+//            let captureNecropsyData =  cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
+//            necArrWithoutPosting.add(captureNecropsyData)
+//            for w in 0..<necArrWithoutPosting.count - 1 {
+//                let c =  necArrWithoutPosting.object(at: w)  as! CaptureNecropsyDataTurkey
+//                if c.necropsyId == captureNecropsyData.necropsyId {
+//                    necArrWithoutPosting.remove(c)
+//                }
+//            }
+//        }
+//        self.postingIdArr.removeAllObjects()
+//        let tempArrTime = NSMutableArray()
+//        let actualTmestamp = NSMutableArray()
+//        var sessionId = NSNumber()
+//        for i in 0..<savedPostingArrWithAllData.count {
+//            let pSession =  savedPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
+//            sessionId = pSession.postingId!
+//            var timestamp = pSession.timeStamp!
+//            var actualTimestampStr =  pSession.actualTimeStamp
+//            if actualTimestampStr == nil {
+//                actualTimestampStr = ""
+//            }
+//            self.postingIdArr.add(sessionId)
+//            tempArrTime.add(timestamp)
+//            actualTmestamp.add(actualTimestampStr!)
+//        }
+//        
+//        let sessionArray = NSMutableArray()
+//        var sessionDictMain = NSMutableDictionary()
+//        
+//        for i in 0..<self.postingIdArr.count {
+//            
+//            let mainDict = NSMutableDictionary()
+//            var FinalArray1 = NSMutableArray()
+//            let allCocciControl =  CoreDataHandlerTurkey().fetchAllCocciControlviaPostingidTurkey(self.postingIdArr[i] as! NSNumber)
+//            var dataSet = Int()
+//            var  index = Int()
+//            let mainFeeds = NSMutableArray()
+//            var feeds = NSMutableDictionary()
+//            for i in 0..<allCocciControl.count {
+//                dataSet+=1
+//                
+//                let mainDict = NSMutableDictionary()
+//                let cocciControl =  allCocciControl.object(at: i) as! CoccidiosisControlFeedTurkey
+//                let coccidiosisVaccine = cocciControl.coccidiosisVaccine
+//                let dosage = cocciControl.dosage
+//                let fromDays = cocciControl.fromDays
+//                let molecule = cocciControl.molecule
+//                let toDays = cocciControl.toDays
+//                let moleculeId = cocciControl.dosemoleculeId
+//                let cocoId = cocciControl.coccidiosisVaccineId
+//                let feedType = cocciControl.feedType
+//                let startDate =  cocciControl.feedDate
+//                mainDict.setValue(startDate, forKey: "startDate")
+//                mainDict.setValue(coccidiosisVaccine, forKey: "coccidiosisVaccine")
+//                mainDict.setValue(dosage, forKey: "dose")
+//                mainDict.setValue(fromDays, forKey: "durationFrom")
+//                mainDict.setValue(molecule, forKey: "molecule")
+//                mainDict.setValue(toDays, forKey: "durationTo")
+//                mainDict.setValue(5, forKey: "feedProgramCategoryId")
+//                mainDict.setValue(moleculeId, forKey: "moleculeId")
+//                mainDict.setValue(cocoId, forKey: "cocciVaccineId")
+//                mainDict.setValue(feedType, forKey: "feedType")
+//                FinalArray1.add(mainDict)
+//                
+//                if dataSet == 7 {
+//                    dataSet = 0
+//                    
+//                    let feedId = cocciControl.feedId as! Int
+//                    let feedProgram = cocciControl.feedProgram
+//                    
+//                    feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : FinalArray1]
+//                    FinalArray1 = NSMutableArray()
+//                    mainFeeds.add(feeds)
+//                    feeds = NSMutableDictionary()
+//                }
+//            }
+//            
+//            let fetchAntibotic = CoreDataHandlerTurkey().fetchAntiboticViaPostingIdTurkey(self.postingIdArr[i] as! NSNumber)
+//            
+//            
+//            for i in 0..<fetchAntibotic.count {
+//                
+//                dataSet+=1
+//                let mainDict = NSMutableDictionary()
+//                let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeedTurkey
+//                let dosage = antiboticFeed.dosage
+//                let feedId = antiboticFeed.feedId as! Int
+//                let feedProgram = antiboticFeed.feedProgram
+//                let fromDays = antiboticFeed.fromDays
+//                let molecule = antiboticFeed.molecule
+//                let toDays = antiboticFeed.toDays
+//                let feedType = antiboticFeed.feedType
+//                let startDate =  antiboticFeed.feedDate
+//                mainDict.setValue(dosage, forKey: "dose")
+//                mainDict.setValue(feedId, forKey: "feedId")
+//                mainDict.setValue(feedProgram, forKey: "feedName")
+//                mainDict.setValue(fromDays, forKey: "durationFrom")
+//                mainDict.setValue(molecule, forKey: "molecule")
+//                mainDict.setValue(toDays, forKey: "durationTo")
+//                mainDict.setValue(12, forKey: "feedProgramCategoryId")
+//                mainDict.setValue(0, forKey: "moleculeId")
+//                mainDict.setValue(feedType, forKey: "feedType")
+//                FinalArray1.add(mainDict)
+//                
+//                if dataSet == 6 {
+//                    dataSet = 0
+//                    
+//                    let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
+//                    if (tempArray.count > 0) {
+//                        tempArray.addObjects(from: FinalArray1 as [AnyObject])
+//                        feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
+//                    }
+//                    mainFeeds.replaceObject(at: index, with: feeds)
+//                    index+=1
+//                    FinalArray1 = NSMutableArray()
+//                    feeds = NSMutableDictionary()
+//                }
+//            }
+//            
+//            let fetchAlternative = CoreDataHandlerTurkey().fetchAlternativeFeedPostingidTurkey(self.postingIdArr[i] as! NSNumber)
+//            
+//            index = 0
+//            for i in 0..<fetchAlternative.count {
+//                
+//                dataSet+=1
+//                let mainDict = NSMutableDictionary()
+//                let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeedTurkey
+//                let dosage = antiboticFeed.dosage
+//                let feedId = antiboticFeed.feedId as! Int
+//                let feedProgram = antiboticFeed.feedProgram
+//                let fromDays = antiboticFeed.fromDays
+//                let molecule = antiboticFeed.molecule
+//                let startDate = antiboticFeed.feedDate
+//                let toDays = antiboticFeed.toDays
+//                let feedType = antiboticFeed.feedType
+//                mainDict.setValue(dosage, forKey: "dose")
+//                mainDict.setValue(feedId, forKey: "feedId")
+//                mainDict.setValue(feedProgram, forKey: "feedName")
+//                mainDict.setValue(fromDays, forKey: "durationFrom")
+//                mainDict.setValue(molecule, forKey: "molecule")
+//                mainDict.setValue(toDays, forKey: "durationTo")
+//                mainDict.setValue(6, forKey: "feedProgramCategoryId")
+//                mainDict.setValue(0, forKey: "moleculeId")
+//                mainDict.setValue(feedType, forKey: "feedType")
+//                
+//                FinalArray1.add(mainDict)
+//                
+//                if dataSet == 6 {
+//                    dataSet = 0
+//                    
+//                    if mainFeeds.count>0 {
+//                        
+//                        let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
+//                        if tempArray.count > 0 {
+//                            tempArray.addObjects(from: FinalArray1 as [AnyObject])
+//                            feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
+//                        }
+//                        mainFeeds.replaceObject(at: index, with: feeds)
+//                        index+=1
+//                        FinalArray1 = NSMutableArray()
+//                        feeds = NSMutableDictionary()
+//                    }
+//                }
+//            }
+//            
+//            let fetchMyBinde = CoreDataHandlerTurkey().fetchMyBindersViaPostingIdTurkey(self.postingIdArr[i] as! NSNumber)
+//            
+//            index = 0
+//            for i in 0..<fetchMyBinde.count {
+//                
+//                dataSet+=1
+//                let mainDict = NSMutableDictionary()
+//                let antiboticFeed = fetchMyBinde.object(at: i) as! MyCotoxinBindersFeedTurkey
+//                let dosage = antiboticFeed.dosage
+//                let feedId = antiboticFeed.feedId as! Int
+//                let feedProgram = antiboticFeed.feedProgram
+//                let fromDays = antiboticFeed.fromDays
+//                let molecule = antiboticFeed.molecule
+//                let toDays = antiboticFeed.toDays
+//                let feedType = antiboticFeed.feedType
+//                let startDate = antiboticFeed.feedDate
+//                mainDict.setValue(dosage, forKey: "dose")
+//                mainDict.setValue(feedId, forKey: "feedId")
+//                mainDict.setValue(feedProgram, forKey: "feedName")
+//                mainDict.setValue(fromDays, forKey: "durationFrom")
+//                mainDict.setValue(molecule, forKey: "molecule")
+//                mainDict.setValue(toDays, forKey: "durationTo")
+//                mainDict.setValue(18, forKey: "feedProgramCategoryId")
+//                mainDict.setValue(0, forKey: "moleculeId")
+//                mainDict.setValue(feedType, forKey: "feedType")
+//                
+//                FinalArray1.add(mainDict)
+//                
+//                if dataSet == 6 {
+//                    dataSet = 0
+//                    if mainFeeds.count>0 {
+//                        let tempArray = (mainFeeds.object(at: index) as AnyObject).value(forKey: "feedProgramDetails") as! NSMutableArray
+//                        if tempArray.count > 0 {
+//                            tempArray.addObjects(from: FinalArray1 as [AnyObject])
+//                            feeds = ["feedName" : feedProgram!, "feedId" : feedId, "startDate" : startDate ?? "","feedProgramDetails" : tempArray]
+//                        }
+//                        mainFeeds.replaceObject(at: index, with: feeds)
+//                        index+=1
+//                        FinalArray1 = NSMutableArray()
+//                        feeds = NSMutableDictionary()
+//                    }
+//                }
+//            }
+//            
+//            if ( allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0){
+//                
+//                mainDict.setValue(sessionId, forKey: "sessionId")
+//                let data = savedPostingArrWithAllData.object(at: 0) as! PostingSessionTurkey
+//                let acttimeStamp = data.timeStamp
+//             
+//                var  fullData = acttimeStamp!
+//                mainDict.setValue(fullData, forKey: "deviceSessionId")
+//                
+//                let id = UserDefaults.standard.integer(forKey: "Id")
+//                mainDict.setValue(id, forKey: "UserId")
+//                mainDict.setValue(false, forKey: "finalized")
+//               
+//                var  sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds] as NSMutableDictionary
+//                sessionArray.add(sessionDict)
+//                sessionDict.removeAllObjects()
+//                sessionDictMain = ["Sessions" : sessionArray]
+//            }
+//        }
+//        do {
+//            
+//            if WebClass.sharedInstance.connected() {
+//                
+//                let Url = "PostingSession/SaveMultipleFeedsSyncData"
+//                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+//              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+//                let headerDict = [Constants.authorization:accestoken]
+//                
+//                let urlString: String = WebClass.sharedInstance.webUrl + Url
+//                var request = URLRequest(url: URL(string: urlString)! )
+//                request.httpMethod = "POST"
+//                request.allHTTPHeaderFields = headerDict
+//                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+//                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
+//                
+//                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
+//                    let statusCode =  response.response?.statusCode
+//                    
+//                    if statusCode == 401  {
+//                        self.loginMethod(postingId: postingId)
+//                    } else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+//                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+//                    }
+//                    
+//                    switch response.result {
+//                        
+//                    case .success(let responseObject):
+//                        // internet works.
+//                        self.addVaccination(postingId:postingId )
+//                        
+//                    case .failure(let encodingError):
+//                        
+//                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+//                            
+//                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+//                        } else if let data = response.data{
+//                            debugPrint(data)
+//                            if let s = statusCode {
+//                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+//                                
+//                            }  else {
+//                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     // MARK: - ******************* Save Add Vacination data On Server ***************************/
     fileprivate func handlecNecArray(_ cNecArr: NSArray, _ necArrWithoutPosting: NSMutableArray) {
         for j in 0..<cNecArr.count
@@ -1043,68 +1202,113 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     // MARK: -********************* Save Image  On Server ***************************/
-    fileprivate func statusUpdateForPostedSession(postingId : NSNumber) {
-        CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(postingId, isSync: false, { (success) in
-            
-            if success == true{
-                
-                CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(postingId , isSync: false, { (success) in
-                    
-                    if success == true{
-                        
-                        CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(postingId , isSync: false, { (success) in
-                            
-                            if success == true{
-                                
-                                CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(postingId , isSync: false, { (success) in
-                                    
-                                    if success == true{
-                                        
-                                        CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(postingId , isSync: false, { (success) in
-                                            
-                                            if success == true{
-                                                
-                                                CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(postingId , isSync: false, { (success) in
-                                                    
-                                                    if success == true{
-                                                        
-                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                            
-                                                            if success == true{
-                                                                CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                    
-                                                                    if success == true{
-                                                                        CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(postingId , isSync: false, { (success) in
-                                                                            if success == true{
-                                                                                CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                    if success == true{
-                                                                                        
-                                                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                            if success == true{
-                                                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
-                                                                                            }
-                                                                                        })
-                                                                                    }
-                                                                                })
-                                                                            }
-                                                                        })
-                                                                    }
-                                                                })
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-        })
+    
+    fileprivate func statusUpdateForPostedSession(postingId: NSNumber) {
+        let handler = CoreDataHandlerTurkey()
+
+        let updateOperations: [(NSNumber, @escaping (Bool) -> Void) -> Void] = [
+            { id, completion in handler.updateisSyncOnMyBindersViaPostingIdTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnAlternativeFeedPostingidTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnAntiboticViaPostingIdTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnAllCocciControlviaPostingidTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnHetcharyVacDataWithPostingIdTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnPostingSessionTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnBirdPhotoCaptureDatabaseTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnNotesBirdDatabaseTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncNecropsystep1neccIdTurkey(id, isSync: false, completion)},
+            { id, completion in handler.updateisSyncOnCaptureSkeletaInDatabaseTurkey(id, isSync: false, completion)}
+        ]
+
+        executeUpdatesSequentially(operations: updateOperations, postingId: postingId) {
+            self.delegeteSyncApiData.didFinishApiSyncdata()
+        }
     }
+    
+    private func executeUpdatesSequentially(operations: [(NSNumber, @escaping (Bool) -> Void) -> Void],postingId: NSNumber,completion: @escaping () -> Void) {
+        var index = 0
+        func executeNext() {
+            guard index < operations.count else {
+                completion()
+                return
+            }
+
+            let operation = operations[index]
+            operation(postingId) { success in
+                if success {
+                    index += 1
+                    executeNext()
+                }
+            }
+        }
+
+        executeNext()
+    }
+
+//    fileprivate func statusUpdateForPostedSession(postingId : NSNumber) {
+//        CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(postingId, isSync: false, { (success) in
+//            
+//            if success == true{
+//                
+//                CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(postingId , isSync: false, { (success) in
+//                    
+//                    if success == true{
+//                        
+//                        CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(postingId , isSync: false, { (success) in
+//                            
+//                            if success == true{
+//                                
+//                                CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(postingId , isSync: false, { (success) in
+//                                    
+//                                    if success == true{
+//                                        
+//                                        CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(postingId , isSync: false, { (success) in
+//                                            
+//                                            if success == true{
+//                                                
+//                                                CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(postingId , isSync: false, { (success) in
+//                                                    
+//                                                    if success == true{
+//                                                        
+//                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
+//                                                            
+//                                                            if success == true{
+//                                                                CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(postingId , isSync: false, { (success) in
+//                                                                    
+//                                                                    if success == true{
+//                                                                        CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(postingId , isSync: false, { (success) in
+//                                                                            
+//                                                                            if success == true{
+//                                                                                CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(postingId , isSync: false, { (success) in
+//                                                                                    
+//                                                                                    if success == true{
+//                                                                                        
+//                                                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
+//                                                                                            
+//                                                                                            if success == true{
+//                                                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
+//                                                                                            }
+//                                                                                        })
+//                                                                                    }
+//                                                                                })
+//                                                                            }
+//                                                                        })
+//                                                                    }
+//                                                                })
+//                                                            }
+//                                                        })
+//                                                    }
+//                                                })
+//                                            }
+//                                        })
+//                                    }
+//                                })
+//                            }
+//                        })
+//                    }
+//                })
+//            }
+//        })
+//    }
     
     fileprivate func postImagesApiFailer(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
@@ -1411,39 +1615,55 @@ class SingleSyncDataTurkey: NSObject {
             }
         })
     }
-    
+
     fileprivate func handleUpdateIsSyncCocciSaveDB(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
-        CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(pId , isSync: false, { (success) in
-            if success == true {
-                CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(pId , isSync: false, { (success) in
-                    if success == true {
-                        handleSyncOnPostingSessionTurkey(pId: pId) { status in
-                            completion(status)
-                        }
-                    }
-                })
+        CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
             }
-        })
+
+            CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(pId, isSync: false) { success in
+                guard success else {
+                    completion(false)
+                    return
+                }
+
+                handleSyncOnPostingSessionTurkey(pId: pId, completion)
+            }
+        }
     }
     
-    func updadateDataOnCoreData(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void){
-        CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(pId, isSync: false, { (success) in
-            if success == true {
-                CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId , isSync: false, { (success) in
-                    if success == true {
-                        
-                        CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId , isSync: false, { (success) in
-                            if success == true {
-                                handleUpdateIsSyncCocciSaveDB(pId: pId) { status in
-                                    completion(status)
-                                }
-                            }
-                        })
-                    }
-                })
+    func updadateDataOnCoreData(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
             }
-        })
+
+            CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId, isSync: false) { success in
+                guard success else {
+                    completion(false)
+                    return
+                }
+
+                CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId, isSync: false) { success in
+                    guard success else {
+                        completion(false)
+                        return
+                    }
+
+                    self.handleUpdateIsSyncCocciSaveDB(pId: pId, completion)
+                }
+            }
+        }
     }
+
+    
+    
+    
+    
+    
     // MARK: - Update Necropsy Data on Core DB
     fileprivate func updateIsSyncInDB(_ nId: NSNumber,_ success: Bool, _ completion: (_ status: Bool) -> Void) {
         if success == true{
@@ -1478,4 +1698,5 @@ class SingleSyncDataTurkey: NSObject {
             }
         })
     }
+    
 }

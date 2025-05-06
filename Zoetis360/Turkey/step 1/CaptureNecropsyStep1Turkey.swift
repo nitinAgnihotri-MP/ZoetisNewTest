@@ -699,7 +699,55 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let complexId = UserDefaults.standard.integer(forKey:"UnlinkComplex")
         let custMid = UserDefaults.standard.integer(forKey:"unCustId")
         self.timeStampString  = self.timeStamp()
-        CoreDataHandlerTurkey().PostingSessionDbTurkey("", birdBreesId: 0, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: 0, cocciProgramId: 0, cociiProgramName: "", complexId: complexId as NSNumber, complexName: complexLbl.text ?? "", convential:"", customerId: custMid as NSNumber, customerName:"", customerRepId: 0, customerRepName: "", imperial: "", metric: "", notes: "", salesRepId: 0, salesRepName: "", sessiondate:  postingDateLbl.text!, sessionTypeId: 0, sessionTypeName: "", vetanatrionName: "", veterinarianId: 0 , loginSessionId: 1, postingId: self.necId as NSNumber,mail: "",female: "",finilize:0, isSync : true,timeStamp:timeStampString,lngId:lngId as NSNumber,birdType:"",birdTypeId:-1,birdbreedId:0,capNec:0 , avgAge: "" , avgWeight: "" , outTime: "" , FCR: "" , Livability: "" , mortality: "")
+        let turkeyData = CoreDataHandlerTurkeyModels.PostingSessionTurkeyDBData(
+            antobotic: "",
+            birdBreesId: 0,
+            birdbreedName: "",
+            birdBreedType: "",
+            birdSize: "",
+            birdSizeId: 0,
+            cocciProgramId: 0,
+            cociiProgramName: "",
+            complexId: complexId as NSNumber,
+            complexName: complexLbl.text ?? "",
+            convential: "",
+            customerId: custMid as NSNumber,
+            customerName: "",
+            customerRepId: 0,
+            customerRepName: "",
+            imperial: "",
+            metric: "",
+            notes: "",
+            salesRepId: 0,
+            salesRepName: "",
+            sessiondate: postingDateLbl.text ?? "",
+            sessionTypeId: 0,
+            sessionTypeName: "",
+            vetanatrionName: "",
+            veterinarianId: 0,
+            loginSessionId: 1,
+            postingId: self.necId as NSNumber,
+            mail: "",
+            female: "",
+            finilize: 0,
+            isSync: true,
+            timeStamp: timeStampString,
+            lngId: lngId as NSNumber,
+            birdType: "",
+            birdTypeId: -1,
+            birdbreedId: 0,
+            capNec: 0,
+            avgAge: "",
+            avgWeight: "",
+            outTime: "",
+            FCR: "",
+            Livability: "",
+            mortality: ""
+        )
+
+        CoreDataHandlerTurkey().PostingSessionDbTurkey(with: turkeyData)
+        
+
         CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.necId as NSNumber, finalizeNec: 2)
     }
     
@@ -729,7 +777,39 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             farmWeightTextField.text = ""
         }
         
-        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(neciIdStep as NSNumber, age: self.ageLbl.text!, farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text!, flockId: flockIdTextField.text!, houseNo: houseNoTextFld.text!, noOfBirds: noOfBirdsLbl.text!, sick: asb as NSNumber,necId:neciIdStep as NSNumber,compexName:complexLbl.text ?? "",complexDate:postingDateLbl.text!,complexId:complexId as NSNumber,custmerId:custMid as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStampString,actualTimeStamp:timeStampString,lngId:lngId as NSNumber,farmWeight: farmWeightTextField.text!,abf: abfLbl.text!,breed: breedString,sex: sexString,farmId:countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId),count: count as NSNumber , genName: genLbl.text! , genId: geneId as! NSNumber)
+        let necropsyData = CoreDataHandlerTurkeyModels.saveTurkeyNecropsyStep1Data(
+             postingId: neciIdStep as NSNumber,
+             age: self.ageLbl.text!,
+             farmName: appendfeedProgramwithCount,
+             feedProgram: feedProgramDisplayLabel.text!,
+             flockId: flockIdTextField.text!,
+             houseNo: houseNoTextFld.text!,
+             noOfBirds: noOfBirdsLbl.text!,
+             sick: asb as NSNumber,
+             necId: neciIdStep as NSNumber,
+             compexName: complexLbl.text ?? "",
+             complexDate: postingDateLbl.text!,
+             complexId: complexId as NSNumber,
+             customerId: custMid as NSNumber,
+             feedId: feedId as NSNumber,
+             isSync: true,
+             timeStamp: timeStampString,
+             actualTimeStamp: timeStampString,
+             lngId: lngId as NSNumber,
+             farmWeight: farmWeightTextField.text!,
+             abf: abfLbl.text!,
+             breed: breedString,
+             sex: sexString,
+             farmId: countFarmId as NSNumber,
+             imageId: NSNumber(value: imageAutoIncrementId),
+             count: count as NSNumber,
+             genName: genLbl.text!,
+             genId: geneId as! NSNumber
+        )
+
+        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necropsyData)
+
+        
         
         UserDefaults.standard.set(false, forKey: "nec")
         UserDefaults.standard.synchronize()

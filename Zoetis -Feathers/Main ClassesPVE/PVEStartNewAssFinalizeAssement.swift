@@ -1409,7 +1409,15 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         
         return cell
     }
-    private func configureVaccinatorsCell(for indexPath: IndexPath,tableView:UITableView) -> UITableViewCell {
+	fileprivate func handleNoOfVaccinatorsValidation(_ indexPath: IndexPath, _ cell: PVETeamMemeberVaccinatorsCell) {
+		if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
+			cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
+		} else {
+			cell.mobileTxtField.text = ""
+		}
+	}
+	
+	private func configureVaccinatorsCell(for indexPath: IndexPath,tableView:UITableView) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
         cell.currentIndPath = indexPath as NSIndexPath
         cell.delegate = self
@@ -1427,11 +1435,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             } else {
                 cell.emailTxtField.text = ""
             }
-            if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
-                cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
-            } else {
-                cell.mobileTxtField.text = ""
-            }
+			handleNoOfVaccinatorsValidation(indexPath, cell)
         } else {
             cell.nameTxtField.text = ""
             cell.mobileTxtField.text = ""
@@ -1481,24 +1485,9 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
     }
     private func configureVaccineNoteCell(for indexPath: IndexPath, tableView:UITableView) -> UITableViewCell {
         if isLiveVaccineOn == true {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            cell.setCellAndControllsNew(qArr:liveQuesArr, currentIndd: indexPath as NSIndexPath)
-            cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-            let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
-            if cameraState == "true"{
-                cell.cameraIcon.alpha = 1.0
-                cell.cameraBtn.alpha = 1.0
-            } else {
-                cell.cameraIcon.alpha = 0.2
-                cell.cameraBtn.alpha = 0.2
-            }
             
-            //cell.saveDelegate = self
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
-            } else {
-                cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
+            configureVaccinationCellAppearance(cell: cell, indexPath: indexPath)
             return cell
             
         } else if isLiveVaccineOn == false {
@@ -1511,31 +1500,30 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             cell.QuesIdArr = liveQuesArr
             cell.SwitchState = isLiveVaccineOn
             
-            //  cell.notetxtView.text = Constants.liveComment
             cell.notetxtView.text = liveComment
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            
-            cell.setCellAndControllsNew(qArr:liveQuesArr, currentIndd: indexPath as NSIndexPath)
-            cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-            let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
-            if cameraState == "true"{
-                cell.cameraIcon.alpha = 1.0
-                cell.cameraBtn.alpha = 1.0
-            } else {
-                cell.cameraIcon.alpha = 0.2
-                cell.cameraBtn.alpha = 0.2
-            }
-            
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
-            } else {
-                cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
-            }
+            configureVaccinationCellAppearance(cell: cell, indexPath: indexPath)
             return cell
         }
     }
+    
+    private func configureVaccinationCellAppearance(cell: PVEVaccinationCrewSafetyCell, indexPath: IndexPath) {
+        cell.setCellAndControllsNew(qArr: liveQuesArr, currentIndd: indexPath as NSIndexPath)
+        cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
+        
+        let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+        let cameraAlpha: CGFloat = (cameraState == "true") ? 1.0 : 0.2
+        cell.cameraIcon.alpha = cameraAlpha
+        cell.cameraBtn.alpha = cameraAlpha
+        
+        cell.contentView.backgroundColor = (indexPath.row % 2 == 0)
+            ? #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
+            : #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
+    }
+
+    
     private func configureVaccineDetailsCell(for indexPath: IndexPath,tableView:UITableView) -> UITableViewCell {
         if isInActiveVaccineOn == true {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
@@ -1627,20 +1615,24 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         }
     }
     
-    fileprivate func handleVaccineInfoDetailSubMethod1(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
+	fileprivate func handleCellVacManTxtFld(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
+		if vaccinInfoDetailArr[indexPath.row].keys.contains("man"){
+			cell.vacManTxtFld.text = vaccinInfoDetailArr[indexPath.row]["man"]  as? String
+		} else {
+			cell.vacManTxtFld.text = ""
+		}
+		
+		if vaccinInfoDetailArr[indexPath.row].keys.contains("name"){
+			cell.vacNameTxtFld.text = vaccinInfoDetailArr[indexPath.row]["name"] as? String
+		} else {
+			cell.vacNameTxtFld.text = ""
+		}
+	}
+	
+	fileprivate func handleVaccineInfoDetailSubMethod1(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
         if vaccinInfoDetailArr.count > indexPath.row {
             
-            if vaccinInfoDetailArr[indexPath.row].keys.contains("man"){
-                cell.vacManTxtFld.text = vaccinInfoDetailArr[indexPath.row]["man"]  as? String
-            } else {
-                cell.vacManTxtFld.text = ""
-            }
-            
-            if vaccinInfoDetailArr[indexPath.row].keys.contains("name"){
-                cell.vacNameTxtFld.text = vaccinInfoDetailArr[indexPath.row]["name"] as? String
-            } else {
-                cell.vacNameTxtFld.text = ""
-            }
+			handleCellVacManTxtFld(indexPath, cell)
             
             if vaccinInfoDetailArr[indexPath.row].keys.contains("serotype"){
                 

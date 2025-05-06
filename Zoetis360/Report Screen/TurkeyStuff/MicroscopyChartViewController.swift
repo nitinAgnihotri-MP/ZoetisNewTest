@@ -226,136 +226,67 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     }
     
     // MARK: - Common Function
-    
-    func callCommonFunction(_ catName : NSString)  {
-        
-        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
-        
-        //arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
+    func callCommonFunction(_ catName: NSString) {
+        guard let arrayOfIds = AllValidSessions.sharedInstance.allValidSession as? [Int] else { return }
         
         let modalObj = MIcroscopyCalculations()
-        
         modalObj.delegate = self
-        
-        if arrayOfIds.count > 2 {
+
+        let sessionLimit = min(arrayOfIds.count, 3)
+
+        for i in 0..<sessionLimit {
+            guard let sessionId = arrayOfIds[safe: i] else { continue }
             
-            for i in 0..<3{
-                
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    self.barChartView.clear()
-                    return
-                }
-                
-                let objectArray : NSMutableArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-        
-        else if arrayOfIds.count > 1 {
-            
-            for i in 0..<2{
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    self.barChartView.clear()
-                    return
-                }
-                
-                let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId : necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-        else{
-            
-            let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.first as! NSNumber)
-            
-            if lastSessionDataArray.count == 0 {
-                
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                self.barChartView.clear()
+            guard let lastSessionDataArray = fetchLastSessionData(sessionId),
+                  lastSessionDataArray.count > 0 else {
+                showNoDataAlertAndClearChart()
                 return
             }
-            
-            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
-            
-            sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-            
-            let allFarmDataArray = NSMutableArray()
-            
-            var totalBirdsPerFarm : Float = 0
-            
-            for j in 0..<lastSessionDataArray.count {
-                
-                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                
-                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                
-                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                
-                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                
-                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            
-            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            
+
+            guard let objectArray = fetchPostingSessions(sessionId),
+                  let session = objectArray.firstObject as? NSDictionary,
+                  let date = session["sessiondate"] as? NSString else { continue }
+
+            sessionDate = date
+
+            let (allFarmDataArray, totalBirdsPerFarm) = processFarmData(from: lastSessionDataArray)
+            modalObj.setupData(allFarmDataArray, birdsCount: totalBirdsPerFarm, catName: catName)
         }
+    }
+
+    private func fetchLastSessionData(_ sessionId: Int) -> NSArray? {
+        return CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(NSNumber(value: sessionId))
+    }
+
+    private func fetchPostingSessions(_ sessionId: Int) -> NSMutableArray? {
+        return CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(NSNumber(value: sessionId)).mutableCopy() as? NSMutableArray
+    }
+
+    private func processFarmData(from sessionData: NSArray) -> (NSMutableArray, Float) {
+        let allFarmDataArray = NSMutableArray()
+        var totalBirdsPerFarm: Float = 0
+
+        for case let entry as NSDictionary in sessionData {
+            guard let farmName = entry["farmName"] as? NSString,
+                  let necID = entry["necropsyId"] as? NSNumber,
+                  let birds = entry["noOfBirds"] as? NSString else { continue }
+
+            totalBirdsPerFarm += birds.floatValue
+
+            let farmData = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+            allFarmDataArray.addObjects(from: farmData as [AnyObject])
+        }
+
+        return (allFarmDataArray, totalBirdsPerFarm)
+    }
+
+    private func showNoDataAlertAndClearChart() {
+        Helper.showAlertMessage(
+            self,
+            titleStr: NSLocalizedString(Constants.alertStr, comment: ""),
+            messageStr: NSLocalizedString(noHistoricalData, comment: "")
+        )
+        self.barChartView.clear()
     }
     
     // MARK: - Button Actions
@@ -363,9 +294,6 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         isFarmSelected = false
         self.rightArrow.isHidden = true
         self.leftArrow.isHidden = true
-        
-        
-        //self.moreLable.isHidden = true
         barChartView.xAxis.centerAxisLabelsEnabled = false
         barChartView.viewPortHandler.resetBarChart(chart: barChartView)
         UserDefaults.standard.set(false, forKey: "isCocciFarm")
@@ -386,7 +314,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
                 let bt = btn as! UIButton
                 if bt.tag == 100 || bt.titleLabel?.text == NSLocalizedString("Last session", comment: "") {
                     bt.isSelected = true
-                } else{
+                } else {
                     bt.isSelected = false
                 }
             }
@@ -432,295 +360,453 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         print(chartData.xMin)
     }
     
+    
     @IBAction func BtnByWeekPressed(_ sender: UIButton) {
+        prepareUIForWeeklyChart(sender)
+        guard let sessionId = (AllValidSessions.sharedInstance.allValidSession as? [Int])?.first else { return }
+        
+        if let firstSession = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber).first as? NSDictionary,
+           let sessionDate = firstSession["sessiondate"] as? String {
+            dateLable.text = UtilityClass.convertDateFormater(sessionDate)
+        }
+
+        guard let lastSessionId = (AllValidSessions.sharedInstance.allValidSession as? [Int])?.last else { return }
+        let lastSessionData = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(lastSessionId as NSNumber)
+
+        guard lastSessionData.count > 0 else {
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(noHistoricalData, comment: ""))
+            lineChartView.clear()
+            return
+        }
+
+        let groupedData = groupDataByWeek(from: lastSessionData)
+        renderMicroscopyChart(with: groupedData)
+    }
+
+    private func prepareUIForWeeklyChart(_ sender: UIButton) {
         isFarmSelected = false
         self.rightArrow.isHidden = true
         self.leftArrow.isHidden = true
-        
         barChartView.xAxis.centerAxisLabelsEnabled = false
         UserDefaults.standard.set(true, forKey: "isCocciFarm")
+
         AllValidSessions.sharedInstance.meanValues.removeAllObjects()
         dateLable.isHidden = false
         verticalValues = weekArray
-        self.Bacteria_Motile_Array.removeAllObjects()
-        self.Bacteria_Nonmotile_Array.removeAllObjects()
-        self.Pepto_Array.removeAllObjects()
-        self.Coccidia_Array.removeAllObjects()
-        self.btnShare.isHidden = false
-        self.incedenceText.isHidden = false
+
+        [Bacteria_Motile_Array, Bacteria_Nonmotile_Array, Pepto_Array, Coccidia_Array].forEach { $0.removeAllObjects() }
+
+        btnShare.isHidden = false
+        incedenceText.isHidden = false
         isMove = false
         moveFrame(true)
-        
-        self.verticalValuesForWeek.removeAll()
+
+        verticalValuesForWeek.removeAll()
         indexValueArray.removeAll()
+
+        lineChartView.frame = barChartView.frame
+        view.addSubview(lineChartView)
+
+        configureLineChartView()
+        resetButtonSelection(sender)
         
-        lineChartView.frame = self.barChartView.frame
-        
-        self.view.addSubview(lineChartView)
+        subjectString = NSLocalizedString("Microscopy by week", comment: "") as NSString
+        chartNameLable.text = subjectString as String
+        btnHistorical.isHidden = true
+        btnLastSession.isHidden = true
+        entries_Array.removeAllObjects()
+        farmNames.removeAllObjects()
+        index = 0
+        total_birds = 0.0
+    }
+    
+    private func configureLineChartView() {
         lineChartView.xAxis.labelPosition = .bottom
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        lineChartView.leftAxis.valueFormatter = numberFormatter as? IAxisValueFormatter
-        
+        lineChartView.leftAxis.valueFormatter = NumberFormatter() as? IAxisValueFormatter
         lineChartView.animate(xAxisDuration: 3.0)
         lineChartView.pinchZoomEnabled = false
-        
         lineChartView.leftAxis.axisMinimum = 0.0
         lineChartView.leftAxis.axisMaximum = 105.0
         lineChartView.rightAxis.axisMinimum = 0.0
-        // lineChartView.xAxis.valueFormatter = formatter
         lineChartView.xAxis.drawGridLinesEnabled = false
         lineChartView.leftAxis.drawGridLinesEnabled = false
         lineChartView.rightAxis.drawGridLinesEnabled = false
         lineChartView.xAxis.labelRotationAngle = 90
         lineChartView.chartDescription?.text = ""
-        
         lineChartView.rightAxis.enabled = false
         lineChartView.isHidden = false
-        self.barChartView.isHidden = true
-        for gestture in self.lineChartView.gestureRecognizers! {
-            if gestture.isKind(of: UIGestureRecognizer.self) {
-                self.lineChartView.removeGestureRecognizer(gestture)
+        barChartView.isHidden = true
+        lineChartView.gestureRecognizers?.forEach { lineChartView.removeGestureRecognizer($0) }
+    }
+    
+    private func resetButtonSelection(_ selectedButton: UIButton) {
+        for subview in self.view.subviews {
+            if let button = subview as? UIButton {
+                button.isSelected = (button == selectedButton)
             }
-        }
-        
-        moveFrame(true)
-        maxFarmCount = 0
-        isMove = false
-        for btn in self.view.subviews {
-            if btn.isKind(of: UIButton.self) {
-                let bt = btn as! UIButton
-                if bt == sender {
-                    bt.isSelected = true
-                } else{
-                    bt.isSelected = false
-                }
-            }
-        }
-        self.subjectString = NSLocalizedString("Microscopy by week", comment: "") as NSString
-        chartNameLable.text = self.subjectString as String
-        self.btnHistorical.isHidden = true
-        self.btnLastSession.isHidden = true
-        self.entries_Array.removeAllObjects()
-        self.farmNames.removeAllObjects()
-        index = 0
-        self.total_birds = 0.0
-        let arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
-        //arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
-        let objectArray1 = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first! as NSNumber).mutableCopy() as! NSMutableArray
-        sessionDate = (objectArray1.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-        dateLable.text = NSString(format: "%@",UtilityClass.convertDateFormater(sessionDate as String)) as String
-        
-        let week1FarmDataArray = NSMutableArray()
-        let week2FarmDataArray = NSMutableArray()
-        let week3FarmDataArray = NSMutableArray()
-        let week4FarmDataArray = NSMutableArray()
-        let week5FarmDataArray = NSMutableArray()
-        let week6FarmDataArray = NSMutableArray()
-        let week7FarmDataArray = NSMutableArray()
-        let week8FarmDataArray = NSMutableArray()
-        let week9FarmDataArray = NSMutableArray()
-        let week10FarmDataArray = NSMutableArray()
-        
-        var totalBirdsWeek1 : Float = 0
-        var totalBirdsWeek2 : Float = 0
-        var totalBirdsWeek3 : Float = 0
-        var totalBirdsWeek4 : Float = 0
-        var totalBirdsWeek5 : Float = 0
-        var totalBirdsWeek6 : Float = 0
-        var totalBirdsWeek7 : Float = 0
-        var totalBirdsWeek8 : Float = 0
-        var totalBirdsWeek9 : Float = 0
-        var totalBirdsWeek10 : Float = 0
-        
-        let modalObj = MIcroscopyCalculations()
-        
-        modalObj.delegate = self
-        
-        let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.last! as NSNumber)
-        
-        if lastSessionDataArray.count == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-            self.lineChartView.clear()
-            return
-        }
-        
-        for j in 0..<lastSessionDataArray.count {
-            
-            let age = ((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as! NSString).intValue
-            
-            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-            
-            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-            
-            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-            
-            if age > 0 && age < 8 {
-                
-                totalBirdsWeek1 = totalBirdsWeek1+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week1FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 7 && age < 15 {
-                
-                totalBirdsWeek2 = totalBirdsWeek2+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week2FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 14 && age < 22 {
-                
-                totalBirdsWeek3 = totalBirdsWeek3+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week3FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 21 && age < 29 {
-                
-                totalBirdsWeek4 = totalBirdsWeek4+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week4FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 28 && age < 36 {
-                
-                totalBirdsWeek5 = totalBirdsWeek5+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week5FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 35 && age < 43 {
-                
-                totalBirdsWeek6 = totalBirdsWeek6+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week6FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 42 && age < 50 {
-                
-                totalBirdsWeek7 = totalBirdsWeek7+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week7FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 49 && age < 57 {
-                
-                totalBirdsWeek8 = totalBirdsWeek8+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week8FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 56 && age < 64 {
-                
-                totalBirdsWeek9 = totalBirdsWeek9+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week9FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 63 {
-                
-                totalBirdsWeek10 = totalBirdsWeek10+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                
-                week10FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-        }
-        
-        self.total_birds = totalBirdsWeek1
-        modalObj.setupCocciDataByFarm(week1FarmDataArray,birdsCount: totalBirdsWeek1 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek2
-        modalObj.setupCocciDataByFarm(week2FarmDataArray,birdsCount: totalBirdsWeek2 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek3
-        modalObj.setupCocciDataByFarm(week3FarmDataArray,birdsCount: totalBirdsWeek3 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek4
-        modalObj.setupCocciDataByFarm(week4FarmDataArray,birdsCount: totalBirdsWeek4 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek5
-        modalObj.setupCocciDataByFarm(week5FarmDataArray,birdsCount: totalBirdsWeek5 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek6
-        modalObj.setupCocciDataByFarm(week6FarmDataArray,birdsCount: totalBirdsWeek6 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek7
-        modalObj.setupCocciDataByFarm(week7FarmDataArray,birdsCount: totalBirdsWeek7 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek8
-        modalObj.setupCocciDataByFarm(week8FarmDataArray,birdsCount: totalBirdsWeek8 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek9
-        modalObj.setupCocciDataByFarm(week9FarmDataArray,birdsCount: totalBirdsWeek9 , catName: "Microscopy")
-        
-        self.total_birds = totalBirdsWeek10
-        modalObj.setupCocciDataByFarm(week10FarmDataArray,birdsCount: totalBirdsWeek10 , catName: "Microscopy")
-        
-        if self.Coccidia_Array.count > 0 {
-            
-            preparedArray.removeAllObjects()
-            
-            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Coccidia_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[0] as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Bacteria_Motile_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[1] as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Bacteria_Nonmotile_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[2] as NSString)!
-            self.preparedArray.add(chartDataSet)
-            
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Pepto_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[3] as NSString)!
-            
-            self.preparedArray.add(chartDataSet)
-        }
-        
-        if self.preparedArray.count < 3 {
-            
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-            self.barChartView.clear()
-            return
-        }
-        
-        let barData : LineChartDataSet = (self.preparedArray[0] as? LineChartDataSet)!
-        barData.colors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
-        barData.circleColors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
-        
-        let barData1 : LineChartDataSet = (self.preparedArray[1] as? LineChartDataSet)!
-        barData1.colors = [UIColor.yellow]
-        barData1.circleColors = [UIColor.yellow]
-        
-        let barData2 : LineChartDataSet = (self.preparedArray[2] as? LineChartDataSet)!
-        barData2.colors = [UIColor(red: 163/255, green: 186/255, blue: 96/255, alpha: 1)]
-        barData2.circleColors = [UIColor(red: 163/255, green: 186/255, blue: 96/255, alpha: 1)]
-        
-        
-        let barData3 : LineChartDataSet = (self.preparedArray[3] as? LineChartDataSet)!
-        barData3.colors = [UIColor(red: 163/255, green: 91/255, blue: 96/255, alpha: 1)]
-        barData3.circleColors = [UIColor(red: 163/255, green: 91/255, blue: 96/255, alpha: 1)]
-        
-        self.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:verticalValuesForWeek)
-        self.lineChartView.xAxis.labelCount = verticalValuesForWeek.count
-        let lineDta = LineChartData(dataSets: [barData,barData1,barData2,barData3])
-        lineChartView.data = lineDta
-        
-        if barData.yMax <= 0.0 && barData1.yMax <= 0.0 && barData2.yMax <= 0.0 && barData3.yMax <= 0.0{
-            lineChartView.clear()
-            self.btnShare.isHidden = true
-            self.incedenceText.isHidden = true
-            self.dateLable.isHidden = true
         }
     }
+
+    private func groupDataByWeek(from dataArray: NSArray) -> [(birds: Float, data: [Any])] {
+        var weeklyBuckets: [(Float, [Any])] = Array(repeating: (0, []), count: 10)
+
+        for item in dataArray {
+            guard let dict = item as? NSDictionary,
+                  let ageStr = dict["age"] as? String,
+                  let farmName = dict["farmName"] as? String,
+                  let necID = dict["necropsyId"] as? NSNumber,
+                  let noOfBirdsStr = dict["noOfBirds"] as? String,
+                  let age = Int(ageStr),
+                  let noOfBirds = Float(noOfBirdsStr)
+            else { continue }
+
+            let weekIndex = min(age / 7, 9)
+            let fetched = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName as NSString, postingId: necID)
+
+            weeklyBuckets[weekIndex].0 += noOfBirds
+            weeklyBuckets[weekIndex].1 += fetched
+        }
+
+        return weeklyBuckets
+    }
+
+    private func renderMicroscopyChart(with groupedData: [(birds: Float, data: [Any])]) {
+        let modalObj = MIcroscopyCalculations()
+        modalObj.delegate = self
+
+        for (weekIndex, week) in groupedData.enumerated() where week.data.count > 0 {
+            verticalValuesForWeek.append("Week \(weekIndex + 1)")
+            total_birds = week.birds
+            modalObj.setupCocciDataByFarm(NSMutableArray(array: week.data), birdsCount: week.birds, catName: "Microscopy")
+        }
+
+        guard Coccidia_Array.count > 0 else {
+            lineChartView.clear()
+            btnShare.isHidden = true
+            incedenceText.isHidden = true
+            dateLable.isHidden = true
+            return
+        }
+
+        preparedArray.removeAllObjects()
+        let arrays: [NSMutableArray] = [Coccidia_Array, Bacteria_Motile_Array, Bacteria_Nonmotile_Array, Pepto_Array]
+        let colors: [UIColor] = [
+            UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1),
+            .yellow,
+            UIColor(red: 163/255, green: 186/255, blue: 96/255, alpha: 1),
+            UIColor(red: 163/255, green: 91/255, blue: 96/255, alpha: 1)
+        ]
+
+        for (index, array) in arrays.enumerated() {
+            guard let values = array as? [Float] else { continue }
+            let label = MicroscopyObservationNameArray[index] as! NSString
+            if let dataSet = setLineChartDataForFarm(verticalValuesForWeek, values: values, lable: label) {
+                dataSet.colors = [colors[index]]
+                dataSet.circleColors = [colors[index]]
+                preparedArray.add(dataSet)
+            }
+        }
+
+        guard preparedArray.count >= 3 else {
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(noHistoricalData, comment: ""))
+            barChartView.clear()
+            return
+        }
+
+        lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: verticalValuesForWeek)
+        lineChartView.xAxis.labelCount = verticalValuesForWeek.count
+        lineChartView.data = LineChartData(dataSets: (preparedArray as! [LineChartDataSet]))
+    }
+
+//    @IBAction func BtnByWeekPressed(_ sender: UIButton) {
+//        isFarmSelected = false
+//        self.rightArrow.isHidden = true
+//        self.leftArrow.isHidden = true
+//        
+//        barChartView.xAxis.centerAxisLabelsEnabled = false
+//        UserDefaults.standard.set(true, forKey: "isCocciFarm")
+//        AllValidSessions.sharedInstance.meanValues.removeAllObjects()
+//        dateLable.isHidden = false
+//        verticalValues = weekArray
+//        self.Bacteria_Motile_Array.removeAllObjects()
+//        self.Bacteria_Nonmotile_Array.removeAllObjects()
+//        self.Pepto_Array.removeAllObjects()
+//        self.Coccidia_Array.removeAllObjects()
+//        self.btnShare.isHidden = false
+//        self.incedenceText.isHidden = false
+//        isMove = false
+//        moveFrame(true)
+//        
+//        self.verticalValuesForWeek.removeAll()
+//        indexValueArray.removeAll()
+//        
+//        lineChartView.frame = self.barChartView.frame
+//        
+//        self.view.addSubview(lineChartView)
+//        lineChartView.xAxis.labelPosition = .bottom
+//        let numberFormatter = NumberFormatter()
+//        numberFormatter.numberStyle = .none
+//        lineChartView.leftAxis.valueFormatter = numberFormatter as? IAxisValueFormatter
+//        
+//        lineChartView.animate(xAxisDuration: 3.0)
+//        lineChartView.pinchZoomEnabled = false
+//        
+//        lineChartView.leftAxis.axisMinimum = 0.0
+//        lineChartView.leftAxis.axisMaximum = 105.0
+//        lineChartView.rightAxis.axisMinimum = 0.0
+//        // lineChartView.xAxis.valueFormatter = formatter
+//        lineChartView.xAxis.drawGridLinesEnabled = false
+//        lineChartView.leftAxis.drawGridLinesEnabled = false
+//        lineChartView.rightAxis.drawGridLinesEnabled = false
+//        lineChartView.xAxis.labelRotationAngle = 90
+//        lineChartView.chartDescription?.text = ""
+//        
+//        lineChartView.rightAxis.enabled = false
+//        lineChartView.isHidden = false
+//        self.barChartView.isHidden = true
+//        for gestture in self.lineChartView.gestureRecognizers! {
+//            if gestture.isKind(of: UIGestureRecognizer.self) {
+//                self.lineChartView.removeGestureRecognizer(gestture)
+//            }
+//        }
+//        
+//        moveFrame(true)
+//        maxFarmCount = 0
+//        isMove = false
+//        for btn in self.view.subviews {
+//            if btn.isKind(of: UIButton.self) {
+//                let bt = btn as! UIButton
+//                if bt == sender {
+//                    bt.isSelected = true
+//                } else{
+//                    bt.isSelected = false
+//                }
+//            }
+//        }
+//        self.subjectString = NSLocalizedString("Microscopy by week", comment: "") as NSString
+//        chartNameLable.text = self.subjectString as String
+//        self.btnHistorical.isHidden = true
+//        self.btnLastSession.isHidden = true
+//        self.entries_Array.removeAllObjects()
+//        self.farmNames.removeAllObjects()
+//        index = 0
+//        self.total_birds = 0.0
+//        let arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
+//        //arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
+//        let objectArray1 = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first! as NSNumber).mutableCopy() as! NSMutableArray
+//        sessionDate = (objectArray1.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+//        dateLable.text = NSString(format: "%@",UtilityClass.convertDateFormater(sessionDate as String)) as String
+//        
+//        let week1FarmDataArray = NSMutableArray()
+//        let week2FarmDataArray = NSMutableArray()
+//        let week3FarmDataArray = NSMutableArray()
+//        let week4FarmDataArray = NSMutableArray()
+//        let week5FarmDataArray = NSMutableArray()
+//        let week6FarmDataArray = NSMutableArray()
+//        let week7FarmDataArray = NSMutableArray()
+//        let week8FarmDataArray = NSMutableArray()
+//        let week9FarmDataArray = NSMutableArray()
+//        let week10FarmDataArray = NSMutableArray()
+//        
+//        var totalBirdsWeek1 : Float = 0
+//        var totalBirdsWeek2 : Float = 0
+//        var totalBirdsWeek3 : Float = 0
+//        var totalBirdsWeek4 : Float = 0
+//        var totalBirdsWeek5 : Float = 0
+//        var totalBirdsWeek6 : Float = 0
+//        var totalBirdsWeek7 : Float = 0
+//        var totalBirdsWeek8 : Float = 0
+//        var totalBirdsWeek9 : Float = 0
+//        var totalBirdsWeek10 : Float = 0
+//        
+//        let modalObj = MIcroscopyCalculations()
+//        
+//        modalObj.delegate = self
+//        
+//        let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.last! as NSNumber)
+//        
+//        if lastSessionDataArray.count == 0 {
+//            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+//            self.lineChartView.clear()
+//            return
+//        }
+//        
+//        for j in 0..<lastSessionDataArray.count {
+//            
+//            let age = ((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as! NSString).intValue
+//            
+//            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+//            
+//            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+//            
+//            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+//            
+//            if age > 0 && age < 8 {
+//                
+//                totalBirdsWeek1 = totalBirdsWeek1+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week1FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 7 && age < 15 {
+//                
+//                totalBirdsWeek2 = totalBirdsWeek2+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week2FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 14 && age < 22 {
+//                
+//                totalBirdsWeek3 = totalBirdsWeek3+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week3FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 21 && age < 29 {
+//                
+//                totalBirdsWeek4 = totalBirdsWeek4+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week4FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 28 && age < 36 {
+//                
+//                totalBirdsWeek5 = totalBirdsWeek5+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week5FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 35 && age < 43 {
+//                
+//                totalBirdsWeek6 = totalBirdsWeek6+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week6FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 42 && age < 50 {
+//                
+//                totalBirdsWeek7 = totalBirdsWeek7+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week7FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 49 && age < 57 {
+//                
+//                totalBirdsWeek8 = totalBirdsWeek8+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week8FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 56 && age < 64 {
+//                
+//                totalBirdsWeek9 = totalBirdsWeek9+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week9FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//            if age > 63 {
+//                
+//                totalBirdsWeek10 = totalBirdsWeek10+numberOfBirds.floatValue
+//                
+//                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+//                
+//                week10FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+//            }
+//        }
+//        
+//        self.total_birds = totalBirdsWeek1
+//        modalObj.setupCocciDataByFarm(week1FarmDataArray,birdsCount: totalBirdsWeek1 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek2
+//        modalObj.setupCocciDataByFarm(week2FarmDataArray,birdsCount: totalBirdsWeek2 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek3
+//        modalObj.setupCocciDataByFarm(week3FarmDataArray,birdsCount: totalBirdsWeek3 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek4
+//        modalObj.setupCocciDataByFarm(week4FarmDataArray,birdsCount: totalBirdsWeek4 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek5
+//        modalObj.setupCocciDataByFarm(week5FarmDataArray,birdsCount: totalBirdsWeek5 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek6
+//        modalObj.setupCocciDataByFarm(week6FarmDataArray,birdsCount: totalBirdsWeek6 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek7
+//        modalObj.setupCocciDataByFarm(week7FarmDataArray,birdsCount: totalBirdsWeek7 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek8
+//        modalObj.setupCocciDataByFarm(week8FarmDataArray,birdsCount: totalBirdsWeek8 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek9
+//        modalObj.setupCocciDataByFarm(week9FarmDataArray,birdsCount: totalBirdsWeek9 , catName: "Microscopy")
+//        
+//        self.total_birds = totalBirdsWeek10
+//        modalObj.setupCocciDataByFarm(week10FarmDataArray,birdsCount: totalBirdsWeek10 , catName: "Microscopy")
+//        
+//        if self.Coccidia_Array.count > 0 {
+//            
+//            preparedArray.removeAllObjects()
+//            
+//            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Coccidia_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[0] as NSString)!
+//            self.preparedArray.add(chartDataSet)
+//            
+//            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Bacteria_Motile_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[1] as NSString)!
+//            self.preparedArray.add(chartDataSet)
+//            
+//            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Bacteria_Nonmotile_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[2] as NSString)!
+//            self.preparedArray.add(chartDataSet)
+//            
+//            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Pepto_Array as NSArray as! [Float], lable:MicroscopyObservationNameArray[3] as NSString)!
+//            
+//            self.preparedArray.add(chartDataSet)
+//        }
+//        
+//        if self.preparedArray.count < 3 {
+//            
+//            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+//            self.barChartView.clear()
+//            return
+//        }
+//        
+//        let barData : LineChartDataSet = (self.preparedArray[0] as? LineChartDataSet)!
+//        barData.colors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
+//        barData.circleColors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
+//        
+//        let barData1 : LineChartDataSet = (self.preparedArray[1] as? LineChartDataSet)!
+//        barData1.colors = [UIColor.yellow]
+//        barData1.circleColors = [UIColor.yellow]
+//        
+//        let barData2 : LineChartDataSet = (self.preparedArray[2] as? LineChartDataSet)!
+//        barData2.colors = [UIColor(red: 163/255, green: 186/255, blue: 96/255, alpha: 1)]
+//        barData2.circleColors = [UIColor(red: 163/255, green: 186/255, blue: 96/255, alpha: 1)]
+//        
+//        
+//        let barData3 : LineChartDataSet = (self.preparedArray[3] as? LineChartDataSet)!
+//        barData3.colors = [UIColor(red: 163/255, green: 91/255, blue: 96/255, alpha: 1)]
+//        barData3.circleColors = [UIColor(red: 163/255, green: 91/255, blue: 96/255, alpha: 1)]
+//        
+//        self.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:verticalValuesForWeek)
+//        self.lineChartView.xAxis.labelCount = verticalValuesForWeek.count
+//        let lineDta = LineChartData(dataSets: [barData,barData1,barData2,barData3])
+//        lineChartView.data = lineDta
+//        
+//        if barData.yMax <= 0.0 && barData1.yMax <= 0.0 && barData2.yMax <= 0.0 && barData3.yMax <= 0.0{
+//            lineChartView.clear()
+//            self.btnShare.isHidden = true
+//            self.incedenceText.isHidden = true
+//            self.dateLable.isHidden = true
+//        }
+//    }
     
     func findDateInRange(_ sDate : Date, eDate : Date, cdate : Date) -> Bool {
         

@@ -10,30 +10,30 @@ import Foundation
 import CoreData
 import UIKit
 
-final public  class UserFilledQuestionnaireDAO{
-    private init(){print("Initializer")}
+final public  class UserFilledQuestionnaireDAO {
+    private init() {print("Initializer")}
     static let sharedInstance = UserFilledQuestionnaireDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     let userIdCertificateStr = "userId = %@ AND certificationId = %@"
     
-    func getVaccinationQuestionsCategoryObj() ->VaccinationFilledQuestionCategories{
+    func getVaccinationQuestionsCategoryObj() ->VaccinationFilledQuestionCategories {
         let vaccinationQuestionCategoriesObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationFilledQuestionCategories" , into: managedContext) as! VaccinationFilledQuestionCategories
         return vaccinationQuestionCategoriesObj
     }
     
-    func getVaccinationQuestionsTypeObj() ->VaccinationFilledQuestionTypes{
+    func getVaccinationQuestionsTypeObj() ->VaccinationFilledQuestionTypes {
         let vaccinationQuestionTypeObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationFilledQuestionTypes" , into: managedContext) as! VaccinationFilledQuestionTypes
         return vaccinationQuestionTypeObj
     }
     
-    func getVaccinationQuestionsObj() ->VaccinationFilledQuetions{
+    func getVaccinationQuestionsObj() ->VaccinationFilledQuetions {
         let vaccinationQuestionObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationFilledQuetions" , into: managedContext) as! VaccinationFilledQuetions
         
         return vaccinationQuestionObj
     }
     
     fileprivate func handleQuestionCatObj(_ questionCategoriesObj: [VaccinationQuestionCategories], _ certificationId: String, _ questTypeObj: VaccinationQuestionTypes, _ userId: String, _ moQuestTypeObj: VaccinationFilledQuestionTypes) {
-        for questCategory in questionCategoriesObj{
+        for questCategory in questionCategoriesObj {
             let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
             questCategoryMOObj.certificationId = certificationId
             questCategoryMOObj.categoryId =    questCategory.categoryId
@@ -45,9 +45,9 @@ final public  class UserFilledQuestionnaireDAO{
             
             questCategoryMOObj.userId = userId
             
-            if let questions = questCategory.questions?.allObjects as? Array<VaccinationQuestions>{
+            if let questions = questCategory.questions?.allObjects as? Array<VaccinationQuestions> {
                 
-                for questionObj in questions{
+                for questionObj in questions {
                     let questionMOObj = getVaccinationQuestionsObj()
                     questionMOObj.certificationId = certificationId
                     questionMOObj.userId = userId
@@ -71,17 +71,17 @@ final public  class UserFilledQuestionnaireDAO{
         }
     }
     
-    private func convertQuestMOtoMO(dtoObjQuestTypes: [VaccinationQuestionTypes], userId:String, certificationId:String){
+    private func convertQuestMOtoMO(dtoObjQuestTypes: [VaccinationQuestionTypes], userId:String, certificationId:String) {
         
-        if dtoObjQuestTypes.count  > 0{
-            for questTypeObj in dtoObjQuestTypes{
+        if dtoObjQuestTypes.count  > 0 {
+            for questTypeObj in dtoObjQuestTypes {
                 let moQuestTypeObj = getVaccinationQuestionsTypeObj()
                 moQuestTypeObj.userId = userId
                 moQuestTypeObj.typeid = questTypeObj.typeid
                 moQuestTypeObj.typename = questTypeObj.typename
                 moQuestTypeObj.certificationId = certificationId
                 
-                if let questionCategoriesObj = questTypeObj.questionCategories?.allObjects as? Array<VaccinationQuestionCategories>{
+                if let questionCategoriesObj = questTypeObj.questionCategories?.allObjects as? Array<VaccinationQuestionCategories> {
                     
                     handleQuestionCatObj(questionCategoriesObj, certificationId, questTypeObj, userId, moQuestTypeObj)
                 }
@@ -92,7 +92,7 @@ final public  class UserFilledQuestionnaireDAO{
     private func convertMotoVM(moObj:[VaccinationFilledQuestionTypes])-> QuestionnaireVM {
         var questionnaireVMObj = QuestionnaireVM()
         var questionTypeArr = [VaccinationQuestionTypeVM]()
-        for questionTypeMoObj in moObj{
+        for questionTypeMoObj in moObj {
             questionTypeArr.append(getQuestionTypeVMObj(questionTypeMoObj))
         }
         
@@ -109,11 +109,11 @@ final public  class UserFilledQuestionnaireDAO{
         questionTypeObj.certificationId = moObj.certificationId
         
         var questionCategoryArr = [VaccinationQuestionCategoryVM]()
-        if var questionCategories = moObj.questionCategories?.allObjects as? Array<VaccinationFilledQuestionCategories>{
+        if var questionCategories = moObj.questionCategories?.allObjects as? Array<VaccinationFilledQuestionCategories> {
             if questionCategories[0].categoryName == "Aseptic Technique & Vaccine Application" {
                 questionCategories.swapAt(0, 1)
             }
-            for questionCatObj in questionCategories{
+            for questionCatObj in questionCategories {
                 questionCategoryArr.append(getQuestionCategoryVMObj(questionCatObj))
             }
         }
@@ -123,7 +123,7 @@ final public  class UserFilledQuestionnaireDAO{
             return questionTypeObj
         } else {
             questionTypeObj.questionCategories?.sort {first,second in
-                if first.categoryName != nil && second.categoryName != nil{
+                if first.categoryName != nil && second.categoryName != nil {
                     return (first.categoryName?.lowercased())! < (second.categoryName?.lowercased())!
                 }
                 return false
@@ -133,7 +133,7 @@ final public  class UserFilledQuestionnaireDAO{
         return questionTypeObj
     }
     
-    func getQuestionCategoryVMObj(_ moObj:VaccinationFilledQuestionCategories)-> VaccinationQuestionCategoryVM{
+    func getQuestionCategoryVMObj(_ moObj:VaccinationFilledQuestionCategories)-> VaccinationQuestionCategoryVM {
         var vaccinationObj  = VaccinationQuestionCategoryVM()
         vaccinationObj.categoryId = moObj.categoryId
         vaccinationObj.categoryName = moObj.categoryName
@@ -144,8 +144,8 @@ final public  class UserFilledQuestionnaireDAO{
         vaccinationObj.userId = moObj.userId
         var questionArr = [VaccinationQuestionVM]()
         
-        if let questions = moObj.questions?.allObjects as? Array<VaccinationFilledQuetions>{
-            for question in questions{
+        if let questions = moObj.questions?.allObjects as? Array<VaccinationFilledQuetions> {
+            for question in questions {
                 questionArr.append(getQuestionVMObj(question))
             }
         }
@@ -172,11 +172,11 @@ final public  class UserFilledQuestionnaireDAO{
         return vaccinationObj
     }
     
-    func getCategoryEmployees(certificationId:String, userId:String, categoryId:String, typeId:String) -> [VaccinationEmployeeVM]{
+    func getCategoryEmployees(certificationId:String, userId:String, categoryId:String, typeId:String) -> [VaccinationEmployeeVM] {
       
         let catEmpBridgeArr = AddEmployeesDAO.sharedInstance.fetchEmpByCatId(catId:categoryId, typeId:typeId, userId:userId, certificationId:certificationId)
         var predicateList = [NSPredicate]()
-        for empBridgeObj in catEmpBridgeArr{
+        for empBridgeObj in catEmpBridgeArr {
             let predicate = NSPredicate(format:"userId = %@ AND certificationId = %@  AND employeeId = %@", userId, certificationId, empBridgeObj.empId ?? "")
             predicateList.append(predicate)
             
@@ -185,7 +185,7 @@ final public  class UserFilledQuestionnaireDAO{
         
     }
     
-    func getQuestionVMObj(_ moObj:VaccinationFilledQuetions) -> VaccinationQuestionVM{
+    func getQuestionVMObj(_ moObj:VaccinationFilledQuetions) -> VaccinationQuestionVM {
         var questionVMObj = VaccinationQuestionVM()
         questionVMObj.categoryId = moObj.categoryId
         questionVMObj.categoryName = moObj.categoryName
@@ -203,13 +203,13 @@ final public  class UserFilledQuestionnaireDAO{
         return questionVMObj
     }
     
-    func fetchQuestionnaireData(userId:String, certificationId:String )->QuestionnaireVM?{
+    func fetchQuestionnaireData(userId:String, certificationId:String )->QuestionnaireVM? {
         var questionnaireVM: QuestionnaireVM?
         questionnaireVM =  convertMotoVM(moObj:fetchQuestionnaireMOData(userId:userId, certificationId: certificationId))
         return questionnaireVM
     }
     
-    func fetchQuestionnaireMOData(userId:String, certificationId:String) -> [VaccinationFilledQuestionTypes]{
+    func fetchQuestionnaireMOData(userId:String, certificationId:String) -> [VaccinationFilledQuestionTypes] {
         var questionTypesArr = [VaccinationFilledQuestionTypes]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationFilledQuestionTypes")
         fetchRequest.returnsObjectsAsFaults = false
@@ -218,31 +218,31 @@ final public  class UserFilledQuestionnaireDAO{
         do {
             questionTypesArr = try managedContext.fetch(fetchRequest) as! [VaccinationFilledQuestionTypes]
             
-        } catch{
+        } catch {
             debugPrint("Error while fetching Employees in \(type(of: self))")
         }
         return questionTypesArr
     }
     
     
-    func saveQuestionData( userId:String, certificationId:String, isSafetyCert:Bool = false){
-        do{
+    func saveQuestionData( userId:String, certificationId:String, isSafetyCert:Bool = false) {
+        do {
             
-            if !checkIfQuestionnaireeDataExists(userId: userId, certificationId: certificationId) && !(SyncStatusDAO.sharedInstance.checkIfRecordExists(for: EntityName.UserFilledQuestionnaire.rawValue, userId:userId, siteId:certificationId, customerId: nil, evalParam1: EntityParameters.certificationId.rawValue, evalParam2:nil) != nil){
+            if !checkIfQuestionnaireeDataExists(userId: userId, certificationId: certificationId) && !(SyncStatusDAO.sharedInstance.checkIfRecordExists(for: EntityName.UserFilledQuestionnaire.rawValue, userId:userId, siteId:certificationId, customerId: nil, evalParam1: EntityParameters.certificationId.rawValue, evalParam2:nil) != nil) {
                 deleteVaccinationQuestions(userId: userId, certificationId: certificationId)
-                if isSafetyCert{
+                if isSafetyCert {
                     let masterListQuestTypes = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_QUESTION_TYPE_ID)
                     convertQuestMOtoMO(dtoObjQuestTypes: masterListQuestTypes, userId: userId, certificationId: certificationId)
                     
                     
-                } else{
+                } else {
                     let masterListQuestTypesSafety = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID)
                     convertQuestMOtoMO(dtoObjQuestTypes: masterListQuestTypesSafety, userId: userId, certificationId: certificationId)
                     let masterListQuestTypes = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID)
                     convertQuestMOtoMO(dtoObjQuestTypes: masterListQuestTypes, userId: userId, certificationId: certificationId)
                     
                     let masterListQuestTypesVaccineMixing = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID)
-                    `convertQuestMOtoMO`(dtoObjQuestTypes: masterListQuestTypesVaccineMixing, userId: userId, certificationId: certificationId)
+                    convertQuestMOtoMO(dtoObjQuestTypes: masterListQuestTypesVaccineMixing, userId: userId, certificationId: certificationId)
                     
                 }
                 
@@ -251,28 +251,28 @@ final public  class UserFilledQuestionnaireDAO{
                 try managedContext.save()
             }
             
-        } catch{
+        } catch {
             managedContext.rollback()
             debugPrint("Error while saveQuestionData in \(type(of: self))")
         }
     }
     
-    func checkIfQuestionnaireeDataExists(_ forceDelete:Bool = false, userId:String, certificationId:String) -> Bool{
+    func checkIfQuestionnaireeDataExists(_ forceDelete:Bool = false, userId:String, certificationId:String) -> Bool {
         
         var response = false
-        if forceDelete{
+        if forceDelete {
             
             deleteVaccinationQuestions(userId: userId, certificationId: certificationId)
             response = false
-        } else{
-            if  fetchQuestionnaireMOData(userId:userId, certificationId: certificationId).count > 0{
+        } else {
+            if  fetchQuestionnaireMOData(userId:userId, certificationId: certificationId).count > 0 {
                 response = true
             }
         }
         return response
     }
     
-    func deleteVaccinationQuestions(userId:String, certificationId:String){
+    func deleteVaccinationQuestions(userId:String, certificationId:String) {
         deleteExisitingData(entityName: "VaccinationFilledQuestionTypes", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
         deleteExisitingData(entityName: "VaccinationFilledQuetions", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
         deleteExisitingData(entityName: "VaccinationFilledQuestionCategories", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
@@ -280,9 +280,9 @@ final public  class UserFilledQuestionnaireDAO{
     
     
     
-    func deleteExisitingData(entityName:String, predicate:NSPredicate?){
+    func deleteExisitingData(entityName:String, predicate:NSPredicate?) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
-        if predicate != nil{
+        if predicate != nil {
             fetchRequest.predicate = predicate
         }
         var results: [NSManagedObject] = []
@@ -303,21 +303,21 @@ final public  class UserFilledQuestionnaireDAO{
     }
     
     func getUserQuestionnaire(userId:String, certificationId:String,quesId:String)->VaccinationFilledQuetions {
-        var questionArr = [VaccinationFilledQuetions]()
+       
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationFilledQuetions")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format:"userId = %@ AND certificationId = %@ AND questionId = %@", userId, certificationId,quesId)
         
         do {
-            questionArr = try managedContext.fetch(fetchRequest) as! [VaccinationFilledQuetions]
+            var questionArr = try managedContext.fetch(fetchRequest) as! [VaccinationFilledQuetions]
             return questionArr[0]
-        } catch{
+        } catch {
             debugPrint("Error while fetching User Questionnaire Data in \(type(of: self))")
         }
         return getVaccinationQuestionsObj()
     }
     
-    func convertQuestVMtoMO(moObj: VaccinationFilledQuetions, vmObj:VaccinationQuestionVM){
+    func convertQuestVMtoMO(moObj: VaccinationFilledQuetions, vmObj:VaccinationQuestionVM) {
         
         moObj.categoryId = vmObj.categoryId
         moObj.categoryName = vmObj.categoryName
@@ -334,7 +334,7 @@ final public  class UserFilledQuestionnaireDAO{
         moObj.sequenceNo = vmObj.sequenceNo as NSNumber?
     }
     
-    func updateQuestionUserResponse(vmObj:VaccinationQuestionVM)-> VaccinationQuestionVM{
+    func updateQuestionUserResponse(vmObj:VaccinationQuestionVM)-> VaccinationQuestionVM {
         let questObj = getUserQuestionnaire(userId:vmObj.userId ?? "", certificationId:vmObj.certificationId ?? "",quesId:vmObj.questionId ?? "")
         do {
             convertQuestVMtoMO(moObj: questObj, vmObj:vmObj)
@@ -347,250 +347,268 @@ final public  class UserFilledQuestionnaireDAO{
         return getQuestionVMObj(questObj)
     }
     
-    private func convertQuestDTOtoMO( userId:String, certificationId:String, operatorCert:[GetSubmittedOperatorCertificationDTO]?, safetyCert:[GetSubmittedSafetyCertificationDTO]?, vaccineMixingCert:[GetSubmittedVaccineMixingCertificationDTO]? , shippingDetails : [ShippingAddressDTO]?){
+	fileprivate func handleConvertQuesDTOtoMOValidation(_ operatorCert: [GetSubmittedOperatorCertificationDTO]?, _ userId: String, _ certificationId: String) {
+		if operatorCert != nil && operatorCert!.count > 0 {
+			let moQuestTypeObj = getVaccinationQuestionsTypeObj()
+			moQuestTypeObj.userId = userId
+			if let typeId = operatorCert?[0].typeID {
+				moQuestTypeObj.typeid = String(typeId)
+			}
+			moQuestTypeObj.certificationId = certificationId
+			
+			for questCategory in operatorCert! {
+				let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
+				questCategoryMOObj.certificationId = certificationId
+				questCategoryMOObj.categoryName = questCategory.categorieName
+				
+				if let typeId = operatorCert?[0].typeID {
+					questCategoryMOObj.typeId = String(typeId)
+				}
+				
+				if let categoryId = questCategory.catID {
+					questCategoryMOObj.categoryId = String(categoryId)
+				}
+				questCategoryMOObj.userId = userId
+				if let questions = questCategory.moduleAssessments {
+					
+					for questionObj in questions {
+						let questionMOObj = getVaccinationQuestionsObj()
+						questionMOObj.certificationId = certificationId
+						questionMOObj.userId = userId
+						questionMOObj.questionDescription = questionObj.assessment
+						
+						if let qSeq = questionObj.sequenceNo {
+							
+							
+							questionMOObj.sequenceNo = (qSeq) as NSNumber?
+						}
+						
+						
+						if let typeId = operatorCert?[0].typeID {
+							questionMOObj.typeId = String(typeId)
+						}
+						
+						if let categoryId = questCategory.catID {
+							questionMOObj.categoryId = String(categoryId)
+						}
+						questionMOObj.categoryName = questCategory.categorieName
+						if let qId = questionObj.id {
+							
+							questionMOObj.questionId = String(qId)
+						}
+						questionMOObj.questionType  = questionObj.types
+						questionMOObj.userComments  = questionObj.comments
+						questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
+						questCategoryMOObj.addToQuestions(questionMOObj)
+						
+					}
+				}
+				if let attendees = questCategory.attendeeList {
+					for attendee in attendees {
+						if let typeId = operatorCert?[0].typeID, let categoryId = questCategory.catID {
+							
+							AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
+						}
+					}
+				}
+				moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
+			}
+		}
+	}
+	
+	fileprivate func handleConvertQuesDTOtoMOValidationPart2(_ safetyCert: [GetSubmittedSafetyCertificationDTO]?, _ userId: String, _ certificationId: String) {
+		if safetyCert != nil && safetyCert!.count > 0 {
+			
+			let moQuestTypeObj = getVaccinationQuestionsTypeObj()
+			moQuestTypeObj.userId = userId
+			if let typeId = safetyCert?[0].typeId {
+				moQuestTypeObj.typeid = String(typeId)
+			}
+			moQuestTypeObj.certificationId = certificationId
+			
+			for questCategory in safetyCert! {
+				let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
+				questCategoryMOObj.certificationId = certificationId
+				questCategoryMOObj.categoryName = questCategory.categorieName
+				
+				if let typeId = safetyCert?[0].typeId {
+					questCategoryMOObj.typeId = String(typeId)
+				}
+				
+				if let categoryId = questCategory.catId {
+					questCategoryMOObj.categoryId = String(categoryId)
+				}
+				
+				questCategoryMOObj.userId = userId
+				
+				if let questions = questCategory.moduleAssessments {
+					
+					for questionObj in questions {
+						let questionMOObj = getVaccinationQuestionsObj()
+						questionMOObj.certificationId = certificationId
+						questionMOObj.userId = userId
+						questionMOObj.questionDescription = questionObj.assessment
+						if let typeId = safetyCert?[0].typeId {
+							questionMOObj.typeId = String(typeId)
+						}
+						
+						if let categoryId = questCategory.catId {
+							questionMOObj.categoryId = String(categoryId)
+						}
+						questionMOObj.categoryName = questCategory.categorieName
+						if let qId = questionObj.id {
+							
+							questionMOObj.questionId = String(qId)
+						}
+						
+						if let qSeq = questionObj.sequenceNo {
+							
+							questionMOObj.sequenceNo = (qSeq) as NSNumber?
+						}
+						questionMOObj.questionType  = questionObj.types
+						questionMOObj.userComments  = questionObj.comments
+						questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
+						questCategoryMOObj.addToQuestions(questionMOObj)
+						
+					}
+				}
+				if let attendees = questCategory.attendeeList {
+					for attendee in attendees {
+						if let typeId = safetyCert?[0].typeId, let categoryId = questCategory.catId {
+							
+							AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
+						}
+					}
+				}
+				moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
+			}
+		}
+	}
+	
+	fileprivate func handleVaccineMixingCertConvertValidations(_ questCategory: GetSubmittedVaccineMixingCertificationDTO, _ certificationId: String, _ userId: String, _ vaccineMixingCert: [GetSubmittedVaccineMixingCertificationDTO]?, _ questCategoryMOObj: VaccinationFilledQuestionCategories) {
+		if let questions = questCategory.moduleAssessments {
+			
+			for questionObj in questions {
+				let questionMOObj = getVaccinationQuestionsObj()
+				questionMOObj.certificationId = certificationId
+				questionMOObj.userId = userId
+				questionMOObj.questionDescription = questionObj.assessment
+				if let typeId = vaccineMixingCert?[0].typeId {
+					questionMOObj.typeId = String(typeId)
+				}
+				
+				if let categoryId = questCategory.catId {
+					questionMOObj.categoryId = String(categoryId)
+				}
+				questionMOObj.categoryName = questCategory.categorieName
+				if let qId = questionObj.id {
+					
+					questionMOObj.questionId = String(qId)
+				}
+				
+				if let qSeq = questionObj.sequenceNo {
+					
+					questionMOObj.sequenceNo = (qSeq) as NSNumber?
+				}
+				questionMOObj.questionType  = questionObj.types
+				questionMOObj.userComments  = questionObj.comments
+				questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
+				questCategoryMOObj.addToQuestions(questionMOObj)
+				
+			}
+		}
+	}
+	
+	fileprivate func handleVaccineMixingCertValidationAttendeesLoop(_ questCategory: GetSubmittedVaccineMixingCertificationDTO, _ vaccineMixingCert: [GetSubmittedVaccineMixingCertificationDTO]?, _ userId: String, _ certificationId: String) {
+		if let attendees = questCategory.attendeeList {
+			for attendee in attendees {
+				if let typeId = vaccineMixingCert?[0].typeId, let categoryId = questCategory.catId {
+					AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
+				}
+			}
+		}
+	}
+	
+	fileprivate func handleVaccineMixingCertConvertQuesDTO(_ vaccineMixingCert: [GetSubmittedVaccineMixingCertificationDTO]?, _ userId: String, _ certificationId: String) {
+		if vaccineMixingCert != nil && vaccineMixingCert!.count > 0 {
+			
+			let moQuestTypeObj = getVaccinationQuestionsTypeObj()
+			moQuestTypeObj.userId = userId
+			if let typeId = vaccineMixingCert?[0].typeId {
+				moQuestTypeObj.typeid = String(typeId)
+			}
+			moQuestTypeObj.certificationId = certificationId
+			
+			for questCategory in vaccineMixingCert! {
+				let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
+				questCategoryMOObj.certificationId = certificationId
+				questCategoryMOObj.categoryName = questCategory.categorieName
+				
+				if let typeId = vaccineMixingCert?[0].typeId {
+					questCategoryMOObj.typeId = String(typeId)
+				}
+				
+				if let categoryId = questCategory.catId {
+					questCategoryMOObj.categoryId = String(categoryId)
+				}
+				
+				questCategoryMOObj.userId = userId
+				handleVaccineMixingCertConvertValidations(questCategory, certificationId, userId, vaccineMixingCert, questCategoryMOObj)
+				handleVaccineMixingCertValidationAttendeesLoop(questCategory, vaccineMixingCert, userId, certificationId)
+				moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
+			}
+		}
+	}
+	
+	fileprivate func handleShippingDetailsConvertQuesDTO(_ shippingDetails: [ShippingAddressDTO]?) {
+		if shippingDetails != nil && shippingDetails!.count > 0 {
+			
+			var moQuestTypeObj : ShippingAddressDTO?
+			
+			if let cityName = shippingDetails?[0].city {
+				moQuestTypeObj?.city = String(cityName)
+			}
+			if let address1 = shippingDetails?[0].address1 {
+				moQuestTypeObj?.address1 = String(address1)
+			}
+			if let address2 = shippingDetails?[0].address2 {
+				moQuestTypeObj?.address2 = String(address2)
+			}
+			if let pincode = shippingDetails?[0].pincode {
+				moQuestTypeObj?.pincode = String(pincode)
+			}
+			if let fssName = shippingDetails?[0].fssName {
+				moQuestTypeObj?.fssName = String(fssName)
+			}
+			if let CountryId = shippingDetails?[0].countryID {
+				moQuestTypeObj?.countryID = Int(CountryId)
+			}
+			if let StateId = shippingDetails?[0].stateID {
+				moQuestTypeObj?.stateID = Int(StateId)
+			}
+			if let FssId = shippingDetails?[0].fssID {
+				moQuestTypeObj?.fssID = Int(FssId)
+			}
+			if let Id = shippingDetails?[0].id {
+				moQuestTypeObj?.id = Int(Id)
+			}
+			if let trainingId = shippingDetails?[0].trainingID {
+				moQuestTypeObj?.trainingID = Int(trainingId)
+			}
+			
+		}
+	}
+	
+	private func convertQuestDTOtoMO( userId:String, certificationId:String, operatorCert:[GetSubmittedOperatorCertificationDTO]?, safetyCert:[GetSubmittedSafetyCertificationDTO]?, vaccineMixingCert:[GetSubmittedVaccineMixingCertificationDTO]? , shippingDetails : [ShippingAddressDTO]?) {
         
-        if operatorCert != nil && operatorCert!.count  > 0{
-            let moQuestTypeObj = getVaccinationQuestionsTypeObj()
-            moQuestTypeObj.userId = userId
-            if let typeId = operatorCert?[0].typeID{
-                moQuestTypeObj.typeid = String(typeId)
-            }
-            moQuestTypeObj.certificationId = certificationId
-            
-            for questCategory in operatorCert!{
-                let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
-                questCategoryMOObj.certificationId = certificationId
-                questCategoryMOObj.categoryName = questCategory.categorieName
-                
-                if let typeId = operatorCert?[0].typeID{
-                    questCategoryMOObj.typeId = String(typeId)
-                }
-                
-                if let categoryId = questCategory.catID{
-                    questCategoryMOObj.categoryId = String(categoryId)
-                }
-                questCategoryMOObj.userId = userId
-                if let questions = questCategory.moduleAssessments{
-                    
-                    for questionObj in questions{
-                        let questionMOObj = getVaccinationQuestionsObj()
-                        questionMOObj.certificationId = certificationId
-                        questionMOObj.userId = userId
-                        questionMOObj.questionDescription = questionObj.assessment
-                        
-                        if let qSeq = questionObj.sequenceNo{
-                            
-                            
-                            questionMOObj.sequenceNo = (qSeq) as NSNumber?
-                        }
-                        
-                        
-                        if let typeId = operatorCert?[0].typeID{
-                            questionMOObj.typeId = String(typeId)
-                        }
-                        
-                        if let categoryId = questCategory.catID{
-                            questionMOObj.categoryId = String(categoryId)
-                        }
-                        questionMOObj.categoryName = questCategory.categorieName
-                        if let qId = questionObj.id{
-                            
-                            questionMOObj.questionId = String(qId)
-                        }
-                        questionMOObj.questionType  = questionObj.types
-                        questionMOObj.userComments  = questionObj.comments
-                        questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
-                        questCategoryMOObj.addToQuestions(questionMOObj)
-                        
-                    }
-                }
-                if let attendees = questCategory.attendeeList{
-                    for attendee in attendees{
-                        if let typeId = operatorCert?[0].typeID, let categoryId = questCategory.catID{
-                            
-                            AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
-                        }
-                    }
-                }
-                moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
-            }
-        }
-        
-        if safetyCert != nil && safetyCert!.count  > 0{
-            
-            let moQuestTypeObj = getVaccinationQuestionsTypeObj()
-            moQuestTypeObj.userId = userId
-            if let typeId = safetyCert?[0].typeId{
-                moQuestTypeObj.typeid = String(typeId)
-            }
-            moQuestTypeObj.certificationId = certificationId
-            
-            for questCategory in safetyCert!{
-                let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
-                questCategoryMOObj.certificationId = certificationId
-                questCategoryMOObj.categoryName = questCategory.categorieName
-                
-                if let typeId = safetyCert?[0].typeId{
-                    questCategoryMOObj.typeId = String(typeId)
-                }
-                
-                if let categoryId = questCategory.catId{
-                    questCategoryMOObj.categoryId = String(categoryId)
-                }
-                
-                questCategoryMOObj.userId = userId
-                
-                if let questions = questCategory.moduleAssessments{
-                    
-                    for questionObj in questions{
-                        let questionMOObj = getVaccinationQuestionsObj()
-                        questionMOObj.certificationId = certificationId
-                        questionMOObj.userId = userId
-                        questionMOObj.questionDescription = questionObj.assessment
-                        if let typeId = safetyCert?[0].typeId{
-                            questionMOObj.typeId = String(typeId)
-                        }
-                        
-                        if let categoryId = questCategory.catId{
-                            questionMOObj.categoryId = String(categoryId)
-                        }
-                        questionMOObj.categoryName = questCategory.categorieName
-                        if let qId = questionObj.id{
-                            
-                            questionMOObj.questionId = String(qId)
-                        }
-                        
-                        if let qSeq = questionObj.sequenceNo{
-                            
-                            questionMOObj.sequenceNo = (qSeq) as NSNumber?
-                        }
-                        questionMOObj.questionType  = questionObj.types
-                        questionMOObj.userComments  = questionObj.comments
-                        questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
-                        questCategoryMOObj.addToQuestions(questionMOObj)
-                        
-                    }
-                }
-                if let attendees = questCategory.attendeeList{
-                    for attendee in attendees{
-                        if let typeId = safetyCert?[0].typeId, let categoryId = questCategory.catId{
-                            
-                            AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
-                        }
-                    }
-                }
-                moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
-            }
-        }
-        
-        
-        if vaccineMixingCert != nil && vaccineMixingCert!.count  > 0{
-            
-            let moQuestTypeObj = getVaccinationQuestionsTypeObj()
-            moQuestTypeObj.userId = userId
-            if let typeId = vaccineMixingCert?[0].typeId{
-                moQuestTypeObj.typeid = String(typeId)
-            }
-            moQuestTypeObj.certificationId = certificationId
-          
-            for questCategory in vaccineMixingCert!{
-                let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
-                questCategoryMOObj.certificationId = certificationId
-                questCategoryMOObj.categoryName = questCategory.categorieName
-                
-                if let typeId = vaccineMixingCert?[0].typeId{
-                    questCategoryMOObj.typeId = String(typeId)
-                }
-                
-                if let categoryId = questCategory.catId{
-                    questCategoryMOObj.categoryId = String(categoryId)
-                }
-                
-                questCategoryMOObj.userId = userId
-                
-                if let questions = questCategory.moduleAssessments{
-                    
-                    for questionObj in questions{
-                        let questionMOObj = getVaccinationQuestionsObj()
-                        questionMOObj.certificationId = certificationId
-                        questionMOObj.userId = userId
-                        questionMOObj.questionDescription = questionObj.assessment
-                        if let typeId = vaccineMixingCert?[0].typeId{
-                            questionMOObj.typeId = String(typeId)
-                        }
-                        
-                        if let categoryId = questCategory.catId{
-                            questionMOObj.categoryId = String(categoryId)
-                        }
-                        questionMOObj.categoryName = questCategory.categorieName
-                        if let qId = questionObj.id{
-                            
-                            questionMOObj.questionId = String(qId)
-                        }
-                        
-                        if let qSeq = questionObj.sequenceNo{
-                            
-                            questionMOObj.sequenceNo = (qSeq) as NSNumber?
-                        }
-                        questionMOObj.questionType  = questionObj.types
-                        questionMOObj.userComments  = questionObj.comments
-                        questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
-                        questCategoryMOObj.addToQuestions(questionMOObj)
-                        
-                    }
-                }
-                if let attendees = questCategory.attendeeList{
-                    for attendee in attendees{
-                        if let typeId = vaccineMixingCert?[0].typeId, let categoryId = questCategory.catId{
-                            
-                            AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
-                        }
-                    }
-                }
-                moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
-            }
-        }
-        
-        if shippingDetails != nil && shippingDetails!.count  > 0{
-            
-            var moQuestTypeObj : ShippingAddressDTO?
-            
-            if let cityName = shippingDetails?[0].city{
-                moQuestTypeObj?.city = String(cityName)
-            }
-            if let address1 = shippingDetails?[0].address1{
-                moQuestTypeObj?.address1 = String(address1)
-            }
-            if let address2 = shippingDetails?[0].address2{
-                moQuestTypeObj?.address2 = String(address2)
-            }
-            if let pincode = shippingDetails?[0].pincode{
-                moQuestTypeObj?.pincode = String(pincode)
-            }
-            if let fssName = shippingDetails?[0].fssName{
-                moQuestTypeObj?.fssName = String(fssName)
-            }
-            if let CountryId = shippingDetails?[0].countryID{
-                moQuestTypeObj?.countryID = Int(CountryId)
-            }
-            if let StateId = shippingDetails?[0].stateID{
-                moQuestTypeObj?.stateID = Int(StateId)
-            }
-            if let FssId = shippingDetails?[0].fssID{
-                moQuestTypeObj?.fssID = Int(FssId)
-            }
-            if let Id = shippingDetails?[0].id{
-                moQuestTypeObj?.id = Int(Id)
-            }
-            if let trainingId = shippingDetails?[0].trainingID{
-                moQuestTypeObj?.trainingID = Int(trainingId)
-            }
-            
-        }
+		handleConvertQuesDTOtoMOValidation(operatorCert, userId, certificationId)
+		handleConvertQuesDTOtoMOValidationPart2(safetyCert, userId, certificationId)
+		handleVaccineMixingCertConvertQuesDTO(vaccineMixingCert, userId, certificationId)
+		handleShippingDetailsConvertQuesDTO(shippingDetails)
     }
     
-    func saveGetResponseQuestionData( userId:String, certificationId:String, operatorCert:[GetSubmittedOperatorCertificationDTO]?, safetyCert:[GetSubmittedSafetyCertificationDTO]?, vaccineMixCert:[GetSubmittedVaccineMixingCertificationDTO]? , shippingAddressDetails:[ShippingAddressDTO]? ){
-        do{
+    func saveGetResponseQuestionData( userId:String, certificationId:String, operatorCert:[GetSubmittedOperatorCertificationDTO]?, safetyCert:[GetSubmittedSafetyCertificationDTO]?, vaccineMixCert:[GetSubmittedVaccineMixingCertificationDTO]? , shippingAddressDetails:[ShippingAddressDTO]?) {
+        do {
             
             if shippingAddressDetails!.count > 0 {
                 for value in shippingAddressDetails! {
@@ -605,12 +623,11 @@ final public  class UserFilledQuestionnaireDAO{
             SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: userId, evalParam1: EntityParameters.certificationId.rawValue , evalParam2: nil, evalParam1Id: nil, evalParam2Id: nil, entityName: EntityName.UserFilledQuestionnaire.rawValue)
             try managedContext.save()
             
-        } catch{
+        } catch {
             managedContext.rollback()
             debugPrint("Error while saveQuestionData in \(type(of: self))")
         }
     }
-    
 }
 
 

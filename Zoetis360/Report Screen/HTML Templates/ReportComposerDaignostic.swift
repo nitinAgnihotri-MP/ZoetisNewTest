@@ -474,90 +474,53 @@ class ReportComposerDaignostic: NSObject {
                     
                     if items[arrayIndex]["meanAge"]!.integerValue > 13 && items[arrayIndex]["meanAge"]!.integerValue < 25{
                         
-                        if needToSplit0114 == true
-                        {
+                        if needToSplit0114 == true {
                             needToSplit3341 = false
                             needToSplit42 = false
                             needToSplit2532 = false
                             needToSplit1424 = false
                             needToSplit0114 = false
                             isCheckSum = true
-                        }
-                        else
-                        {
-                            if isCheckSum == false
-                            {
+                        } else {
+                            if isCheckSum == false {
                                 needToSplit0114 = true
                                 
-                            }
-                            else
-                            {
+                            } else {
                                 needToSplit0114 = false
                             }
-                            
                         }
-                    }
-                    
-                    else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33{
-                        
-                        
-                        
-                        
-                        if needToSplit1424 == true
-                        {
+                    } else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33 {
+                        if needToSplit1424 == true {
                             needToSplit3341 = false
                             needToSplit42 = false
                             needToSplit2532 = false
                             needToSplit1424 = false
                             needToSplit0114 = false
                             isCheckSum1 = true
-                        }
-                        else
-                        {
-                            if isCheckSum1 == false
-                            {
+                        } else {
+                            if isCheckSum1 == false {
                                 needToSplit1424 = true
-                            }
-                            else{
+                            } else {
                                 needToSplit1424 = false
                             }
-                            
                         }
-                        
-                        
-                        
-                    }
-                    else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43{
-                        
-                        
-                        if needToSplit2532 == true
-                        {
+                    } else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43 {
+                        if needToSplit2532 == true {
                             needToSplit3341 = false
                             needToSplit42 = false
                             needToSplit2532 = false
                             needToSplit1424 = false
                             needToSplit0114 = false
                             isCheckSum2 = true
-                        }
-                        else
-                        {
-                            if isCheckSum2 == false
-                            {
+                        } else {
+                            if isCheckSum2 == false {
                                 needToSplit2532 = true
-                            }
-                            else{
+                            } else {
                                 needToSplit2532 = false
-                                
                             }
-                            
                         }
-                        
-                    }
-                    else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81{
-                        
-                        
-                        if needToSplit42 == true
-                        {
+                    } else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81 {
+                        if needToSplit42 == true {
                             
                             needToSplit3341 = false
                             needToSplit42 = false
@@ -565,23 +528,14 @@ class ReportComposerDaignostic: NSObject {
                             needToSplit1424 = false
                             needToSplit0114 = false
                             isCheckSum3 = true
-                        }
-                        
-                        else if needToSplit3341 == true
-                        {
-                            
-                            
-                            
-                            if (items.count == i + 1)
-                            {
+                        } else if needToSplit3341 == true {
+                            if (items.count == i + 1) {
                                 needToSplit42 = true
                                 needToSplit3341 = false
                                 needToSplit2532 = false
                                 needToSplit1424 = false
                                 needToSplit0114 = false
-                            }
-                            else
-                            {
+                            } else {
                                 needToSplit42 = false
                                 needToSplit3341 = false
                                 needToSplit2532 = false
@@ -589,28 +543,18 @@ class ReportComposerDaignostic: NSObject {
                                 needToSplit0114 = false
                                 isCheckSum3 = true
                             }
-                            
-                            
-                        }
-                        else
-                        {
-                            
-                            if (items.count == i + 1)
-                            {
+                        } else {
+                            if (items.count == i + 1) {
                                 needToSplit42 = true
                                 needToSplit3341 = false
                                 needToSplit2532 = false
                                 needToSplit1424 = false
                                 needToSplit0114 = false
-                            }
-                            else
-                            {
+                            } else {
                                 needToSplit42 = false
-                                if isCheckSum3 == false
-                                {
+                                if isCheckSum3 == false {
                                     needToSplit3341 = true
-                                }
-                                else{
+                                } else {
                                     needToSplit3341 = false
                                     
                                 }
@@ -619,7 +563,6 @@ class ReportComposerDaignostic: NSObject {
                                 needToSplit0114 = false
                             }
                         }
-                        
                     }
                     
                     if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
@@ -632,7 +575,7 @@ class ReportComposerDaignostic: NSObject {
                     }
                     
                     
-                    if  ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false)) || (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false){
+                    if ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false)) || (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false){
                         
                         isCheckSum = false
                         isCheckSum1 = false

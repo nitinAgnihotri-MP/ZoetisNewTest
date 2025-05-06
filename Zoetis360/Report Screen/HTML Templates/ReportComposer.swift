@@ -35,10 +35,130 @@ class ReportComposer: NSObject {
     override init() {
         super.init()
     }
+    fileprivate func handleNeedToSplit0114(_ needToSplit0114: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit42: inout Bool, _ needToSplit2532: inout Bool, _ needToSplit1424: inout Bool, _ isCheckSum: inout Bool) {
+        if needToSplit0114 == true {
+            needToSplit3341 = false
+            needToSplit42 = false
+            needToSplit2532 = false
+            needToSplit1424 = false
+            needToSplit0114 = false
+            isCheckSum = true
+        } else {
+            if isCheckSum == false {
+                needToSplit0114 = true
+            } else {
+                needToSplit0114 = false
+            }
+        }
+    }
+    
+    fileprivate func handleNeedToSplit1424(_ needToSplit1424: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit42: inout Bool, _ needToSplit2532: inout Bool, _ needToSplit0114: inout Bool, _ isCheckSum1: inout Bool) {
+        if needToSplit1424 == true {
+            needToSplit3341 = false
+            needToSplit42 = false
+            needToSplit2532 = false
+            needToSplit1424 = false
+            needToSplit0114 = false
+            isCheckSum1 = true
+        } else {
+            if isCheckSum1 == false {
+                needToSplit1424 = true
+            } else {
+                needToSplit1424 = false
+            }
+        }
+    }
+    
+    fileprivate func handleNeedToSplit2532(_ needToSplit2532: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit42: inout Bool, _ needToSplit1424: inout Bool, _ needToSplit0114: inout Bool, _ isCheckSum2: inout Bool) {
+        if needToSplit2532 == true{
+            needToSplit3341 = false
+            needToSplit42 = false
+            needToSplit2532 = false
+            needToSplit1424 = false
+            needToSplit0114 = false
+            isCheckSum2 = true
+        } else {
+            if isCheckSum2 == false {
+                needToSplit2532 = true
+            } else {
+                needToSplit2532 = false
+            }
+        }
+    }
+    
+    fileprivate func handleNeedToSplit42(_ needToSplit42: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit2532: inout Bool, _ needToSplit1424: inout Bool, _ needToSplit0114: inout Bool, _ isCheckSum3: inout Bool, _ items: [[String : AnyObject]], _ i: Int) {
+        if needToSplit42 == true {
+            needToSplit3341 = false
+            needToSplit42 = false
+            needToSplit2532 = false
+            needToSplit1424 = false
+            needToSplit0114 = false
+            isCheckSum3 = true
+        } else if needToSplit3341 == true {
+            if (items.count == i + 1) {
+                needToSplit42 = true
+                needToSplit3341 = false
+                needToSplit2532 = false
+                needToSplit1424 = false
+                needToSplit0114 = false
+            } else {
+                needToSplit42 = false
+                needToSplit3341 = false
+                needToSplit2532 = false
+                needToSplit1424 = false
+                needToSplit0114 = false
+                isCheckSum3 = true
+            }
+        } else {
+            
+            if (items.count == i + 1) {
+                needToSplit42 = true
+                needToSplit3341 = false
+                needToSplit2532 = false
+                needToSplit1424 = false
+                needToSplit0114 = false
+            } else {
+                needToSplit42 = false
+                if isCheckSum3 == false {
+                    needToSplit3341 = true
+                } else{
+                    needToSplit3341 = false
+                }
+                needToSplit2532 = false
+                needToSplit1424 = false
+                needToSplit0114 = false
+            }
+        }
+    }
+    
+    fileprivate func handleItemHTMLContextValidations(_ itemHTMLContent: inout String?, _ items: [[String : AnyObject]], _ i: Int) {
+        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "" )
+        if items[i]["meanAge"]!.integerValue > 0 && items[i]["meanAge"]!.integerValue < 14 {
+            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
+        } else if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
+            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "14 - 24 \(NSLocalizedString("Days", comment: ""))")
+        } else if items[i]["meanAge"]!.integerValue > 24 && items[i]["meanAge"]!.integerValue < 33 {
+            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "25 - 32 \(NSLocalizedString("Days", comment: ""))")
+        } else if items[i]["meanAge"]!.integerValue > 32 && items[i]["meanAge"]!.integerValue < 43 {
+            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "33 - 41 \(NSLocalizedString("Days", comment: ""))")
+        } else  if items[i]["meanAge"]!.integerValue > 42 && items[i]["meanAge"]!.integerValue < 81 {
+            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: NSLocalizedString("42 days or older", comment: ""))
+        }
+    }
+    
+    fileprivate func handleNeedToSplit0114(_ items: [[String : AnyObject]], _ i: Int, _ needToSplit0114: inout Bool, _ needToSplit3341: inout Bool) {
+        if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
+            needToSplit0114 = false
+        }
+        if items[i]["meanAge"]!.integerValue > 41 && items[i]["meanAge"]!.integerValue < 81 {
+            needToSplit3341 = false
+        }
+    }
+    
     func renderReports(_ complexName: String,customerName: String,vetanatrionName: String,salesRepName: String,customerRepName: String,typeDate: String,items: [[String: AnyObject]]) -> String! {
         
         do {
-            if let value = pathToReportHTMLTemplate {
+            if pathToReportHTMLTemplate != nil {
                 var HTMLContent = try? String(contentsOfFile: pathToReportHTMLTemplate!, encoding: String.Encoding.utf8)
                 
                 
@@ -120,7 +240,7 @@ class ReportComposer: NSObject {
                 for i in 0..<items.count+1 {
                     var itemHTMLContent: String!
                     
-                    if i != items.count  {
+                    if i != items.count {
                         itemHTMLContent = try String(contentsOfFile: pathToSingleItemHTMLTemplate!, encoding: String.Encoding.utf8)
                         index = 0
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Acervulina#", with: NSString(format: "%.1f",items[i]["acer"]?.floatValue ?? 0) as String)
@@ -192,189 +312,26 @@ class ReportComposer: NSObject {
                         
                         let arrayIndex = i + 1 < items.count ? i + 1 : i
                         
-                        if items[arrayIndex]["meanAge"]!.integerValue > 13 && items[arrayIndex]["meanAge"]!.integerValue < 25{
-                            
-                            if needToSplit0114 == true
-                            {
-                                needToSplit3341 = false
-                                needToSplit42 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                                isCheckSum = true
-                            }
-                            else
-                            {
-                                if isCheckSum == false
-                                {
-                                    needToSplit0114 = true
-                                    
-                                }
-                                else
-                                {
-                                    needToSplit0114 = false
-                                }
-                            }
+                        if items[arrayIndex]["meanAge"]!.integerValue > 13 && items[arrayIndex]["meanAge"]!.integerValue < 25 {
+                            handleNeedToSplit0114(&needToSplit0114, &needToSplit3341, &needToSplit42, &needToSplit2532, &needToSplit1424, &isCheckSum)
+                        } else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33 {
+                            handleNeedToSplit1424(&needToSplit1424, &needToSplit3341, &needToSplit42, &needToSplit2532, &needToSplit0114, &isCheckSum1)
+                        } else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43 {
+                            handleNeedToSplit2532(&needToSplit2532, &needToSplit3341, &needToSplit42, &needToSplit1424, &needToSplit0114, &isCheckSum2)
+                        } else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81 {
+                            handleNeedToSplit42(&needToSplit42, &needToSplit3341, &needToSplit2532, &needToSplit1424, &needToSplit0114, &isCheckSum3, items, i)
                         }
-                        
-                        else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33{
-                            
-                            if needToSplit1424 == true
-                            {
-                                needToSplit3341 = false
-                                needToSplit42 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                                isCheckSum1 = true
-                            }
-                            else
-                            {
-                                if isCheckSum1 == false
-                                {
-                                    needToSplit1424 = true
-                                }
-                                else{
-                                    needToSplit1424 = false
-                                }
-                                
-                            }
-                            
-                        }
-                        else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43{
-                            
-                            
-                            if needToSplit2532 == true
-                            {
-                                needToSplit3341 = false
-                                needToSplit42 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                                isCheckSum2 = true
-                            }
-                            else
-                            {
-                                if isCheckSum2 == false
-                                {
-                                    needToSplit2532 = true
-                                }
-                                else{
-                                    needToSplit2532 = false
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81{
-                            
-                            
-                            if needToSplit42 == true
-                            {
-                                
-                                needToSplit3341 = false
-                                needToSplit42 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                                isCheckSum3 = true
-                            }
-                            
-                            else if needToSplit3341 == true
-                            {
-                                
-                                
-                                
-                                if (items.count == i + 1)
-                                {
-                                    needToSplit42 = true
-                                    needToSplit3341 = false
-                                    needToSplit2532 = false
-                                    needToSplit1424 = false
-                                    needToSplit0114 = false
-                                }
-                                else
-                                {
-                                    needToSplit42 = false
-                                    needToSplit3341 = false
-                                    needToSplit2532 = false
-                                    needToSplit1424 = false
-                                    needToSplit0114 = false
-                                    isCheckSum3 = true
-                                }
-                                
-                                
-                            }
-                            else
-                            {
-                                
-                                if (items.count == i + 1)
-                                {
-                                    needToSplit42 = true
-                                    needToSplit3341 = false
-                                    needToSplit2532 = false
-                                    needToSplit1424 = false
-                                    needToSplit0114 = false
-                                }
-                                else
-                                {
-                                    needToSplit42 = false
-                                    if isCheckSum3 == false
-                                    {
-                                        needToSplit3341 = true
-                                    }
-                                    else{
-                                        needToSplit3341 = false
-                                        
-                                    }
-                                    needToSplit2532 = false
-                                    needToSplit1424 = false
-                                    needToSplit0114 = false
-                                }
-                            }
-                            
-                        }
-                        if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
-                            
-                            needToSplit0114 = false
-                        }
-                        if items[i]["meanAge"]!.integerValue > 41 && items[i]["meanAge"]!.integerValue < 81 {
-                            
-                            needToSplit3341 = false
-                        }
-                        if  ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false)) || (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false) {
+                        handleNeedToSplit0114(items, i, &needToSplit0114, &needToSplit3341)
+                        let boolStatusNeedToSplit: (Bool) = ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false))
+                        let boolStatusIsCocciHistory: (Bool) = (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false)
+                        if boolStatusNeedToSplit || boolStatusIsCocciHistory {
                             
                             isCheckSum = false
                             isCheckSum1 = false
                             isCheckSum2 = false
                             isCheckSum3 = false
                             
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "" )
-                            if items[i]["meanAge"]!.integerValue > 0 && items[i]["meanAge"]!.integerValue < 14
-                            {
-                                itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
-                            }
-                            
-                            else if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25
-                            {
-                                itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "14 - 24 \(NSLocalizedString("Days", comment: ""))")
-                            }
-                            
-                            else if items[i]["meanAge"]!.integerValue > 24 && items[i]["meanAge"]!.integerValue < 33
-                            {
-                                itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "25 - 32 \(NSLocalizedString("Days", comment: ""))")
-                            }
-                            
-                            else  if items[i]["meanAge"]!.integerValue > 32 && items[i]["meanAge"]!.integerValue < 43
-                            {
-                                itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "33 - 41 \(NSLocalizedString("Days", comment: ""))")
-                            }
-                            
-                            else  if items[i]["meanAge"]!.integerValue > 42 && items[i]["meanAge"]!.integerValue < 81
-                            {
-                                itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: NSLocalizedString("42 days or older", comment: ""))
-                            }
+                            handleItemHTMLContextValidations(&itemHTMLContent, items, i)
                             
                             itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal_Spliter) as String )
                             itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAgeTotal#", with: NSString(format: "%.0f",round(Float(meanAge_Spliter/index_Spliter))) as String)
@@ -408,19 +365,12 @@ class ReportComposer: NSObject {
                             index_Spliter = 0
                             
                             index_Total += 1
-                            
-                            //                        needToSplit2532 = false
-                            //                        needToSplit3341 = false
-                            //                        needToSplit42 = false
-                            
-                        } else{
-                            
+                        } else {
                             itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "display:none" )
                         }
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Sick#", with: items[i]["isSick"]!.intValue == 0 ? "" : "checked")
-                    }
-                    else {
+                    } else {
                         itemHTMLContent = try String(contentsOfFile: pathToLastItemHTMLTemplate!, encoding: String.Encoding.utf8)
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal) as String )

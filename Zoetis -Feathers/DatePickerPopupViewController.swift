@@ -77,7 +77,6 @@ class DatePickerPopupViewController: BaseViewController {
                     datePicker.maximumDate =  lastDateOfCurrentQuarter
                 }
             } else {
-                let evaluationDateObj =  Date()
                 
                 if isCertificateDate == 0 {
                     let theDaysLater = TimeInterval(3.months)

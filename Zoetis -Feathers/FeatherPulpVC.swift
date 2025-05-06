@@ -167,7 +167,7 @@ class FeatherPulpVC: BaseViewController {
     
     private func saveReviewersDataToDatabase(isSessionType: Bool){
         let prediacateForNonSessionType = NSPredicate(format: "timeStamp == %@", argumentArray: [self.currentRequisition.timeStamp])
-        let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+        let prediacateForSessionType = predicateForSessionType()
         let doesReviewerExists = MicrobialSelectedUnselectedReviewer.doReviewersExisitsFortheTimeStamp(predicate: isSessionType ? prediacateForSessionType : prediacateForNonSessionType)
         if !doesReviewerExists{
             let reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
@@ -332,7 +332,7 @@ class FeatherPulpVC: BaseViewController {
         self.reviewerDetails.removeAll()
         switch requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
+            let prediacateForSessionType = predicateForSessionType()
             self.reviewerDetails = MicrobialSelectedUnselectedReviewer.fetchDetailsForReviewer(predicate: prediacateForSessionType)
         case .SHOW_DRAFT_FOR_EDITING,.SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             let prediacateForNonSessionType = NSPredicate(format: "timeStamp == %@", argumentArray: [self.currentRequisition.timeStamp])
@@ -503,13 +503,45 @@ class FeatherPulpVC: BaseViewController {
 
         switch self.requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(plate, plateId: plateId, flockId: "", houseNo: "", sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "true", microsporeCheck: "false", sessionId: sessionId, timeStamp: self.currentRequisition.timeStamp, isSessionPlate: true)
+            
+            let data = CoreDataHandlerMicrodataModels.FeatherPulpSampleInfoDataSave(
+                plateIdGenerated: plate,
+                    plateId: plateId,
+                    flockId: "",
+                    houseNo: "",
+                    sampleDescription: "",
+                    additionalTests: "Bacterial",
+                    checkMark: "true",
+                    microsporeCheck: "false",
+                    sessionId: sessionId,
+                    timeStamp: self.currentRequisition.timeStamp,
+                    isSessionPlate: true
+            )
+
+            CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(data)            
+            
             plateArr.removeAll()
             let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
         
         case .SHOW_DRAFT_FOR_EDITING:
-            CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(plate, plateId: plateId, flockId: "", houseNo: "", sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "true", microsporeCheck: "false", sessionId: sessionId, timeStamp: self.currentRequisition.timeStamp, isSessionPlate: false)
+            
+            let data = CoreDataHandlerMicrodataModels.FeatherPulpSampleInfoDataSave(
+                plateIdGenerated: plate,
+                 plateId: plateId,
+                 flockId: "",
+                 houseNo: "",
+                 sampleDescription: "",
+                 additionalTests: "Bacterial",
+                 checkMark: "true",
+                 microsporeCheck: "false",
+                 sessionId: sessionId,
+                 timeStamp: self.currentRequisition.timeStamp,
+                 isSessionPlate: false
+            )
+
+            CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(data)
+            
             plateArr.removeAll()
             let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             self.plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]

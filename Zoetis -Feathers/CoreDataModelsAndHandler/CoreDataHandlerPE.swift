@@ -168,71 +168,37 @@ class CoreDataHandlerPE: NSObject {
         }
     }
     
-    func updateOfflineRefrigatorInDB(_ id: Int, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,serverAssessmentId:Int) {
+    func updateOfflineRefrigatorInDB(_ data: CoreDataHandlerPEModels.updateOfflineRefrigeratorData) {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
+
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Offline")
-        fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
-        
+        fetchRequest.predicate = NSPredicate(format: predicateId, data.id, data.serverAssessmentId)
+
         var results: [NSManagedObject] = []
-        
+
         do {
             results = try appDelegate.managedObjectContext.fetch(fetchRequest)
-            if(results.count>0){
-                for i in 0..<results.count{
-                    let re = results[i]
-                    re.setValue(labelText, forKey: "labelText")
-                    re.setValue(rollOut, forKey: "rollOut")
-                    re.setValue(unit, forKey: "unit")
-                    re.setValue(value, forKey: "value")
-                    re.setValue(catID, forKey: "catID")
-                    re.setValue(isCheck, forKey: "isCheck")
-                    re.setValue(isNA, forKey: "isNA")
+            if results.count > 0 {
+                for re in results {
+                    re.setValue(data.labelText, forKey: "labelText")
+                    re.setValue(data.rollOut, forKey: "rollOut")
+                    re.setValue(data.unit, forKey: "unit")
+                    re.setValue(data.value, forKey: "value")
+                    re.setValue(data.catID, forKey: "catID")
+                    re.setValue(data.isCheck, forKey: "isCheck")
+                    re.setValue(data.isNA, forKey: "isNA")
                     do {
-                        try managedContext.save()
+                        try appDelegate.managedObjectContext.save()
                     } catch {
+                        // handle save error
                     }
                 }
             }
-        }
-        catch {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
     }
     
-    
-    //    Update  Rejected Refrigator Data
-    func updateRejectedRefrigatorInDB(_ id: Int, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,serverAssessmentId:Int) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Rejected")
-        fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
-        
-        var results: [NSManagedObject] = []
-        
-        do {
-            results = try appDelegate.managedObjectContext.fetch(fetchRequest)
-            if(results.count>0){
-                for i in 0..<results.count{
-                    let re = results[i]
-                    re.setValue(labelText, forKey: "labelText")
-                    re.setValue(rollOut, forKey: "rollOut")
-                    re.setValue(unit, forKey: "unit")
-                    re.setValue(value, forKey: "value")
-                    re.setValue(catID, forKey: "catID")
-                    re.setValue(isCheck, forKey: "isCheck")
-                    re.setValue(isNA, forKey: "isNA")
-                    do {
-                        try managedContext.save()
-                    } catch {
-                    }
-                }
-            }
-        }
-        catch {
-            print(appDelegateObj.testFuntion())
-        }
-    }
     
     //    Update Refrigator Data
     func updateRefrigatorInDB(_ id: Int, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,serverAssessmentId:Int) {
@@ -3999,10 +3965,9 @@ class CoreDataHandlerPE: NSObject {
     
     func updateOfflineStatus(assessment: PENewAssessment) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+         managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "dataToSubmitNumber == %d", argumentArray: [assessment.dataToSubmitNumber])
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject] ?? []

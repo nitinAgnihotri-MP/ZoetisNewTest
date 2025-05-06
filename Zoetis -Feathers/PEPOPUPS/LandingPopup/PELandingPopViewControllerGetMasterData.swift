@@ -1129,8 +1129,7 @@ extension PELandingPoupViewController {
                     CoreDataHandler().deleteAllData("PE_AssessmentInProgress")
                     CoreDataHandler().deleteAllData("PE_Refrigator")
                 }
-            }
-             else{
+            } else {
                  debugPrint("Draft ASSESSMENT : ",self.convertDictToJson(dict: objDic,apiName: "COMPLETED ASSESSMENT :") )
                 
                 let peNewAssessmentWas = PENewAssessment()
