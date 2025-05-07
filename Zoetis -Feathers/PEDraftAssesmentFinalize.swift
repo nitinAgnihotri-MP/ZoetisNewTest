@@ -1192,9 +1192,37 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         if(refrigtorArray.count > 0) {
             for refrii in refrigtorArray {
                 if(CoreDataHandlerPE().someEntityExists(id: Int(refrii.id ?? 0))) {
-                    CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    
+                    let updatedData = CoreDataHandlerPEModels.updateRefrigatorData(
+                        id: Int(refrii.id ?? 0),
+                        labelText: refrii.labelText ?? "",
+                        rollOut: refrii.rollOut ?? "",
+                        unit: refrii.unit ?? "",
+                        value: refrii.value ?? 0.0,
+                        catID: refrii.catID ?? 0,
+                        isCheck: refrii.isCheck ?? false,
+                        isNA: refrii.isNA ?? false,
+                        serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                    )
+
+                    CoreDataHandlerPE().updateRefrigatorInDB(data: updatedData)
+                    
                 } else {
-                    CoreDataHandlerPE().saveRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
+                    
+                    let refrigeratorData = CoreDataHandlerPEModels.refrigeratorData(
+                        id: refrii.id ?? 0,
+                        labelText: refrii.labelText ?? "",
+                        rollOut: refrii.rollOut ?? "",
+                        unit: refrii.unit ?? "",
+                        value: refrii.value ?? 0.0,
+                        catID: refrii.catID ?? 0,
+                        isCheck: refrii.isCheck ?? false,
+                        isNA: refrii.isNA ?? false,
+                        schAssmentId: refrii.schAssmentId ?? 0
+                    )
+
+                    CoreDataHandlerPE().saveRefrigatorInDB(refrigeratorData: refrigeratorData)
+                    
                 }
             }
         }
@@ -1308,9 +1336,35 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         if(refrigtorArray.count > 0) {
             for refrii in refrigtorArray {
                 if(CoreDataHandlerPE().someEntityExists(id: Int(refrii.id ?? 0))) {
-                    CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    let updatedData = CoreDataHandlerPEModels.updateRefrigatorData(
+                        id: Int(refrii.id ?? 0),
+                        labelText: refrii.labelText ?? "",
+                        rollOut: refrii.rollOut ?? "",
+                        unit: refrii.unit ?? "",
+                        value: refrii.value ?? 0.0,
+                        catID: refrii.catID ?? 0,
+                        isCheck: refrii.isCheck ?? false,
+                        isNA: refrii.isNA ?? false,
+                        serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                    )
+
+                    CoreDataHandlerPE().updateRefrigatorInDB(data: updatedData)
                 } else {
-                    CoreDataHandlerPE().saveRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
+                    
+                    let refrigeratorData = CoreDataHandlerPEModels.refrigeratorData(
+                        id: refrii.id ?? 0,
+                         labelText: refrii.labelText ?? "",
+                         rollOut: refrii.rollOut ?? "",
+                         unit: refrii.unit ?? "",
+                         value: refrii.value ?? 0.0,
+                         catID: refrii.catID ?? 0,
+                         isCheck: refrii.isCheck ?? false,
+                         isNA: refrii.isNA ?? false,
+                         schAssmentId: refrii.schAssmentId ?? 0
+                    )
+
+                    CoreDataHandlerPE().saveRefrigatorInDB(refrigeratorData: refrigeratorData)
+                    
                 }
             }
         }
@@ -2528,16 +2582,71 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         
         if(switchisCheck) {
             if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id:   assessment?.assID as! Int,
+                    labelText: assessment?.assDetail1 ?? "",
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0.0,
+                    catID: assessment?.catID as! NSNumber,
+                    isCheck: true,
+                    isNA: false,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,schAssmentId:  Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                      id: assessment?.assID as! NSNumber,
+                      labelText: assessment?.assDetail1 ?? "",
+                      rollOut: "Y",
+                      unit: "",
+                      value: 0,
+                      catID: assessment?.catID as! NSNumber,
+                      isCheck: true,
+                      isNA: false,
+                      schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
                 
             }
         } else {
             if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assessment?.assID as! Int,
+                    labelText: assessment?.assDetail1 ?? "",
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0.0,
+                    catID: assessment?.catID as! NSNumber,
+                    isCheck: false,
+                    isNA: false,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId:  Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                      id: assessment?.assID as! NSNumber,
+                      labelText: assessment?.assDetail1 ?? "",
+                      rollOut: "Y",
+                      unit: "",
+                      value: 0,
+                      catID: assessment?.catID as! NSNumber,
+                      isCheck: false,
+                      isNA: false,
+                      schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         }
     }
@@ -2545,15 +2654,71 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     fileprivate func handleSetupRefrigderateValidationBtnSelectedFalse(_ switchisCheck: Bool,assessment:PE_AssessmentInProgress?) {
         if(switchisCheck) {
             if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assessment?.assID as! Int,
+                    labelText: assessment?.assDetail1 ?? "",
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0.0,
+                    catID: assessment?.catID as! NSNumber,
+                    isCheck: true,
+                    isNA: true,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                     id: assessment?.assID as! NSNumber,
+                     labelText: assessment?.assDetail1 ?? "",
+                     rollOut: "Y",
+                     unit: "",
+                     value: 0.0,
+                     catID: assessment?.catID as! NSNumber,
+                     isCheck: true,
+                     isNA: true,
+                     schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         } else {
             if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assessment?.assID as! Int,
+                    labelText: assessment?.assDetail1 ?? "",
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0.0,
+                    catID: assessment?.catID as! NSNumber,
+                    isCheck: false,
+                    isNA: true,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                      id: assessment?.assID as! NSNumber,
+                      labelText: assessment?.assDetail1 ?? "",
+                      rollOut: "Y",
+                      unit: "",
+                      value: 0.0,
+                      catID: assessment?.catID as! NSNumber,
+                      isCheck: false,
+                      isNA: true,
+                      schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         }
     }
@@ -2589,10 +2754,37 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     self.resultScoreLabel.text = String(result)
                     assessment?.assStatus = 1
                     if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                            id:  assessment?.assID as! Int,
+                            labelText: assessment?.assDetail1 ?? "",
+                            rollOut: "Y",
+                            unit: "",
+                            value: 0.0,
+                            catID: assessment?.catID as! NSNumber,
+                            isCheck: true,
+                            isNA: false,
+                            serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
                         
                     } else {
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                              id: assessment?.assID as! NSNumber,
+                              labelText: assessment?.assDetail1 ?? "",
+                              rollOut: "Y",
+                              unit: "",
+                              value: 0.0,
+                              catID: assessment?.catID as! NSNumber,
+                              isCheck: true,
+                              isNA: true,
+                              schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                        
                     }
                 } else {
                     var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
@@ -2603,9 +2795,38 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     self.resultScoreLabel.text = String(result)
                     assessment?.assStatus = 0
                     if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                            id: assessment?.assID as! Int,
+                            labelText: assessment?.assDetail1 ?? "",
+                            rollOut: "Y",
+                            unit: "",
+                            value: 0.0,
+                            catID: assessment?.catID as! NSNumber,
+                            isCheck: false,
+                            isNA: false,
+                            serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                        
+                        
                     } else {
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                              id: assessment?.assID as! NSNumber,
+                              labelText: assessment?.assDetail1 ?? "",
+                              rollOut: "Y",
+                              unit: "",
+                              value: 0.0,
+                              catID: assessment?.catID as! NSNumber,
+                              isCheck: false,
+                              isNA: true,
+                              schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                        
                         
                     }
                 }
@@ -3379,9 +3600,37 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             let assID = assessment?.assID
             
             if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "", value: Double(valueText) ?? 0.0, catID: 1, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assID as! Int,
+                    labelText: textLabel,
+                    rollOut: "Y",
+                    unit: txtfld.text ?? "",
+                    value: Double(valueText) ?? 0.0,
+                    catID: 1,
+                    isCheck: true,
+                    isNA: false,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: txtfld.text ?? "", value: Double(valueText) ?? 0.0, catID: 1, isCheck: true, isNA: false, schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                      id: assID as! NSNumber,
+                      labelText: textLabel,
+                      rollOut: "Y",
+                      unit: txtfld.text ?? "",
+                      value: Double(valueText) ?? 0.0,
+                      catID: 1,
+                      isCheck: true,
+                      isNA: false,
+                      schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
             self.tableview.reloadData()
         }
@@ -3420,9 +3669,37 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         let assID = assessment?.assID
         
         if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-            CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValue, value: Double(value?.text ?? "0.0") ?? 0.0, catID: self.selectedCategory?.catID as! NSNumber, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            
+            let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                id: assID as! Int,
+                labelText: textLabel,
+                rollOut: "Y",
+                unit: unitValue,
+                value: Double(value?.text ?? "0.0") ?? 0.0,
+                catID: self.selectedCategory?.catID as! NSNumber,
+                isCheck: true,
+                isNA: false,
+                serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+            )
+
+            CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
         } else {
-            CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValue, value: Double(value?.text ?? "0.0") ?? 0.0, catID: self.selectedCategory?.catID as! NSNumber, isCheck: true, isNA: false, schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            
+            let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                id: assID as! NSNumber,
+                  labelText: textLabel,
+                  rollOut: "Y",
+                  unit: unitValue,
+                  value: Double(value?.text ?? "0.0") ?? 0.0,
+                  catID: self.selectedCategory?.catID as! NSNumber,
+                  isCheck: true,
+                  isNA: false,
+                  schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+            )
+
+            CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+            
+            
         }
         self.tableview.reloadData()
     }
@@ -3607,9 +3884,36 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     }
                     let assID = assessmentCopy?.assID
                     if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                            id: assID as! Int,
+                            labelText: textLabel,
+                            rollOut: "Y",
+                            unit: unitValueCopy,
+                            value: Double(valueTextCopy) ?? 0.0,
+                            catID: assessmentCopy?.catID as! NSNumber,
+                            isCheck: true,
+                            isNA: false,
+                            serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                        
                     } else {
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                             id: assID as! NSNumber,
+                             labelText: textLabel,
+                             rollOut: "Y",
+                             unit: unitValueCopy,
+                             value: Double(valueTextCopy) ?? 0.0,
+                             catID: assessmentCopy?.catID as! NSNumber,
+                             isCheck: true,
+                             isNA: false,
+                             schAssmentId: self.selectedCategory?.assID ?? 0
+                        )
+
+                        CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
                     }
                 }
                 self.dropHiddenAndShow()
@@ -3630,9 +3934,37 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             valueTextCopy = value?.text ?? ""
             let assID = assessmentCopy?.assID
             if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assID as! Int,
+                    labelText: textLabel,
+                    rollOut: "Y",
+                    unit: unitValueCopy,
+                    value: Double(valueTextCopy) ?? 0.0,
+                    catID: 1,
+                    isCheck: true,
+                    isNA: false,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                    id: assID as! NSNumber,
+                    labelText: textLabel,
+                    rollOut: "Y",
+                    unit: unitValueCopy,
+                    value: Double(valueTextCopy) ?? 0.0,
+                    catID: 1,
+                    isCheck: true,
+                    isNA: false,
+                    schAssmentId: self.selectedCategory?.assID ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         }
     }
@@ -3701,10 +4033,13 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     private func setupVaccineMixerHeaderCompletions(_ headerView: PETableviewHeaderFooterView) {
         headerView.addCompletion = { [unowned self] error in
             if self.certificateData.last == nil || self.certificateData.last?.name != "" {
-                let certificateData = PECertificateData(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
-                let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
-                certificateData.id = id
-                self.certificateData.append(certificateData)
+                
+                let certificModel = CoreDataHandlerPEModels.CertificateInfo.init(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
+                
+                let data = PECertificateData(info: certificModel)
+                let id = self.saveVMixerInPEModule(peCertificateData: data)
+                data.id = id
+                self.certificateData.append(data)
             } else {
                 self.showtoast(message: "Please add Vaccine Mixer & Certification Date")
             }
@@ -3712,9 +4047,13 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
         headerView.minusCompletion = { [unowned self] error in
             if self.certificateData.count > 0 {
-                let certificateData = PECertificateData(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
+                
+                let certificModel = CoreDataHandlerPEModels.CertificateInfo.init(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
+                
+                let data = PECertificateData(info: certificModel)
+                
                 let lastItem = self.certificateData.last
-                self.delVMixerInPEModule(peCertificateData: lastItem ?? certificateData)
+                self.delVMixerInPEModule(peCertificateData: lastItem ?? data)
                 self.certificateData.removeLast()
             }
             if self.certificateData.count > 1 {
@@ -4326,7 +4665,21 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
             for i in catArrayForTableIs {
                 let refri = i as! PE_AssessmentInProgress
                 if(!CoreDataHandlerPE().checkDraftSameAssesmentEntityExists(id: refri.assID as! Int,serverAssessmentId: Int(refri.serverAssessmentId ?? "0") ?? 0)) {
-                    CoreDataHandlerPE().saveDraftRefrigatorInDB(refri.assID as! NSNumber, labelText: "", rollOut: "Y", unit: "Celsius" , value: 0.0,catID: refri.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId: Int(refri.serverAssessmentId ?? "0") ?? 0)
+
+                    let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                           id: refri.assID as! NSNumber,
+                           labelText: "",
+                           rollOut: "Y",
+                           unit: "Celsius",
+                           value: 0.0,
+                           catID: refri.catID as! NSNumber,
+                           isCheck: false,
+                           isNA: false,
+                           schAssmentId: Int(refri.serverAssessmentId ?? "0") ?? 0
+                    )
+
+                    CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                    
                 }
             }
             if(catArrayForTableIs.count > 0) {

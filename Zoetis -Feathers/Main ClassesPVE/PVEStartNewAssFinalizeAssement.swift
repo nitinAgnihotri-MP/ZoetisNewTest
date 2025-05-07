@@ -1517,12 +1517,30 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             ? #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
             : #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
     }
-
     
-    private func configureVaccineDetailsCell(for indexPath: IndexPath,tableView:UITableView) -> UITableViewCell {
+    private func configuredCrewSafetyCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
+        
+        cell.setCellAndControllsNew(qArr: inactiveQuessArr, currentIndd: indexPath as NSIndexPath)
+        cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
+        
+        let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String
+        let isCameraEnabled = (cameraState == "true")
+        cell.cameraIcon.alpha = isCameraEnabled ? 1.0 : 0.2
+        cell.cameraBtn.alpha = isCameraEnabled ? 1.0 : 0.2
+        
+        cell.contentView.backgroundColor = (indexPath.row % 2 == 0)
+            ? #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
+            : #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
+        
+        return cell
+    }
+
+    private func configureVaccineDetailsCell(for indexPath: IndexPath, tableView: UITableView) -> UITableViewCell {
         if isInActiveVaccineOn == true {
+            return configuredCrewSafetyCell(tableView: tableView, indexPath: indexPath)
+        } else if isInActiveVaccineOn == false {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            
             cell.setCellAndControllsNew(qArr:inactiveQuessArr, currentIndd: indexPath as NSIndexPath)
             cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
             let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
@@ -1533,48 +1551,17 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 cell.cameraIcon.alpha = 0.2
                 cell.cameraBtn.alpha = 0.2
             }
-            
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
+            if (indexPath.row % 2 == 0) {
+                cell.contentView.backgroundColor = #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
             } else {
                 cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
             }
-            
-            return cell
-            
-        } else if isInActiveVaccineOn == false {
-            let isSelecteLivedArr = inactiveQuessArr.value(forKey: "inactiveComment") as? [String]
-            let liveComment = isSelecteLivedArr![0]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "switchVaccineNote", for: indexPath) as! Vaccine_NoteTypeCell
-            cell.currentIndPath = indexPath as NSIndexPath
-            cell.QuesIdArr = inactiveQuessArr
-            cell.SwitchState = isInActiveVaccineOn
-            
-            cell.notetxtView.text = liveComment
-            cell.type = "sync"
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            
-            cell.setCellAndControllsNew(qArr:inactiveQuessArr, currentIndd: indexPath as NSIndexPath)
-            cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-            let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
-            if cameraState == "true"{
-                cell.cameraIcon.alpha = 1.0
-                cell.cameraBtn.alpha = 1.0
-            } else {
-                cell.cameraIcon.alpha = 0.2
-                cell.cameraBtn.alpha = 0.2
-            }
-            
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
-            } else {
-                cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
-            }
-            return cell
+            return configuredCrewSafetyCell(tableView: tableView, indexPath: indexPath)
         }
     }
+    
     fileprivate func handleVaccineInfDetailsOtherValidations(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
         if vaccinInfoDetailArr[indexPath.row].keys.contains("expDate") {
             cell.expiryTxtFld.text = vaccinInfoDetailArr[indexPath.row]["expDate"]  as? String

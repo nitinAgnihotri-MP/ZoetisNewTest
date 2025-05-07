@@ -50,12 +50,12 @@ internal class DropperCell: UITableViewCell {
     }
     
     fileprivate func addBottomBorder() {
-        if let index = indexPath, let lastItem = last {
-            if (index.row != lastItem) {
-                seperator.frame = CGRect(x: 0, y: self.frame.height - 1, width: self.frame.width, height: 1)
-                seperator.backgroundColor = borderColor ?? UIColor.black
-                addSubview(seperator)
-            }
+        if let index = indexPath, let lastItem = last, index.row != lastItem {
+            seperator.frame = CGRect(x: 0, y: self.frame.height - 1, width: self.frame.width, height: 1)
+            seperator.backgroundColor = borderColor ?? UIColor.black
+            addSubview(seperator)
         }
     }
+
+    
 }

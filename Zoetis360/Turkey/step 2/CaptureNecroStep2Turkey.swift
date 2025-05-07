@@ -3696,103 +3696,65 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     
     func addSkeltonResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {
- 
-        var formName = UserDefaults.standard.value(forKey: "farm") as! String
+        let formName = UserDefaults.standard.value(forKey: "farm") as! String
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         let skeletenArr = CoreDataHandlerTurkey().fetchAllSeettingdataWithLngIdTurkey(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        for i in 0..<skeletenArr.count
-        {
+        for i in 0..<skeletenArr.count {
             if ((skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                 
                 let skleta : SkeletaTurkey = skeletenArr.object(at: i) as! SkeletaTurkey
-                if skleta.measure! == "Y,N" {
-                    
-                    
-                    var necId = getNecId()
-                    
-             
+                switch skleta.measure {
+                case "Y,N","Actual":
+                    let necId = getNecId()
                     let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
-                           catName: "skeltaMuscular",
-                           obsName: skleta.observationField!,
-                           formName: formName,
-                           obsVisibility: false,
-                           birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
-                           obsPoint: 0,
-                           index: self.items.count,
-                           obsId: skleta.observationId!.intValue,
-                           measure: skleta.measure!,
-                           quickLink: skleta.quicklinks!,
-                           necId: necId as NSNumber,
-                           isSync: true,
-                           lngId: lngId as NSNumber,
-                           refId: skleta.refId!,
-                           actualText: skleta.measure ?? ""
+                        catName: "skeltaMuscular",
+                        obsName: skleta.observationField!,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
+                        obsPoint: 0,
+                        index: self.items.count,
+                        obsId: skleta.observationId!.intValue,
+                        measure: skleta.measure!,
+                        quickLink: skleta.quicklinks!,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: skleta.refId!,
+                        actualText: skleta.measure ?? ""
                     )
-
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
-                }
-                else if ( skleta.measure! == "Actual"){
-                    
-                    var necId = getNecId()
-                    
-                           let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
-                            catName: "skeltaMuscular",
-                             obsName: skleta.observationField!,
-                             formName: formName,
-                             obsVisibility: false,
-                             birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
-                             obsPoint: 0,
-                             index: self.items.count,
-                             obsId: skleta.observationId!.intValue,
-                             measure: skleta.measure!,
-                             quickLink: skleta.quicklinks!,
-                             necId: necId as NSNumber,
-                             isSync: true,
-                             lngId: lngId as NSNumber,
-                             refId: skleta.refId!,
-                             actualText: skleta.measure ?? ""
-                           )
-
-                           CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
-                }
-                else
-                {
+                default:
                     let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
-                    var necId = getNecId()
+                    let necId = getNecId()
                     let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
-                        
                         catName: "skeltaMuscular",
-                         obsName: skleta.observationField!,
-                         formName: formName,
-                         obsVisibility: false,
-                         birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
-                         obsPoint: Int(array[0])!,
-                         index: self.items.count,
-                         obsId: skleta.observationId!.intValue,
-                         measure: skleta.measure!,
-                         quickLink: skleta.quicklinks!,
-                         necId: necId as NSNumber,
-                         isSync: true,
-                         lngId: lngId as NSNumber,
-                         refId: skleta.refId!,
-                         actualText: skleta.measure ?? ""
+                        obsName: skleta.observationField!,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
+                        obsPoint: Int(array[0])!,
+                        index: self.items.count,
+                        obsId: skleta.observationId!.intValue,
+                        measure: skleta.measure!,
+                        quickLink: skleta.quicklinks!,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: skleta.refId!,
+                        actualText: skleta.measure ?? ""
                     )
-
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
                 }
             }
         }
         
         self.dataSkeltaArray.removeAllObjects()
-        
-        var  necId = getNecId()
-        
-        self.dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-        
+        let necId = getNecId()
+        self.dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         completion (true)
-        
     }
     
     func addCocoiResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {

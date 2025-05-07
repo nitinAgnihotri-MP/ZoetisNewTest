@@ -127,9 +127,7 @@ class SingleSyncDataTurkey: NSObject {
     func feedprogram(postingId: NSNumber) {
         let savedSessions = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId)
         guard let savedPostingSessions = savedSessions as? [PostingSessionTurkey] else { return }
-        
-        let necropsyRaw = CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
-        
+                
         var sessionDataArray: [[String: Any]] = []
         
         for session in savedPostingSessions {
@@ -1291,27 +1289,32 @@ class SingleSyncDataTurkey: NSObject {
                 completion(false)
                 return
             }
-
-            CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId, isSync: false) { success in
-                guard success else {
-                    completion(false)
-                    return
-                }
-
-                CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId, isSync: false) { success in
-                    guard success else {
-                        completion(false)
-                        return
-                    }
-
-                    self.handleUpdateIsSyncCocciSaveDB(pId: pId, completion)
-                }
-            }
+            self.updateAlternativeFeedSync(pId: pId, completion: completion)
         }
     }
 
-    
-    
+    private func updateAlternativeFeedSync(pId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.updateAntibioticSync(pId: pId, completion: completion)
+        }
+    }
+
+    private func updateAntibioticSync(pId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.handleUpdateIsSyncCocciSaveDB(pId: pId, completion)
+        }
+    }
+
+
+
     
     
     
@@ -1331,23 +1334,41 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     
-    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void){
-        
-        CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(nId , isSync: false, { (success) in
-            if success == true {
-                
-                CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(nId , isSync: false, { (success) in
-                    if success == true {
-                        
-                        CoreDataHandlerTurkey().updateisSyncOnCaptureInDatabaseTurkey(nId , isSync: false, { (success) in
-                            updateIsSyncInDB(nId,success) { (status) in
-                                completion(status)
-                            }
-                        })
-                    }
-                })
+    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(nId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
             }
-        })
+            self.updateStep1Sync(nId: nId, completion: completion)
+        }
     }
+
+    private func updateStep1Sync(nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(nId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.updateStep2Sync(nId: nId, completion: completion)
+        }
+    }
+
+    private func updateStep2Sync(nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnCaptureInDatabaseTurkey(nId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.updateIsSyncInDB(nId, success: success, completion: completion)
+        }
+    }
+
+    private func updateIsSyncInDB(_ nId: NSNumber, success: Bool, completion: @escaping (Bool) -> Void) {
+        updateIsSyncInDB(nId, success) { status in
+            completion(status)
+        }
+    }
+
     
 }

@@ -165,12 +165,14 @@ class ApiSyncTurkey: NSObject {
             
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 
+                
+                
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
                 debugPrint(err)
-            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            } else if let data = response.data{
                 // other failures
                 debugPrint (encodingError)
-                debugPrint (responseString)
+               
                 if let s = statusCode {
                     
                     self.delegeteSyncApiTurkey.failWithError(statusCode: s)
@@ -392,11 +394,9 @@ class ApiSyncTurkey: NSObject {
                     let id = UserDefaults.standard.integer(forKey: "Id")
                     mainDict.setValue(id, forKey: "UserId")
                     mainDict.setValue(false, forKey: "finalized")
-                    var sessionDict = NSMutableDictionary()
-                    sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds] 
-                    
+                    var sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds] as [String : Any]
                     sessionArray.add(sessionDict)
-                    sessionDict = NSMutableDictionary()
+                    sessionDict = NSMutableDictionary() as! [String : Any]
                     sessionDictMain = ["Sessions" : sessionArray]
                 }
             }
@@ -1246,11 +1246,9 @@ class ApiSyncTurkey: NSObject {
     }
     
     fileprivate func handleIsDelegateCallAndSuccessValidations(_ success: Bool) {
-        if success == true {
-            if self.isDelegateCalled == false {
-                self.isDelegateCalled = true
-                self.delegeteSyncApiTurkey.didFinishApi()
-            }
+        if success == true,self.isDelegateCalled == false {
+            self.isDelegateCalled = true
+            self.delegeteSyncApiTurkey.didFinishApi()
         }
     }
     
@@ -1588,15 +1586,18 @@ class ApiSyncTurkey: NSObject {
                         completion(false)
                         return
                     }
-                    
-                    self.handleUpdateisSyncOnPostingSessionTurkey(pId: pId, cNecArr: cNecArr) { status in
-                        completion(status)
-                    }
+                    self.continueSyncUpdate(pId: Int(pId), cNecArr: cNecArr as! [Any], completion: completion)
                 }
             }
         }
     }
 
+    private func continueSyncUpdate(pId: Int, cNecArr: [Any], completion: @escaping (Bool) -> Void) {
+        self.handleUpdateisSyncOnPostingSessionTurkey(pId: pId as NSNumber, cNecArr: cNecArr as NSArray) { status in
+            completion(status)
+        }
+    }
+    
     private func updateSyncOnAntibiotic(pId: NSNumber, _ completion: @escaping (_ success: Bool) -> Void) {
         CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId, isSync: false, completion)
     }
@@ -1625,15 +1626,17 @@ class ApiSyncTurkey: NSObject {
                 completion(false)
                 return
             }
-            CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId, isSync: false) { success in
-                guard success else {
-                    completion(false)
-                    return
-                }
-                self.handleUpdateIsSyncOnAntibioticCoredataSave(pId: pId, cNecArr: cNecArr) { status in
-                    completion(status)
-                }
+            self.continueAlternativeFeedSyncUpdate(pId: pId, cNecArr: cNecArr, completion: completion)
+        }
+    }
+
+    private func continueAlternativeFeedSyncUpdate(pId: NSNumber, cNecArr: NSArray, completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
             }
+            self.handleUpdateIsSyncOnAntibioticCoredataSave(pId: pId, cNecArr: cNecArr, completion)
         }
     }
 
@@ -1672,23 +1675,30 @@ class ApiSyncTurkey: NSObject {
                 completion(false)
                 return
             }
-            self.updateNecropsystep1Sync(handler: handler, necropsyId: necropsyId) { success in
-                guard success else {
-                    completion(false)
-                    return
-                }
-                self.updateCaptureSync(handler: handler, necropsyId: necropsyId) { success in
-                    guard success else {
-                        completion(false)
-                        return
-                    }
-                    self.handleUpdateIsSyncOnNotesBirdDataBase(handler: handler, necropsyId: necropsyId) { status in
-                        completion(status)
-                    }
-                }
-            }
+            self.continueUpdateAfterSkeleton(handler: handler, necropsyId: necropsyId, completion: completion)
         }
     }
+
+    private func continueUpdateAfterSkeleton(handler: CoreDataHandlerTurkey, necropsyId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
+        updateNecropsystep1Sync(handler: handler, necropsyId: necropsyId) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.continueUpdateAfterStep1(handler: handler, necropsyId: necropsyId, completion: completion)
+        }
+    }
+
+    private func continueUpdateAfterStep1(handler: CoreDataHandlerTurkey, necropsyId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
+        updateCaptureSync(handler: handler, necropsyId: necropsyId) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            self.handleUpdateIsSyncOnNotesBirdDataBase(handler: handler, necropsyId: necropsyId, completion: completion)
+        }
+    }
+
 
     private func updateCaptureSkeletaSync(handler: CoreDataHandlerTurkey, necropsyId: NSNumber, completion: @escaping (Bool) -> Void) {
         handler.updateisSyncOnCaptureSkeletaInDatabaseTurkey(necropsyId, isSync: false, completion)

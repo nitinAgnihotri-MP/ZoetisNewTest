@@ -157,17 +157,29 @@ public class PECertificateData: NSObject {
     var fsrSign = ""
     
     
-     
-    init(id:Int,name:String,date:String,isCertExpired:Bool,isReCert:Bool,vacOperatorId:Int,signatureImg:String , fsrSign : String) {
-        self.id = id
-        self.name = name
-        self.certificateDate = date
-        self.isCertExpired = isCertExpired
-        self.isReCert = isReCert
-        self.signatureImg = signatureImg
-        self.vacOperatorId = vacOperatorId
-        self.fsrSign = fsrSign
+    
+    init(info: CoreDataHandlerPEModels.CertificateInfo) {
+        self.id = info.id
+        self.name = info.name
+        self.certificateDate = info.date
+        self.isCertExpired = info.isCertExpired
+        self.isReCert = info.isReCert
+        self.signatureImg = info.signatureImg
+        self.vacOperatorId = info.vacOperatorId
+        self.fsrSign = info.fsrSign
     }
+    
+     
+//    init(id:Int,name:String,date:String,isCertExpired:Bool,isReCert:Bool,vacOperatorId:Int,signatureImg:String , fsrSign : String) {
+//        self.id = id
+//        self.name = name
+//        self.certificateDate = date
+//        self.isCertExpired = isCertExpired
+//        self.isReCert = isReCert
+//        self.signatureImg = signatureImg
+//        self.vacOperatorId = vacOperatorId
+//        self.fsrSign = fsrSign
+//    }
 }
 
 

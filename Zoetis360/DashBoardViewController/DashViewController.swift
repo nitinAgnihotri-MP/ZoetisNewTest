@@ -2302,18 +2302,10 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         let cNecArr = CoreDataHandler().FetchNecropsystep1WithisSync(true)
         let necArrWithoutPosting = NSMutableArray()
         
-        for i in 0..<allPostingArrWithData.count
-        {
-            let pSession =  allPostingArrWithData.object(at: i) as! PostingSession
-            let farmSync = pSession.isfarmSync
-            if farmSync != nil{
-                Constants.isFromPsoting = true
-            }
-            else{
-                Constants.isFromPsoting = false
-            }
-            break
+        if let pSession = allPostingArrWithData.firstObject as? PostingSession {
+            Constants.isFromPsoting = (pSession.isfarmSync != nil) // for warnig Refactor this loop to do more than one iteration.
         }
+
         
         for j in 0..<cNecArr.count
         {

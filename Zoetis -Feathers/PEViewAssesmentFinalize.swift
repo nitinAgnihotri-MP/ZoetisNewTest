@@ -1065,15 +1065,71 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         let serverAssessmentId = Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
         if switchisCheck {
             if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: true, isNA: isNA, serverAssessmentId: serverAssessmentId)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assID,
+                    labelText: labelText,
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0,
+                    catID: catID,
+                    isCheck: true,
+                    isNA: isNA,
+                    serverAssessmentId: serverAssessmentId
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as NSNumber, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: true, isNA: isNA, schAssmentId: serverAssessmentId)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                     id: assID as NSNumber,
+                     labelText: labelText,
+                     rollOut: "Y",
+                     unit: "",
+                     value: 0,
+                     catID: catID,
+                     isCheck: true,
+                     isNA: isNA,
+                     schAssmentId: serverAssessmentId
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         } else {
             if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: false, isNA: isNA, serverAssessmentId: serverAssessmentId)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id: assID,
+                    labelText: labelText,
+                    rollOut: "Y",
+                    unit: "",
+                    value: 0,
+                    catID: catID,
+                    isCheck: false,
+                    isNA: isNA,
+                    serverAssessmentId: serverAssessmentId
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as NSNumber, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: false, isNA: isNA, schAssmentId: serverAssessmentId)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                        id: assID as NSNumber,
+                        labelText: labelText,
+                        rollOut: "Y",
+                        unit: "",
+                        value: 0,
+                        catID: catID,
+                        isCheck: false,
+                        isNA: isNA,
+                        schAssmentId: serverAssessmentId
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         }
     }
@@ -1468,9 +1524,37 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     }
                     let assID = assessmentCopy?.assID
                     if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                            id: assID as! Int,
+                            labelText: textLabel,
+                            rollOut: "Y",
+                            unit: unitValueCopy,
+                            value: Double(valueTextCopy) ?? 0.0,
+                            catID: assessmentCopy?.catID as! NSNumber,
+                            isCheck: true,
+                            isNA: false,
+                            serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                        )
+
+                        CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                        
                     } else {
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
+                        
+                        let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                            id: assID as! NSNumber,
+                             labelText: textLabel,
+                             rollOut: "Y",
+                             unit: unitValueCopy,
+                             value: Double(valueTextCopy) ?? 0.0,
+                             catID: assessmentCopy?.catID as! NSNumber,
+                             isCheck: true,
+                             isNA: false,
+                             schAssmentId: self.selectedCategory?.assID ?? 0
+                        )
+
+                        CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                        
                     }
                 }
                 self.dropHiddenAndShow()
@@ -1491,9 +1575,37 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             valueTextCopy = value?.text ?? ""
             let assID = assessmentCopy?.assID
             if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
-                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.updateDraftRefrigeratorData(
+                    id:  assID as! Int,
+                    labelText: textLabel,
+                    rollOut: "Y",
+                    unit: unitValueCopy,
+                    value: Double(valueTextCopy) ?? 0.0,
+                    catID: 1,
+                    isCheck: true,
+                    isNA: false,
+                    serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+                )
+
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(draftData)
+                
             } else {
-                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
+                
+                let draftData = CoreDataHandlerPEModels.RefrigatorDraftData(
+                    id: assID as! NSNumber,
+                       labelText: textLabel,
+                       rollOut: "Y",
+                       unit: unitValueCopy,
+                       value: Double(valueTextCopy) ?? 0.0,
+                       catID: 1,
+                       isCheck: true,
+                       isNA: false,
+                       schAssmentId: self.selectedCategory?.assID ?? 0
+                )
+
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(draftData)
+                
             }
         }
     }
@@ -1551,10 +1663,15 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         headerView.lblTitle.text = "Vaccine Mixer Observer"
         headerView.lblSubTitle.text = "Crew Information"
         headerView.addCompletion = { [unowned self] error in
-            let certificateData = PECertificateData(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
-            let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
-            certificateData.id = id
-            self.certificateData.append(certificateData)
+            
+            let certificModel = CoreDataHandlerPEModels.CertificateInfo.init(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
+            
+            let data = PECertificateData(info: certificModel)
+            let id = self.saveVMixerInPEModule(peCertificateData: data)
+            
+            data.id = id
+            self.certificateData.append(data)
+            
             DispatchQueue.main.async {
                 self.reloadTableViewWithoutAnimation()
             }
@@ -2177,16 +2294,17 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
 // MARK:  Extension
 extension PEViewAssesmentFinalize{
     
-    func anyCategoryContainValueOrNot() -> Bool{
+    func anyCategoryContainValueOrNot() -> Bool {
         let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0]
-        for obj in peNewAssessmentSurrentIs.peCategoryArray{
+        for obj in peNewAssessmentSurrentIs.peCategoryArray {
             if obj.resultMark ?? 0 > 0 {
                 return true
             }
-            return false
         }
         return false
     }
+
+    
     
     func getCategoryAlreadyDone() -> PECategory{
         let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0]

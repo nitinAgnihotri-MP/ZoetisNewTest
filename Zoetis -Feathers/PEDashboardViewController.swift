@@ -2629,6 +2629,33 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     // MARK: - Post Request for Extended Microbial's
+    
+    fileprivate func extractedFunc9(params: inout CoreDataHandlerPEModels.ExtntdMicroFuncParams) {
+        params.json = [
+            "AssessmentId": params.serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": params.userId,
+            "EvaluationId": params.evaluationId ?? 0,
+            "SaveType": params.saveType,
+            "Status_Type": params.statusType,
+            "IsEMRequested": params.isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": params.appVersion,
+            "SanitationEmbrexScoresDataModel": params.extendedData
+        ] as JSONDictionary
+
+        if params.statusType == 2 {
+            if params.dict.isEMRejected == true || params.dict.isPERejected == true {
+                params.statusType = 0
+            }
+            params.json["Status_Type"] = params.statusType
+        }
+    }
+
+    
+    
+    
+    /*
     fileprivate func extractedFunc9(_ statusType: inout Int, _ dict: PENewAssessment, _ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ saveType: Int, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
         
         json = [
@@ -2651,7 +2678,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             json["Status_Type"] = statusType
         }
     }
-    
+    */
     fileprivate func extractedFunc10(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
         
         json = [
@@ -2765,7 +2792,24 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         tempArr.removeAll()
         
         if saveType == 0 {
-            extractedFunc9(&statusType, dict, &json, serverAssessmentId, UserId, EvaluationId, saveType, isEMRequested, appVersion, extendedData)
+         //   extractedFunc9(&statusType, dict, &json, serverAssessmentId, UserId, EvaluationId, saveType, isEMRequested, appVersion, extendedData)
+            
+            var extndMicrParams = CoreDataHandlerPEModels.ExtntdMicroFuncParams(
+                statusType: statusType,
+                dict: dict,
+                   json: json,
+                   serverAssessmentId: serverAssessmentId,
+                   userId: UserId,
+                   evaluationId: EvaluationId,
+                   saveType: saveType,
+                   isEMRequested: isEMRequested,
+                   appVersion: appVersion,
+                   extendedData: extendedData
+      
+            )
+
+            extractedFunc9(params:&extndMicrParams)
+            
         } else {
             if dict.isPERejected == true && dict.isEMRejected == true {
                 extractedFunc10(&json, serverAssessmentId, UserId, EvaluationId, isEMRequested, appVersion, extendedData)
@@ -3813,14 +3857,15 @@ extension PEDashboardViewController{
         })
     }
     
-    fileprivate func handleAccessPEArrObjectsValidations(_ obj: PENewAssessment, _ refrigratorDataArr: inout [[String : Any]], _ inovojectDataArr: inout [[String : Any]], _ dayOfAgeDataArr: inout [[String : Any]], _ dayOfAgeSDataArr: inout [[String : Any]], _ certificateDataArr: inout [[String : Any]], _ vaccineResidueMoldsDataArr: inout [[String : Any]], _ vaccineMicroSamplesDataArr: inout [[String : Any]]) {
+    fileprivate func handleAccessPEArrObjectsValidations(_ obj: PENewAssessment, _ validationData: inout CoreDataHandlerPEModels.ValidationData) {
         if self.isSync == false {
             self.isSync = true
             self.assessID = Int(obj.serverAssessmentId ?? "")
             self.objAssessment = obj
             self.checkDataDuplicacy(obj: obj)
+            
             var arrIDs = [NSNumber]()
-            handleRegionRefrigratorDataArr(&refrigratorDataArr, &arrIDs)
+            handleRegionRefrigratorDataArr(&validationData.refrigratorDataArr, &arrIDs)
             handleDayOfAgeSData(obj)
             handleDayOfAgeDataValidations(obj)
             handleInovojectDataValidations(obj)
@@ -3831,46 +3876,66 @@ extension PEDashboardViewController{
             } else {
                 HaveToCallExtendedMicro = true
             }
+            
             self.tempArr.removeAll()
-            let json = self.createSyncRequest(dict: obj , certificationData : self.certificateData )
+            let json = self.createSyncRequest(dict: obj, certificationData: self.certificateData)
             tempArr.append(json)
             
-            handleInovoObjectDataArrDayOfAgeValidations(obj, &inovojectDataArr, &dayOfAgeDataArr, &dayOfAgeSDataArr)
+            handleInovoObjectDataArrDayOfAgeValidations(obj, &validationData.inovojectDataArr, &validationData.dayOfAgeDataArr, &validationData.dayOfAgeSDataArr)
+            
             var AssessmentId = self.objAssessment.dataToSubmitNumber ?? 0
-
-            handleVaccinationResdueMicroSample(obj, &certificateDataArr, &vaccineResidueMoldsDataArr, &vaccineMicroSamplesDataArr, &AssessmentId)
+            handleVaccinationResdueMicroSample(obj, &validationData.certificateDataArr, &validationData.vaccineResidueMoldsDataArr, &validationData.vaccineMicroSamplesDataArr, &AssessmentId)
             
             var paramForDoaInnovoject = JSONDictionary()
             
-            if (self.regionID  != 3) {
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr,"RefrigeratorData":refrigratorDataArr,"DeviceId": self.deviceIDFORSERVER, "AssessmentDetailsId" :AssessmentId] as JSONDictionary
+            if self.regionID != 3 {
+                paramForDoaInnovoject = [
+                    "InovojectData": validationData.inovojectDataArr,
+                    "DayOfAgeData": validationData.dayOfAgeDataArr,
+                    "DayAgeSubcutaneousDetailsData": validationData.dayOfAgeSDataArr,
+                    "VaccineMixerObservedData": validationData.certificateDataArr,
+                    "VaccineResidueMoldsData": validationData.vaccineResidueMoldsDataArr,
+                    "VaccineMicroSamplesData": validationData.vaccineMicroSamplesDataArr,
+                    "RefrigeratorData": validationData.refrigratorDataArr,
+                    "DeviceId": self.deviceIDFORSERVER,
+                    "AssessmentDetailsId": AssessmentId
+                ] as JSONDictionary
             } else {
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr, "DeviceId": self.deviceIDFORSERVER, "AssessmentDetailsId" :AssessmentId] as JSONDictionary
+                paramForDoaInnovoject = [
+                    "InovojectData": validationData.inovojectDataArr,
+                    "DayOfAgeData": validationData.dayOfAgeDataArr,
+                    "DayAgeSubcutaneousDetailsData": validationData.dayOfAgeSDataArr,
+                    "VaccineMixerObservedData": validationData.certificateDataArr,
+                    "VaccineResidueMoldsData": validationData.vaccineResidueMoldsDataArr,
+                    "VaccineMicroSamplesData": validationData.vaccineMicroSamplesDataArr,
+                    "DeviceId": self.deviceIDFORSERVER,
+                    "AssessmentDetailsId": AssessmentId
+                ] as JSONDictionary
             }
             
             var idArr = [String]()
             for val in tempArr {
                 let id = val["AssessmentId"] as? Int64 ?? 0
-                if id != 0{
+                if id != 0 {
                     idArr.append("\(id)")
                 }
             }
             
-            let param = ["AssessmentData":tempArr,"appVersion":Bundle.main.versionNumber,"IsSendEmail":"true"] as JSONDictionary
+            let param = ["AssessmentData": tempArr, "appVersion": Bundle.main.versionNumber, "IsSendEmail": "true"] as JSONDictionary
             
             handleSendPostDataToServer(param, paramForDoaInnovoject)
         }
     }
-    
+
     func accessPEArrayObjects(){
         
-        var inovojectDataArr : [JSONDictionary]  = []
-        var dayOfAgeDataArr : [JSONDictionary]  = []
-        var dayOfAgeSDataArr : [JSONDictionary]  = []
-        var certificateDataArr : [JSONDictionary]  = []
-        var vaccineMicroSamplesDataArr : [JSONDictionary]  = []
-        var vaccineResidueMoldsDataArr : [JSONDictionary]  = []
-        var refrigratorDataArr : [JSONDictionary]  = []
+        let inovojectDataArr : [JSONDictionary]  = []
+        let dayOfAgeDataArr : [JSONDictionary]  = []
+        let dayOfAgeSDataArr : [JSONDictionary]  = []
+        let certificateDataArr : [JSONDictionary]  = []
+        let vaccineMicroSamplesDataArr : [JSONDictionary]  = []
+        let vaccineResidueMoldsDataArr : [JSONDictionary]  = []
+        let refrigratorDataArr : [JSONDictionary]  = []
         if peAssessmentSyncArray.count > 0 {
             for obj in self.peAssessmentSyncArray {
                 // For loop for each assessment to be synced (Multiple Assessment)
@@ -3879,7 +3944,20 @@ extension PEDashboardViewController{
                     return
                 }
                 
-                handleAccessPEArrObjectsValidations(obj, &refrigratorDataArr, &inovojectDataArr, &dayOfAgeDataArr, &dayOfAgeSDataArr, &certificateDataArr, &vaccineResidueMoldsDataArr, &vaccineMicroSamplesDataArr)
+                var validationData = CoreDataHandlerPEModels.ValidationData(
+                    refrigratorDataArr: refrigratorDataArr,
+                    inovojectDataArr: inovojectDataArr,
+                    dayOfAgeDataArr: dayOfAgeDataArr,
+                    dayOfAgeSDataArr: dayOfAgeSDataArr,
+                    certificateDataArr: certificateDataArr,
+                    vaccineResidueMoldsDataArr: vaccineResidueMoldsDataArr,
+                    vaccineMicroSamplesDataArr:  vaccineMicroSamplesDataArr
+                )
+
+                handleAccessPEArrObjectsValidations(obj, &validationData)
+
+                
+                
             }
         }
     }
@@ -4191,6 +4269,33 @@ extension PEDashboardViewController{
     }
     
     // MARK: - Handle PE Posting Assessment List API Responce
+    
+    fileprivate func extractedFunc(_ input: CoreDataHandlerPEModels.AssessmentInput, _ filterScoreData: inout [[String : Any]], _ isNaSelectedArray: inout [[String : Any]]) {
+        if input.frequencyValue.count > 0 {
+            CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency: input.frequencyValue)
+        }
+        if input.qcCount.count > 0 {
+            CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount: input.qcCount)
+        }
+        if input.personName.count > 0 {
+            CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: input.personName)
+        }
+        if input.amPmText.count > 0 {
+            CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: input.amPmText)
+        }
+        if input.ppmValue.count > 0 {
+            CoreDataHandlerPE().updatePPMValueInAssessmentInProgress(PpmValue: input.ppmValue)
+        }
+        if input.assessmentScore == 0 || input.isNA {
+            filterScoreData.append(input.questionMark)
+        }
+        if input.isNA {
+            isNaSelectedArray.append(input.questionMark)
+        }
+    }
+
+    
+    /*
     fileprivate func extractedFunc(_ FrequencyValueStr: String, _ QCCount: String, _ PersonName: String, _ TextAmPm: String, _ PPMValue: String, _ AssessmentScore: Int, _ isNAValue: Bool, _ filterScoreData: inout [[String : Any]], _ questionMark: [String : Any], _ isNaSelectedArray: inout [[String : Any]]) {
         if FrequencyValueStr.count > 0 {
             CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
@@ -4214,7 +4319,7 @@ extension PEDashboardViewController{
             isNaSelectedArray.append(questionMark)
         }
     }
-    
+    */
     private func handlGetPostingAssessmentListByUser(_ json: JSON) {
         let dataArray = extractDataArray(from: json)
         if dataArray.count > 0 {
@@ -4226,11 +4331,7 @@ extension PEDashboardViewController{
     }
 
     private func extractDataArray(from json: JSON) -> [Any] {
-        var dataDic: [String: Any] = [:]
-        if let string = json.rawString() {
-            dataDic = string.convertToDictionary() ?? [:]
-        }
-        return dataDic["Data"] as? [Any] ?? []
+        return extractDataArrayCommon(from: json)
     }
 
     private func deleteAllPreviousAssessmentData() {
@@ -4337,27 +4438,7 @@ extension PEDashboardViewController{
     }
 
     private func handleSanitationEmbrex(_ objDic: [String: Any], serverAssessmentId: String) {
-        let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
-        if sanitationEmbrexValue {
-            PEInfoDAO.sharedInstance.saveData(
-                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                isExtendedPE: sanitationEmbrexValue,
-                assessmentId: serverAssessmentId,
-                date: nil,
-                override: false
-            )
-        }
-        let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String: Any]] ?? []
-        let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
-        let jsonDecoder = JSONDecoder()
-        if let jsonData = jsonData,
-           let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData) {
-            SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(
-                assessmentId: serverAssessmentId,
-                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                dtoArr: dtoArr
-            )
-        }
+        handleSanitationCommon(objDic, serverAssessmentId: serverAssessmentId)
     }
 
     private func handleCategoriesAndQuestions(for assessment: PENewAssessment, objDic: [String: Any]) {
@@ -4455,7 +4536,23 @@ extension PEDashboardViewController{
             let PersonName = questionMark["PersonName"] as? String ?? ""
             let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
             let isNAValue = questionMark["IsNA"] as? Bool ?? false
-            extractedFunc(FrequencyValueStr, QCCount, PersonName, TextAmPm, PPMValue, AssessmentScore, isNAValue, &filterScoreData, questionMark, &isNaSelectedArray)
+           // extractedFunc(FrequencyValueStr, QCCount, PersonName, TextAmPm, PPMValue, AssessmentScore, isNAValue, &filterScoreData, questionMark, &isNaSelectedArray)
+            
+            
+            var input = CoreDataHandlerPEModels.AssessmentInput(
+                frequencyValue: FrequencyValueStr,
+                qcCount: QCCount,
+                personName: PersonName,
+                amPmText: TextAmPm,
+                ppmValue: PPMValue,
+                assessmentScore: AssessmentScore,
+                isNA: isNAValue,
+                questionMark: questionMark
+            )
+
+            extractedFunc(input, &filterScoreData, &isNaSelectedArray)
+            
+            
         }
 
         var assArray: [Int] = []
@@ -4602,11 +4699,9 @@ extension PEDashboardViewController{
             }
             let AmpulePerbag = DayOfAgeIS["DayOfAgeAmpulePerbag"] as? Int ?? 0
             let HatcheryAntibiotics = DayOfAgeIS["DayOfBagHatcheryAntibiotics"] as? Bool ?? false
-            let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
             let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
             let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
             var VName = ""
-            let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")        
             let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
             let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
             let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
@@ -4634,53 +4729,10 @@ extension PEDashboardViewController{
         }
     }
     // MARK: - Handle PE Posting Assessment images List API Responce
-    private func handlGetPostingAssessmentImagesListByUser(_ json: JSON) {
-        var dataDic : [String:Any] = [:]
-        if let string = json.rawString() {
-            dataDic = string.convertToDictionary() ?? [:]
-        }
-        let dataArray = dataDic["Data"] as? [Any] ?? []
-        for obj in dataArray {
-            DispatchQueue.main.async {
-                let objDic = obj as? [String:Any] ?? [:]
-                let base64Encoded = objDic["ImageBase64"] as? String ?? ""
-                let DisplayId = objDic["DisplayId"] as? String ?? ""
-                let DeviceId = objDic["Device_Id"] as? String ?? ""
-                let UserId = objDic["UserId"] as? Int ?? 0
-                let Assessment_Id = objDic["Assessment_Id"] as? Int ?? 0
-                let Module_Assessment_Categories_Id = objDic["Module_Assessment_Categories_Id"] as? Int ?? 0
-                let decodedData = Data(base64Encoded: base64Encoded) ?? Data()
-                let AppCreationTime = DisplayId.replacingOccurrences(of: "C-", with: "")
-                let imageCount = self.getImageCountInPEModule()
-                CoreDataHandlerPE().saveImageInGetApi(imageId:imageCount+1,imageData:decodedData)
-                CoreDataHandlerPE().saveImageIdGetApi(imageId:imageCount+1,userID:UserId,catID:Module_Assessment_Categories_Id,assID:Assessment_Id,dataToSubmitID:AppCreationTime)
-                
-                CoreDataHandlerPE().saveImageDraftIdGetApi(imageId:imageCount+1,userID:UserId,catID:Module_Assessment_Categories_Id,assID:Assessment_Id,dataToSubmitID:DeviceId)
-            }
-        }
-        let allAssesmentDraftArr = self.getAllDateArrayStoredDraft()
-        if allAssesmentDraftArr.count  > 0 {
-            let count = allAssesmentDraftArr.count//getDraftCountFromDb()
-            self.labelDraftCount.text = String(count)
-            self.showDraftCount()
-            if count == 0 {
-                self.hideDraftCount()
-            }
-        } else {
-            self.labelDraftCount.text  = "0"
-            self.hideDraftCount()
-        }
-        self.dismissGlobalHUD(self.view)
-        let dontGetRejected = UserDefaults.standard.value(forKey: "dontGetRejectedAssessment") as? Bool
-        if dontGetRejected ?? false{
-            print(appDelegateObj.testFuntion())
-        }
-        else
-        {
-            getRejectedAssessmentListByUser()
-        }
-        
-    }
+    /*
+    delete this code because "Remove this unused private function."
+    
+    */
     // MARK: - Handle PE Rejected Assessment List API Responce
     private func handlGetRejectedAssessmentListByUser(_ json: JSON) {
         let dataArray = extractRejectedDataArray(from: json)
@@ -4696,13 +4748,18 @@ extension PEDashboardViewController{
     }
 
     private func extractRejectedDataArray(from json: JSON) -> [Any] {
+        return extractDataArrayCommon(from: json)
+    }
+
+    
+    private func extractDataArrayCommon(from json: JSON) -> [Any] {
         var dataDic: [String: Any] = [:]
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
         return dataDic["Data"] as? [Any] ?? []
     }
-
+    
     private func handleRejectedAssessmentObject(_ obj: Any) {
         let objDic = obj as? [String: Any] ?? [:]
         let peNewAssessmentWas = parseRejectedAssessment(objDic)
@@ -4799,6 +4856,10 @@ extension PEDashboardViewController{
     }
 
     private func handleRejectedSanitation(_ objDic: [String: Any], serverAssessmentId: String) {
+        handleSanitationCommon(objDic, serverAssessmentId: serverAssessmentId)
+    }
+    
+    private func handleSanitationCommon(_ objDic: [String: Any], serverAssessmentId: String) {
         let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
         if sanitationEmbrexValue {
             PEInfoDAO.sharedInstance.saveData(
@@ -4821,6 +4882,8 @@ extension PEDashboardViewController{
             )
         }
     }
+
+    
 
     private func handleRejectedCategoriesAndQuestions(for assessment: PENewAssessment, objDic: [String: Any]) {
         jsonRe = (getJSON("QuestionAns") ?? JSON())

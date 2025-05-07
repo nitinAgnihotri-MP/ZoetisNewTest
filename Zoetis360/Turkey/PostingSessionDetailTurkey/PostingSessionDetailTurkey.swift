@@ -1138,90 +1138,110 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
-    fileprivate func saveNecropsyDataInDataBase(_ farmArr: Any?, _ sessionId: Int, _ posttingId: inout Int, _ complexName: String, _ seesDat: String, _ complexId: Int, _ custId: Int, _ devSessionId: String) {
-        for j in 0..<(farmArr! as AnyObject).count {
-            let farmName = ((farmArr as AnyObject).object(at:j) as AnyObject).value(forKey:"farmName") as! String
-            let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
-            if postingArr.count>0 {
-                posttingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
-                if posttingId == sessionId {
-                    CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId, finalizeNec: 1)
-                    posttingId = sessionId
+    fileprivate func saveNecropsyDataInDataBase(_ input: NecropsySessionInput, _ postingId: inout Int) {
+        for farm in input.farms {
+            let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(input.sessionId as NSNumber)
+            
+            if let firstPosting = postingArr.first as? NSObject,
+               let fetchedPostingId = firstPosting.value(forKey: "postingId") as? Int {
+                postingId = fetchedPostingId
+                if postingId == input.sessionId {
+                    CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(postingId as NSNumber, finalizeNec: 1)
+                    postingId = input.sessionId
                 }
             } else {
-                posttingId = 0
+                postingId = 0
             }
-            let birdAge =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
-            let birds =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"birds")
-            let houseNo =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"houseNo")
-            let flockId =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"flockId")
-            let feedProgram =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedProgram") as! String
-            let sick =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"sick") as! Bool
-            let feedId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "FeedId") as! Int
-            let farmweight =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Farm_Weight") as! String
-            let abf =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"ABF") as! String
-            let sex =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Sex") as! String
-            let breed =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Breed") as! String
-            let farmId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "DeviceFarmId") as! Int
-            let genName =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"GenerationName") as! String
-            let genId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "GenerationId") as! Int
-            
-            let imgId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "ImgId") as! Int
-            
+
             let necropsyData = CoreDataHandlerTurkeyModels.singleNecropsyDataTurkey(
                 postingId: postingId as NSNumber,
-                age: (birdAge as AnyObject).stringValue ?? "",
-                farmName: farmName,
-                feedProgram: feedProgram,
-                flockId: (flockId as AnyObject).stringValue ?? "",
-                houseNo: (houseNo as AnyObject).stringValue ?? "",
-                noOfBirds: (birds as AnyObject).stringValue ?? "",
-                sick: sick as NSNumber,
-                necId: sessionId as NSNumber,
-                compexName: complexName,
-                complexDate: seesDat,
-                complexId: complexId as NSNumber,
-                custmerId: custId as NSNumber,
-                feedId: feedId as NSNumber,
+                age: farm.age,
+                farmName: farm.farmName,
+                feedProgram: farm.feedProgram,
+                flockId: farm.flockId,
+                houseNo: farm.houseNo,
+                noOfBirds: farm.birds,
+                sick: farm.sick as NSNumber,
+                necId: input.sessionId as NSNumber,
+                compexName: input.complexName,
+                complexDate: input.seesDate,
+                complexId: input.complexId as NSNumber,
+                custmerId: input.customerId as NSNumber,
+                feedId: farm.feedId as NSNumber,
                 isSync: false,
-                timeStamp: devSessionId,
-                actualTimeStamp: devSessionId,
-                necIdSingle: postingId, // self.postingId
-                farmweight: farmweight,
-                abf: abf,
-                sex: sex,
-                breed: breed,
-                farmId: farmId as NSNumber,
-                imgId: imgId as NSNumber,
-                generationName: genName,
-                generationId: genId as NSNumber
+                timeStamp: input.deviceSessionId,
+                actualTimeStamp: input.deviceSessionId,
+                necIdSingle: postingId as NSNumber,
+                farmweight: farm.farmWeight,
+                abf: farm.abf,
+                sex: farm.sex,
+                breed: farm.breed,
+                farmId: farm.farmId as NSNumber,
+                imgId: farm.imgId as NSNumber,
+                generationName: farm.generationName,
+                generationId: farm.generationId as NSNumber
             )
-
-            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(data: necropsyData)
-
             
-            UserDefaults.standard.set(farmId as NSNumber, forKey: "farmIdTurkey")
+            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(data: necropsyData)
+            UserDefaults.standard.set(farm.farmId as NSNumber, forKey: "farmIdTurkey")
         }
     }
+
     
     fileprivate func handleArrAndSaveNecropsyDataValidations(_ arr: NSArray) {
         if arr.count>0 {
             CoreDataHandlerTurkey().deleteDataWithPostingIdCaptureStepDataTurkey(self.postingId)
             for i in 0..<arr.count {
-                var posttingId = Int ()
-                let sessionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                let devSessionId = (arr.object(at: i) as AnyObject).value(forKey: "deviceSessionId") as! String
-                let custId = (arr.object(at: i) as AnyObject).value(forKey: "CustomerId") as! Int
-                let complexId = (arr.object(at: i) as AnyObject).value(forKey: "ComplexId") as! Int
-                let complexName = (arr.object(at: i) as AnyObject).value(forKey: "ComplexName") as! String
-                let savedSessionDateOutlet = (arr.object(at: i) as AnyObject).value(forKey: "SessionDate") as! String
+                var postingId = 0
+                let obj = arr.object(at: i) as AnyObject
                 
-                let seesDat = self.convertDateFormater(savedSessionDateOutlet)
-                let farmArr = (arr.object(at:i) as AnyObject).value(forKey:  "Farms")
-                if (farmArr as AnyObject).count>0 {
-                    self.saveNecropsyDataInDataBase(farmArr, sessionId, &posttingId, complexName, seesDat, complexId, custId, devSessionId)
+                let sessionId = obj.value(forKey: "SessionId") as! Int
+                let devSessionId = obj.value(forKey: "deviceSessionId") as! String
+                let custId = obj.value(forKey: "CustomerId") as! Int
+                let complexId = obj.value(forKey: "ComplexId") as! Int
+                let complexName = obj.value(forKey: "ComplexName") as! String
+                let savedSessionDateOutlet = obj.value(forKey: "SessionDate") as! String
+                let seesDate = self.convertDateFormater(savedSessionDateOutlet)
+                
+                guard let farmRawArr = obj.value(forKey: "Farms") as? [AnyObject], !farmRawArr.isEmpty else {
+                    continue
                 }
+
+                let farms: [NecropsyFarmModel] = farmRawArr.map { farmObj in
+                    NecropsyFarmModel(
+                        farmName: farmObj.value(forKey: "farmName") as? String ?? "",
+                        age: (farmObj.value(forKey: "age") as AnyObject).stringValue ?? "",
+                        birds: (farmObj.value(forKey: "birds") as AnyObject).stringValue ?? "",
+                        houseNo: (farmObj.value(forKey: "houseNo") as AnyObject).stringValue ?? "",
+                        flockId: (farmObj.value(forKey: "flockId") as AnyObject).stringValue ?? "",
+                        feedProgram: farmObj.value(forKey: "feedProgram") as? String ?? "",
+                        sick: farmObj.value(forKey: "sick") as? Bool ?? false,
+                        feedId: farmObj.value(forKey: "FeedId") as? Int ?? 0,
+                        farmWeight: farmObj.value(forKey: "Farm_Weight") as? String ?? "",
+                        abf: farmObj.value(forKey: "ABF") as? String ?? "",
+                        sex: farmObj.value(forKey: "Sex") as? String ?? "",
+                        breed: farmObj.value(forKey: "Breed") as? String ?? "",
+                        farmId: farmObj.value(forKey: "DeviceFarmId") as? Int ?? 0,
+                        generationName: farmObj.value(forKey: "GenerationName") as? String ?? "",
+                        generationId: farmObj.value(forKey: "GenerationId") as? Int ?? 0,
+                        imgId: farmObj.value(forKey: "ImgId") as? Int ?? 0
+                    )
+                }
+
+                let sessionInput = NecropsySessionInput(
+                    farms: farms,
+                    sessionId: sessionId,
+                    postingId: postingId,
+                    complexName: complexName,
+                    seesDate: seesDate,
+                    complexId: complexId,
+                    customerId: custId,
+                    deviceSessionId: devSessionId
+                )
+
+                self.saveNecropsyDataInDataBase(sessionInput, &postingId)
             }
+            
             let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
             if necArr.count>0 {
                 self.getPostingDataFromServerforNecorpsy()

@@ -1544,7 +1544,7 @@ extension PEViewStartNewAssesmentINT{
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
     }
-    
+    /*
     fileprivate func handleManBreedValidation(_ man: String, _ manufacutrerNameArray: NSArray, _ ManufacturerId: inout Int, _ manufacutrerIDArray: NSArray, _ breeedd: String, _ BirdBreedNameArray: NSArray, _ breeddId: inout Int, _ BirdBreedIDArray: NSArray, _ eggg: String, _ EggsNameArray: NSArray, _ EggID: inout Int, _ EggsIDArray: NSArray) {
         if man != "" {
             let indexOfd = manufacutrerNameArray.index(of: man)
@@ -1560,6 +1560,26 @@ extension PEViewStartNewAssesmentINT{
             EggID = EggsIDArray[indexOfp] as? Int ?? 0
         }
     }
+    */
+    
+    
+    fileprivate func handleManBreedValidation(_ data: inout chickenCoreDataHandlerModels.manBreedValidationData) {
+        if data.manufacturerName != "" {
+            let index = data.manufacturerNames.index(of: data.manufacturerName)
+            data.manufacturerId = data.manufacturerIDs[index] as? Int ?? 0
+        }
+
+        if data.breedName != "" {
+            let index = data.breedNames.index(of: data.breedName)
+            data.breedId = data.breedIDs[index] as? Int ?? 0
+        }
+
+        if data.eggName != "" {
+            let index = data.eggNames.index(of: data.eggName)
+            data.eggId = data.eggIDs[index] as? Int ?? 0
+        }
+    }
+
     
     fileprivate func handleBreedValidation(_ breeedd: inout String, _ breeeddOther: inout String) {
         if breeedd != "", let character = breeedd.character(at: 0), character == "S".character(at: 0) {
@@ -1677,16 +1697,38 @@ extension PEViewStartNewAssesmentINT{
         
        
         let BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
-        var manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        var manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        var manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
-        var BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        var BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
+        let manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        let manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
+        let manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
+        let BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
+        let BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
         let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
-        var EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
-        var EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
+        let EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
+        let EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
+                
+        var validationData = chickenCoreDataHandlerModels.manBreedValidationData(
+            
+               manufacturerName: man,
+               manufacturerNames: manufacutrerNameArray,
+               manufacturerIDs: manufacutrerIDArray,
+               
+               breedName: breeedd,
+               
+               breedNames: BirdBreedNameArray,
+               breedIDs: BirdBreedIDArray,
+               eggName :eggg,
+               eggNames:EggsNameArray,
+               
+               eggIDs: EggsIDArray,
+               manufacturerId: ManufacturerId,
+               breedId: breeddId,
+               eggId: EggID
+    
+        )
+
+        handleManBreedValidation(&validationData)
         
-        handleManBreedValidation(man, manufacutrerNameArray, &ManufacturerId, manufacutrerIDArray, breeedd, BirdBreedNameArray, &breeddId, BirdBreedIDArray, eggg, EggsNameArray, &EggID, EggsIDArray)
+        
         
         let FlockAgeId = dict.isFlopSelected
         let Status_Type = ""
@@ -2655,7 +2697,6 @@ extension PEViewStartNewAssesmentINT{
             if arrayCount > 0 {
                 let ss = imgDic
                 let paramForImages = ["AssessmentImages": ss] as JSONDictionary
-                arrayCount = 0
                 imgDic.removeAll()
                 self.callRequest4(paramForImages: paramForImages)
             }

@@ -405,16 +405,46 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                     
                     if skleta.measure! == "Y,N" || skleta.measure == "Actual"{
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        let skeltaData = SkeletalObservationData(
+                            catName: "skeltaMuscular",
+                            obsName: skleta.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            obsId: Int(truncating: skleta.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: skleta.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: skleta.refId ?? 0,
+                            actualText: skleta.measure ?? ""
+                        )
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: skleta.observationId ?? 0),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!,actualText: skleta.measure ?? "")
-                    }
-                    else
-                    {
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(skeltaData, index: j)
+                    } else {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:skleta.observationId ?? 0),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!,actualText: skleta.measure ?? "")
-                        
+                        let skeletalData = SkeletalObservationData(
+                            catName: "skeltaMuscular",
+                            obsName: skleta.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: Int(array[0]) ?? 0,
+                            obsId: Int(truncating: skleta.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: skleta.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: skleta.refId ?? 0,
+                            actualText: skleta.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(skeletalData, index: j)
                     }
                 }
             }
@@ -443,14 +473,46 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                     if cocoiDis.measure! == "Y,N" || cocoiDis.measure == "Actual" {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!,actualText: cocoiDis.measure ?? "")
-                    }
-                    else
-                    {
+                        let cocciData = SkeletalObservationData(
+                            catName: "Coccidiosis",
+                            obsName: cocoiDis.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            obsId: Int(truncating: cocoiDis.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: cocoiDis.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: cocoiDis.refId ?? 0,
+                            actualText: cocoiDis.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(cocciData, index: j)
+                    } else {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!,actualText: cocoiDis.measure ?? "")
+                        let cocciData = SkeletalObservationData(
+                            catName: "Coccidiosis",
+                            obsName: cocoiDis.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            obsId: Int(truncating: cocoiDis.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: cocoiDis.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: cocoiDis.refId ?? 0,
+                            actualText: cocoiDis.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(cocciData, index: j)
                     }
                 }
             }
@@ -470,27 +532,54 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         let gitract = CoreDataHandler().fetchAllGITractDataUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        
-        
-        for i in 0..<gitract.count
-        {
-            for j in 0..<numberofBirds
-            {
+        for i in 0..<gitract.count {
+            for j in 0..<numberofBirds {
                 if ((gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let gitract : GITract = gitract.object(at: i) as! GITract
                     
                     if gitract.measure! == "Y,N" || gitract.measure == "Actual"{
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: gitract.observationId ?? 0),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!,actualText: gitract.measure ?? "")
-                    }
-                  
-                    else
-                    {
+                        let giTractData = SkeletalObservationData(
+                            catName: "GITract",
+                            obsName: gitract.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            obsId: Int(truncating: gitract.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: gitract.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: gitract.refId ?? 0,
+                            actualText: gitract.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(giTractData, index: j)
+                    } else {
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating: gitract.observationId ?? 0),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!,actualText: gitract.measure ?? "")
+                        let giTractData = SkeletalObservationData(
+                            catName: "GITract",
+                            obsName: gitract.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: Int(array[0]) ?? 0,
+                            obsId: Int(truncating: gitract.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: gitract.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: gitract.refId ?? 0,
+                            actualText: gitract.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(giTractData, index: j)
                     }
                 }
                 
@@ -524,16 +613,47 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: resp.observationId ?? 0),measure: trimmed,quickLink: resp.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "")
-                    }
-                   
-                    else
-                    {
+                        let respData = SkeletalObservationData(
+                            catName: "Resp",
+                            obsName: resp.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: 0,
+                            obsId: Int(truncating: resp.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: resp.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: resp.refId ?? 0,
+                            actualText: resp.measure ?? ""
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(respData, index: j)
+                    } else {
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:resp.observationId ?? 0),measure: trimmed,quickLink: resp.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "")
+                        let respData = SkeletalObservationData(
+                            catName: "Resp",
+                            obsName: resp.observationField ?? "",
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: NSNumber(value: j + 1),
+                            obsPoint: Int(array[0])!,
+                            obsId: Int(truncating: resp.observationId ?? 0),
+                            measure: trimmed,
+                            quickLink: resp.quicklinks ?? 0,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: resp.refId ?? 0,
+                            actualText: resp.measure ?? ""
+                        )
+                        
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(respData, index: j)
                     }
                 }
             }
@@ -541,36 +661,51 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
     }
     // MARK: 🟢 - Save Imune Category
     fileprivate func handleIfCondition(_ immune: Immune, _ formName: String, _ j: Int, _ necId: Int) {
-        if immune.measure! == "Y,N" {
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-        } else if (immune.measure! == "Actual") {
-            
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0.0")
-            
+        let trimmed = immune.measure!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let obsId = Int(truncating: immune.observationId ?? 0)
+        let birdNo = NSNumber(value: j + 1)
+        let quickLink = immune.quicklinks ?? 0
+        let lngId = lngId as NSNumber
+        let refId = immune.refId ?? 0
+        let observationField = immune.observationField ?? ""
+        
+        // Helper function to call saveCaptureSkeletaInDatabaseOnSwithCase
+        func saveImmuneData(actualText: String) {
+            let immuneData = SkeletalObservationData(
+                catName: "Immune",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: 0,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(immuneData, index: j)
+        }
+
+        // Conditionally save based on the immune measure
+        if immune.measure == "Y,N" {
+            saveImmuneData(actualText: trimmed)
+        } else if immune.measure == "Actual" {
+            saveImmuneData(actualText: "0.0")
             if immune.observationField == Constants.maleFemaleStr {
-                
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "N/A")
-                
+                saveImmuneData(actualText: "N/A")
             }
-        } else if ( immune.measure! == "F,M") {  /// New Addition for Bird Sex
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        } else if immune.measure == "F,M" {
             if immune.observationField == Constants.maleFemaleStr {
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0")
-                
+                saveImmuneData(actualText: "0")
             }
         } else {
-            
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            let array = (trimmed.components(separatedBy: ",") as [String])
-            if immune.refId == 58 {
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-            } else {
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-            }
+            let array = trimmed.components(separatedBy: ",")
+            let point = (immune.refId == 58) ? Int(array[3])! : Int(array[0])!
+            saveImmuneData(actualText: immune.measure ?? "")
         }
     }
     

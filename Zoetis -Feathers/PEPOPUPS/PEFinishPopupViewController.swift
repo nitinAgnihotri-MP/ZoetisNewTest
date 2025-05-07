@@ -650,42 +650,34 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
         }
         return cell
     }
-
+    
     private func configureSignatureCell(_ cell: SignatureTableViewCell, indexPath: IndexPath) {
-        if regionID != 3 {
-            let fullName = certificateData[0].name ?? ""
-            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
-            cell.deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
-            if fullName == certificateData[0].name {
-                cell.previousBtn.isHidden = true
-                cell.nextBtn.isHidden = false
-                cell.nextBtn.isUserInteractionEnabled = true
-            }
-            if !(certificateData[0].isCertExpired ?? false) && (prevController == "Rejected") {
+        let fullName = certificateData[0].name ?? ""
+        cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
+        cell.deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
+        
+        // Common logic for showing and hiding buttons
+        if fullName == certificateData[0].name {
+            cell.previousBtn.isHidden = true
+            cell.nextBtn.isHidden = false
+            cell.nextBtn.isUserInteractionEnabled = true
+        }
+        
+        // Determine if the image should be shown/hidden based on certificate expiration and rejection status
+        let shouldShowImage = !(certificateData[0].isCertExpired ?? false) && (prevController == "Rejected")
+        if regionID != 3 || indexPath.row == 1 {
+            if shouldShowImage {
                 cell.hideShowImgVw(false)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
             } else {
                 cell.showImgVw(true)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
             }
-        } else if indexPath.row == 1 {
-            let fullName = certificateData[0].name ?? ""
-            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
-            cell.deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
-            if fullName == certificateData[0].name {
-                cell.previousBtn.isHidden = true
-                cell.nextBtn.isHidden = false
-                cell.nextBtn.isUserInteractionEnabled = true
-            }
-            if !(certificateData[0].isCertExpired ?? false) && (prevController == "Rejected") {
-                cell.hideShowImgVw(false)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
-            } else {
-                cell.showImgVw(true)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
-            }
+            cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
         }
     }
+
+    
+    
+
 
     private func setupFinalizeCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell else {

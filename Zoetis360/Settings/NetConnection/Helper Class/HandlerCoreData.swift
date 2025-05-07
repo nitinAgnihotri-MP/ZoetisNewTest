@@ -6603,136 +6603,65 @@ class CoreDataHandler : NSObject  {
     }
     
     /********************************* Save data in to CocoiPrgramFeed *************************************/
-    func saveCoccoiControlDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String,coccidiosisVaccine:String,targetWeight:String, index : Int,dbArray: NSArray,feedId: NSNumber,feedProgram : String,formName : String,isSync : Bool,feedType: String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String , dosemoleculeId : Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let managedContext = appDelegate!.managedObjectContext
-        cocciControlArray = dbArray
-        
-        if  cocciControlArray.count > 0 {
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
-            
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
+    func saveCoccoiControlDatabase(_ data: CoccidiosisControlData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.managedObjectContext
+        cocciControlArray = data.dbArray
+
+        if cocciControlArray.count > 0 {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoccidiosisControlFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
-            
-            do
-            {
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, data.feedId)
+
+            do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                
-                if fetchedResult!.count > 0
-                {
-                    
-                    if (fetchedResult?.count <= index)
-                    {
-                        let entity         = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)
-                        let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(coccidiosisVaccine, forKey:"coccidiosisVaccine")
-                        person.setValue(targetWeight, forKey:"targetWeight")
-                        person.setValue(feedId, forKey:"feedId")
-                        person.setValue(feedProgram, forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lbldate, forKey:"feedDate")
-                        person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
+                if let results = fetchedResult {
+                    if results.count <= data.index {
+                        let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)!
+                        let person = NSManagedObject(entity: entity, insertInto: managedContext)
+                        setValues(for: person, with: data)
                         try? managedContext.save()
                         cocciCoccidiosControl.append(person)
-                        
-                    }
-                    else
-                    {
-                        let objTable: CoccidiosisControlFeed = (fetchedResult![index] as? CoccidiosisControlFeed)!
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(coccidiosisVaccine, forKey:"coccidiosisVaccine")
-                        objTable.setValue(targetWeight, forKey:"targetWeight")
-                        objTable.setValue(feedId, forKey:"feedId")
-                        objTable.setValue(feedProgram, forKey:"feedProgram")
-                        objTable.setValue(formName, forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lbldate, forKey:"feedDate")
-                        objTable.setValue(dosemoleculeId, forKey:"dosemoleculeId")
-                        try? managedContext.save()
+                    } else {
+                        if let objTable = results[data.index] as? CoccidiosisControlFeed {
+                            setValues(for: objTable, with: data)
+                            try? managedContext.save()
+                        }
                     }
                 }
-                else{
-                    
-                    let entity         = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)
-                    
-                    let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(coccidiosisVaccine, forKey:"coccidiosisVaccine")
-                    person.setValue(targetWeight, forKey:"targetWeight")
-                    person.setValue(feedId, forKey:"feedId")
-                    person.setValue(feedProgram, forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lbldate, forKey:"feedDate")
-                    person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
-                    
-                    try? managedContext.save()
-                    
-                    cocciCoccidiosControl.append(person)
-                }
+            } catch {
+                // handle error
             }
-            catch
-            {
-                
-            }
-        }
-        else
-        {
-            let entity         = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)
-            let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(coccidiosisVaccine, forKey:"coccidiosisVaccine")
-            person.setValue(targetWeight, forKey:"targetWeight")
-            person.setValue(feedId, forKey:"feedId")
-            person.setValue(feedProgram, forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lbldate, forKey:"feedDate")
-            person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)!
+            let person = NSManagedObject(entity: entity, insertInto: managedContext)
+            setValues(for: person, with: data)
             try? managedContext.save()
             cocciCoccidiosControl.append(person)
         }
-        
+    }
+    
+    private func setValues(for object: NSManagedObject, with data: CoccidiosisControlData) {
+        object.setValue(data.loginSessionId, forKey: "loginSessionId")
+        object.setValue(data.postingId, forKey: "postingId")
+        object.setValue(data.molecule, forKey: "molecule")
+        object.setValue(data.dosage, forKey: "dosage")
+        object.setValue(data.fromDays, forKey: "fromDays")
+        object.setValue(data.toDays, forKey: "toDays")
+        object.setValue(data.coccidiosisVaccine, forKey: "coccidiosisVaccine")
+        object.setValue(data.targetWeight, forKey: "targetWeight")
+        object.setValue(data.feedId, forKey: "feedId")
+        object.setValue(data.feedProgram, forKey: "feedProgram")
+        object.setValue(data.formName, forKey: "formName")
+        object.setValue(data.isSync, forKey: "isSync")
+        object.setValue(data.feedType, forKey: "feedType")
+        object.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+        object.setValue(data.lngId, forKey: "lngId")
+        object.setValue(data.lbldate, forKey: "feedDate")
+        object.setValue(data.doseMoleculeId, forKey: "dosemoleculeId")
     }
     
     /********************** Get data from server forCocoidisControll **********************/
-    
     func getDataFromCocoiiControll(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
         
@@ -7621,129 +7550,103 @@ class CoreDataHandler : NSObject  {
         return AntiboticArray
     }
     
-    func saveAlternativeDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId : NSNumber,feedProgram: String , formName : String,isSync: Bool,feedType:String,cocoVacId:NSNumber,lngId: NSNumber,lblDate: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveAlternativeDatabase(_ data: AlternativeFeedData, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         AlternativeArray = dbArray
         
-        if  AlternativeArray.count > 0 {
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
-            
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
+        if AlternativeArray.count > 0 {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AlternativeFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, data.feedId)
             
-            do
-            {
+            do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                if fetchedResult!.count > 0
-                {
-                    
-                    if (fetchedResult?.count <= index)
-                    {
-                        
-                        let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
-                        
-                        let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(feedId , forKey:"feedId")
-                        person.setValue(feedProgram , forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lblDate, forKey:"feedDate")
+                if fetchedResult!.count > 0 {
+                    if (fetchedResult?.count ?? 0 <= index) {
+                        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
+                        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                        person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        person.setValue(data.postingId, forKey: "postingId")
+                        person.setValue(data.molecule, forKey: "molecule")
+                        person.setValue(data.dosage, forKey: "dosage")
+                        person.setValue(data.fromDays, forKey: "fromDays")
+                        person.setValue(data.toDays, forKey: "toDays")
+                        person.setValue(data.feedId, forKey: "feedId")
+                        person.setValue(data.feedProgram, forKey: "feedProgram")
+                        person.setValue(data.isSync, forKey: "isSync")
+                        person.setValue(data.feedType, forKey: "feedType")
+                        person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        person.setValue(data.lngId, forKey: "lngId")
+                        person.setValue(data.lblDate, forKey: "feedDate")
                         
                         try? managedContext.save()
-
-                        
                         cocciAlternative.append(person)
-                    }
-                    else{
-                        
+                    } else {
                         let objTable: AlternativeFeed = (fetchedResult![index] as? AlternativeFeed)!
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(feedId , forKey:"feedId")
-                        objTable.setValue(feedProgram , forKey:"feedProgram")
-                        objTable.setValue(formName , forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lblDate, forKey:"feedDate")
+                        objTable.setValue(data.loginSessionId, forKey: "loginSessionId")
+                        objTable.setValue(data.postingId, forKey: "postingId")
+                        objTable.setValue(data.molecule, forKey: "molecule")
+                        objTable.setValue(data.dosage, forKey: "dosage")
+                        objTable.setValue(data.fromDays, forKey: "fromDays")
+                        objTable.setValue(data.toDays, forKey: "toDays")
+                        objTable.setValue(data.feedId, forKey: "feedId")
+                        objTable.setValue(data.feedProgram, forKey: "feedProgram")
+                        objTable.setValue(data.formName, forKey: "formName")
+                        objTable.setValue(data.isSync, forKey: "isSync")
+                        objTable.setValue(data.feedType, forKey: "feedType")
+                        objTable.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                        objTable.setValue(data.lngId, forKey: "lngId")
+                        objTable.setValue(data.lblDate, forKey: "feedDate")
+                        
                         try? managedContext.save()
-
                     }
-                }
-                else{
-                    let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
-                    
-                    let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(feedId , forKey:"feedId")
-                    person.setValue(feedProgram , forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lblDate, forKey:"feedDate")
+                } else {
+                    let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
+                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                    person.setValue(data.loginSessionId, forKey: "loginSessionId")
+                    person.setValue(data.postingId, forKey: "postingId")
+                    person.setValue(data.molecule, forKey: "molecule")
+                    person.setValue(data.dosage, forKey: "dosage")
+                    person.setValue(data.fromDays, forKey: "fromDays")
+                    person.setValue(data.toDays, forKey: "toDays")
+                    person.setValue(data.feedId, forKey: "feedId")
+                    person.setValue(data.feedProgram, forKey: "feedProgram")
+                    person.setValue(data.isSync, forKey: "isSync")
+                    person.setValue(data.feedType, forKey: "feedType")
+                    person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+                    person.setValue(data.lngId, forKey: "lngId")
+                    person.setValue(data.lblDate, forKey: "feedDate")
                     try? managedContext.save()
-
                     cocciAlternative.append(person)
                 }
+            } catch {
+                // Handle error
             }
-            catch
-            {
-                
-            }
-        }
-        
-        else{
-            let entity  = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(loginSessionId, forKey:"loginSessionId")
-            person.setValue( postingId , forKey:"postingId")
-            person.setValue( molecule , forKey:"molecule")
-            person.setValue(dosage, forKey:"dosage")
-            person.setValue(fromDays, forKey:"fromDays")
-            person.setValue(toDays , forKey:"toDays")
-            person.setValue(feedId , forKey:"feedId")
-            person.setValue(feedProgram , forKey:"feedProgram")
-            person.setValue(isSync , forKey:"isSync")
-            person.setValue(feedType, forKey:"feedType")
-            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(lblDate, forKey:"feedDate")
-            
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(data.loginSessionId, forKey: "loginSessionId")
+            person.setValue(data.postingId, forKey: "postingId")
+            person.setValue(data.molecule, forKey: "molecule")
+            person.setValue(data.dosage, forKey: "dosage")
+            person.setValue(data.fromDays, forKey: "fromDays")
+            person.setValue(data.toDays, forKey: "toDays")
+            person.setValue(data.feedId, forKey: "feedId")
+            person.setValue(data.feedProgram, forKey: "feedProgram")
+            person.setValue(data.isSync, forKey: "isSync")
+            person.setValue(data.feedType, forKey: "feedType")
+            person.setValue(data.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(data.lngId, forKey: "lngId")
+            person.setValue(data.lblDate, forKey: "feedDate")
             try? managedContext.save()
-
             cocciAlternative.append(person)
         }
     }
+
     
     /******************** getApi  AlterNative data from server *****************/
-    
-    
     func getDataFromAlterNative(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
         let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: backgroundContext)
@@ -7884,8 +7787,7 @@ class CoreDataHandler : NSObject  {
         
     }
     
-    func saveMyCoxtinDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lblDate: String)
-    {
+    func saveMyCoxtinDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lblDate: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
         let managedContext = appDelegate!.managedObjectContext
@@ -9649,38 +9551,38 @@ class CoreDataHandler : NSObject  {
     /***************** save data Skleta ************************************************************************/
     // MARK: 🟢 Save Captured Skeletan Database on switch case
 
-    func saveCaptureSkeletaInDatabaseOnSwithCase(catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,obsPoint:NSInteger, index : Int,obsId: NSInteger ,measure: String,quickLink: NSNumber,necId:NSNumber,isSync : Bool,lngId:NSNumber,refId:NSNumber, actualText: String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewData", in: managedContext)
-        let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
+    func saveCaptureSkeletaInDatabaseOnSwithCase(_ data: SkeletalObservationData, index: Int) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.managedObjectContext
         
-        person.setValue(catName, forKey:"catName")
-        person.setValue(birdNo, forKey:"birdNo")
-        person.setValue(formName, forKey:"formName")
-        person.setValue(obsId, forKey:"obsID")
-        person.setValue(obsName, forKey:"obsName")
-        person.setValue(obsPoint, forKey:"obsPoint")
-        person.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-        person.setValue(measure, forKey:"measure")
-        person.setValue(quickLink, forKey:"quickLink")
-        person.setValue(necId, forKey:"necropsyId")
-        person.setValue(isSync, forKey:"isSync")
-        person.setValue(lngId, forKey:"lngId")
-        person.setValue(refId, forKey:"refId")
-        person.setValue(actualText, forKey:"actualText")
-        
-        do
-        {
-            try managedContext.save()
+        if let entity = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewData", in: managedContext) {
+            let person = NSManagedObject(entity: entity, insertInto: managedContext)
+
+            person.setValue(data.catName, forKey: "catName")
+            person.setValue(data.birdNo, forKey: "birdNo")
+            person.setValue(data.formName, forKey: "formName")
+            person.setValue(data.obsId, forKey: "obsID")
+            person.setValue(data.obsName, forKey: "obsName")
+            person.setValue(data.obsPoint, forKey: "obsPoint")
+            person.setValue(NSNumber(value: data.obsVisibility), forKey: "objsVisibilty")
+            person.setValue(data.measure, forKey: "measure")
+            person.setValue(data.quickLink, forKey: "quickLink")
+            person.setValue(data.necId, forKey: "necropsyId")
+            person.setValue(data.isSync, forKey: "isSync")
+            person.setValue(data.lngId, forKey: "lngId")
+            person.setValue(data.refId, forKey: "refId")
+            person.setValue(data.actualText, forKey: "actualText")
+            
+            do {
+                try managedContext.save()
+            } catch {
+                print(appDelegateObj.testFuntion())
+            }
+            
+            captureSkeletaObject.append(person)
         }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        captureSkeletaObject.append(person)
     }
+
     // MARK: 🟢 Save Captured Necropsy Detail
     
     func saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(data: chickenCoreDataHandlerModels.updateSkeletaSingleSyncSkeletaData) {

@@ -269,11 +269,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
      
         if postingIdFromExistingNavigate == "Exting"{
             self.farmRow = nsIndexPathFromExist
-            var  postingId = postingIdFromExisting
+            let postingId = postingIdFromExisting
             self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1NecId(postingId as NSNumber) as! [NSManagedObject]
         } else {
             self.farmRow = 0
-            var postingId = UserDefaults.standard.integer(forKey: "necId") as Int
+            let postingId = UserDefaults.standard.integer(forKey: "necId") as Int
             self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber) as! [NSManagedObject]
         }
         
@@ -344,17 +344,44 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     // MARK: 🟢 Save Skeleton Data to Database
     fileprivate func handleSkleta(_ skleta: Skeleta, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
-        if skleta.measure! == "Y,N" || skleta.measure! == "Actual" {
-            
-            let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:skleta.observationId ?? 0),measure: trimmed,quickLink:skleta.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
-            
-        }  else {
-            let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            let array = (trimmed.components(separatedBy: ",") as [String])
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: Int(array[0])! , index: j, obsId: Int(truncating: skleta.observationId ?? 0),measure: trimmed,quickLink:skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
+        let trimmed = skleta.measure!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let obsId = Int(truncating: skleta.observationId ?? 0)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = skleta.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = skleta.refId!
+        let observationField = skleta.observationField!
+        let formName = farmArray[i] as! String
+        
+        // Helper function to save data
+        func saveSkletaData(obsPoint: Int, actualText: String) {
+            let skletaData = SkeletalObservationData(
+                catName: "skeltaMuscular",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: obsPoint,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(skletaData, index: j)
+        }
+        
+        // Condition handling
+        if skleta.measure == "Y,N" || skleta.measure == "Actual" {
+            saveSkletaData(obsPoint: 0, actualText: "")
+        } else {
+            let array = trimmed.components(separatedBy: ",")
+            if let obsPoint = Int(array[0]) {
+                saveSkletaData(obsPoint: obsPoint, actualText: "")
+            }
         }
     }
     
@@ -409,34 +436,59 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     // MARK: 🟢 Save Coccidiosis Data to Database
     fileprivate func handleCocooiData(_ cocoii: NSMutableArray, _ j: Int, _ birdnumber: Any, _ i: Int, _ necId: Int) {
+        let cocoiDis: Coccidiosis = cocoii.object(at: j) as! Coccidiosis
+        let trimmed = cocoiDis.measure!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let obsId = Int(truncating: cocoiDis.observationId ?? 0)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = cocoiDis.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = cocoiDis.refId!
+        let observationField = cocoiDis.observationField!
+        let formName = farmArray[i] as! String
+
+        // Helper function to save data
+        func saveCoccidiosisData(obsPoint: Int, actualText: String) {
+            let cocciData = SkeletalObservationData(
+                catName: "Coccidiosis",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: obsPoint,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(cocciData, index: j)
+        }
+
+        // Check if visibility is enabled
         if ((cocoii.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
-            let cocoiDis : Coccidiosis = cocoii.object(at: j) as! Coccidiosis
+            let fetchObsArr = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(birdNo, farmname: formName, catName: "Coccidiosis", Obsid: cocoiDis.observationId!, necId: necId as NSNumber)
             
-            let FetchObsArr =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(birdnumber as! NSNumber, farmname: farmArray[i] as! String, catName: "Coccidiosis" ,Obsid: cocoiDis.observationId!,necId:necId as NSNumber)
-            if FetchObsArr.count > 0 {
-                debugPrint("print Cocci data")
+            if fetchObsArr.count > 0 {
+                debugPrint("Cocci data already exists")
             } else {
-                if cocoiDis.measure! == "Y,N" {
-                    let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "" )
-                } else if ( cocoiDis.measure! == "Actual"){
-                    let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating: cocoiDis.observationId!),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
+                if cocoiDis.measure == "Y,N" || cocoiDis.measure == "Actual" {
+                    saveCoccidiosisData(obsPoint: 0, actualText: "")
                 } else {
-                    let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    let array = (trimmed.components(separatedBy: ",") as [String])
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: Int(array[0])! , index: j, obsId: Int(truncating: cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
+                    let array = trimmed.components(separatedBy: ",")
+                    if let obsPoint = Int(array[0]) {
+                        saveCoccidiosisData(obsPoint: obsPoint, actualText: "")
+                    }
                 }
             }
         } else {
-            let cocoiDis : Coccidiosis = cocoii.object(at: j) as! Coccidiosis
+            // Delete entry if visibility is not enabled
             CoreDataHandler().deleteCaptureNecropsyViewDataWithObsID(cocoiDis.observationId!, necId: necId as NSNumber)
-            
         }
     }
+
     
     func saveCocoiCat(_ completion: (_ status: Bool) -> Void) {
         let farm = farmArray.object(at: nsIndexPathFromExist)
@@ -469,19 +521,48 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
     }
     // MARK: 🟢 Save GiTract Data to Database
-    fileprivate func handleFetchObsArr(_ FetchObsArr: NSArray, _ gitract: GITract, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
-        if FetchObsArr.count > 0 {
-            debugPrint("Gitract Data")
+    fileprivate func handleFetchObsArr(_ fetchObsArr: NSArray, _ gitract: GITract, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
+        let formName = farmArray[i] as! String
+        let trimmed = gitract.measure!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let obsId = Int(truncating: gitract.observationId!)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = gitract.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = gitract.refId!
+        let observationField = gitract.observationField!
+
+        // Helper function to save GITract data
+        func saveGITractData(obsPoint: Int, actualText: String) {
+            let gitractData = SkeletalObservationData(
+                catName: "GITract",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: obsPoint,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(gitractData, index: j)
+        }
+
+        // Check if there is any existing data
+        if fetchObsArr.count > 0 {
+            debugPrint("GITract Data already exists")
         } else {
-            if gitract.measure! == "Y,N" ||  gitract.measure! == "Actual" {
-                let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!, actualText: "")
-            }  else {
-                let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                let array = (trimmed.components(separatedBy: ",") as [String])
-                
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!, actualText: "" )
+            if gitract.measure == "Y,N" || gitract.measure == "Actual" {
+                saveGITractData(obsPoint: 0, actualText: "")
+            } else {
+                let array = trimmed.components(separatedBy: ",")
+                if let obsPoint = Int(array[0]) {
+                    saveGITractData(obsPoint: obsPoint, actualText: "")
+                }
             }
         }
     }
@@ -531,16 +612,44 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     // MARK: 🟢 Save Respiratory Data to Database
     fileprivate func handleRespiratoryValidation(_ resp: Respiratory, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
-        if resp.measure! == "Y,N"  || resp.measure! == "Actual"{
-            let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:resp.observationId!),measure:trimmed,quickLink: resp.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!, actualText: "")
-        }  else {
-            let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            let array = (trimmed.components(separatedBy: ",") as [String])
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber, obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:resp.observationId!),measure:trimmed,quickLink: resp.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!, actualText: "")
-            
+        let formName = farmArray[i] as! String
+        let trimmed = resp.measure!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let obsId = Int(truncating: resp.observationId!)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = resp.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = resp.refId!
+        let observationField = resp.observationField!
+        
+        // Helper function to save Respiratory data
+        func saveRespiratoryData(obsPoint: Int, actualText: String) {
+            let respiratoryData = SkeletalObservationData(
+                catName: "Resp",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: obsPoint,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(respiratoryData, index: j)
+        }
+
+        // Handling based on measure value
+        if resp.measure == "Y,N" || resp.measure == "Actual" {
+            saveRespiratoryData(obsPoint: 0, actualText: "")
+        } else {
+            let array = trimmed.components(separatedBy: ",")
+            if let obsPoint = Int(array[0]) {
+                saveRespiratoryData(obsPoint: obsPoint, actualText: "")
+            }
         }
     }
     
@@ -594,45 +703,91 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     // MARK: 🟢  Save Immune Category Data to Database
     fileprivate func handleImmuneObservationField(_ immune: Immune, _ i: Int, _ birdnumber: Any, _ j: Int, _ trimmed: String, _ necId: Int) {
+        let formName = farmArray[i] as! String
+        let obsId = Int(truncating: immune.observationId!)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = immune.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = immune.refId!
+        let observationField = immune.observationField!
+        
+        // Helper function to save Immune data
+        func saveImmuneData(actualText: String) {
+            let immuneData = SkeletalObservationData(
+                catName: "Immune",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: 0,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(immuneData, index: j)
+        }
+
+        // Handling based on observation field
         if immune.observationField == Constants.maleFemaleStr {
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
-            
+            saveImmuneData(actualText: "0")
         } else {
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
+            saveImmuneData(actualText: "0.0")
         }
     }
+
     
     fileprivate func handleImmuneMeasureValidation(_ immune: Immune, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
-        if immune.measure! == "Y,N" {
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: immune.measure ?? "")
-        } else if ( immune.measure! == "Actual") {
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            handleImmuneObservationField(immune, i, birdnumber, j, trimmed, necId)
+        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let formName = farmArray[i] as! String
+        let obsId = Int(truncating: immune.observationId!)
+        let birdNo = birdnumber as! NSNumber
+        let quickLink = immune.quicklinks!
+        let lngId = lngId as NSNumber
+        let refId = immune.refId!
+        let observationField = immune.observationField!
+
+        // Helper function to save Immune data
+        func saveImmuneData(actualText: String, obsPoint: Int) {
+            let immuneData = SkeletalObservationData(
+                catName: "Immune",
+                obsName: observationField,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdNo,
+                obsPoint: obsPoint,
+                obsId: obsId,
+                measure: trimmed,
+                quickLink: quickLink,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId,
+                refId: refId,
+                actualText: actualText
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(immuneData, index: j)
         }
-        
-        else if ( immune.measure! == "F,M") {  /// New Addition for Bird Sex
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+
+        // Measure handling based on the type
+        if immune.measure == "Y,N" {
+            saveImmuneData(actualText: immune.measure ?? "", obsPoint: 0)
+        } else if immune.measure == "Actual" {
+            handleImmuneObservationField(immune, i, birdnumber, j, trimmed, necId)
+        } else if immune.measure == "F,M" {  // Bird Sex
             if immune.observationField == Constants.maleFemaleStr {
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
-                
+                saveImmuneData(actualText: "0", obsPoint: 0)
             }
-            
-        } else {
-            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            let array = (trimmed.components(separatedBy: ",") as [String])
-            
-            if immune.refId == 58 {
-                
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
-                
-            } else {
-                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
-                
-            }
+        } else {  // For other cases
+            let array = trimmed.components(separatedBy: ",")
+            let obsPoint = (immune.refId == 58) ? Int(array[3])! : Int(array[0])!
+            saveImmuneData(actualText: "0.0", obsPoint: obsPoint)
         }
     }
+
     
     fileprivate func handleVisiblityCheckSaveImmuneCatValidation(_ immu: NSMutableArray, _ birdnumber: Any, _ i: Int, _ necId: Int) {
         for j in 0..<immu.count {
@@ -1018,11 +1173,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             handleClickHelpPopUpBtnTag3(&skleta, sender, &obsName, &refId, &obsNameArr, infoImage)
         }
         
-        if btnTag == 4 {
-            if let status = handleClickHelpPopUpBtnTag4(&skleta, sender, &obsName, &refId, &obsNameArr, infoImage) {
-                return
-            }
+        if btnTag == 4, handleClickHelpPopUpBtnTag4(&skleta, sender, &obsName, &refId, &obsNameArr, infoImage) != nil {
+            return
         }
+
+        
         buttonPopup = UIButton(frame: CGRect(x: 0, y: 0, width: 1024, height: 768))
         buttonPopup.backgroundColor = UIColor(white: 0, alpha: 0.5)
         buttonPopup.addTarget(self, action: #selector(buttonActionpopup), for: .touchUpInside)
@@ -3700,93 +3855,120 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         Helper.dismissGlobalHUD(self.view)
     }
     // MARK: 🟢 Save Skelaton Data to Server
-    func addSkeltonResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {
-        
-        var  formName = UserDefaults.standard.value(forKey: "farm") as! String
-        lngId = UserDefaults.standard.integer(forKey: "lngId")
+    func addSkeltonResponseData(_ noOfBirdsArr1: NSMutableArray, completion: (_ status: Bool) -> Void) {
+        let formName = UserDefaults.standard.value(forKey: "farm") as! String
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
         let skeletenArr = CoreDataHandler().fetchAllSeettingdataWithLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        for i in 0..<skeletenArr.count
-        {
+        let birdCount = (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber
+
+        // Helper function to save Skelton data
+        func saveSkeltonData(skleta: Skeleta, measure: String, obsPoint: Int) {
+            let necId = getNecIdChicken()
+            let data = SkeletalObservationData(
+                catName: "skeltaMuscular",
+                obsName: skleta.observationField!,
+                formName: formName,
+                obsVisibility: false,
+                birdNo: birdCount,
+                obsPoint: obsPoint,
+                obsId: skleta.observationId!.intValue,
+                measure: measure,
+                quickLink: skleta.quicklinks!,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId as NSNumber,
+                refId: skleta.refId!,
+                actualText: ""
+            )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(data, index: self.items.count)
+        }
+
+        for i in 0..<skeletenArr.count {
             if ((skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
-                
-                let skleta : Skeleta = skeletenArr.object(at: i) as! Skeleta
-                if skleta.measure! == "Y,N" {
-                    
-                 
-                 
-                    let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber , obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
-                }
-                else if ( skleta.measure! == "Actual"){
-                    
-                  
-                    let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber as NSNumber,  obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
-                }
-                else
-                {
-                    let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    let array = (trimmed.components(separatedBy: ",") as [String])
-                    let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
+                let skleta: Skeleta = skeletenArr.object(at: i) as! Skeleta
+                let measure = skleta.measure!
+
+                if measure == "Y,N" || measure == "Actual" {
+                    saveSkeltonData(skleta: skleta, measure: measure, obsPoint: 0)
+                } else {
+                    let trimmed = measure.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    let array = trimmed.components(separatedBy: ",")
+                    let obsPoint = Int(array[0])!
+                    saveSkeltonData(skleta: skleta, measure: measure, obsPoint: obsPoint)
                 }
             }
         }
-        
+
+        // Fetch updated data for Skelta
         self.dataSkeltaArray.removeAllObjects()
         let necId = getNecIdChicken()
-        
-        self.dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-        
-        completion (true)
-        
+        self.dataSkeltaArray = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            birdCount,
+            farmname: formName,
+            catName: "skeltaMuscular",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+
+        completion(true)
     }
+    
     // MARK: 🟢 Save Coccidiosis Data to Server
     func addCocoiResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {
-       
-        var formName =  UserDefaults.standard.value(forKey: "farm") as! String
-        
+        var formName = UserDefaults.standard.value(forKey: "farm") as! String
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         UserDefaults.standard.synchronize()
         let cocoiArr = CoreDataHandler().fetchAllCocoiiDataUsinglngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        for i in 0..<cocoiArr.count
-        {
+        for i in 0..<cocoiArr.count {
             if ((cocoiArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
-                
                 let cocoiDis : Coccidiosis = cocoiArr.object(at: i) as! Coccidiosis
-                
                 if cocoiDis.measure! == "Y,N" || cocoiDis.measure == "Actual"  {
-                    
                     let necId = getNecIdChicken()
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
-                }
-               
-                else
-                {
-                    
+                    let observationData = SkeletalObservationData(
+                        catName: "Coccidiosis",
+                        obsName: cocoiDis.observationField!,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
+                        obsPoint: 0,
+                        obsId: cocoiDis.observationId!.intValue,
+                        measure: cocoiDis.measure!,
+                        quickLink: cocoiDis.quicklinks!,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: cocoiDis.refId!,
+                        actualText: ""
+                    )
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observationData, index: self.items.count)
+                } else {
                     let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
-                    
                     let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
+                    let observationData = SkeletalObservationData(
+                        catName: "Coccidiosis",
+                        obsName: cocoiDis.observationField!,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
+                        obsPoint: Int(array[0])!,
+                        obsId: cocoiDis.observationId!.intValue,
+                        measure: cocoiDis.measure!,
+                        quickLink: cocoiDis.quicklinks!,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: cocoiDis.refId!,
+                        actualText: ""
+                    )
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observationData, index: self.items.count)
                 }
-                
             }
-            
         }
         
         self.dataArrayCocoi.removeAllObjects()
-        
         let necId = getNecIdChicken()
-        
         self.dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-        
         completion (true)
-        
     }
     
     // MARK: 🟢 Save GITract Data to Server
@@ -3797,38 +3979,50 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         UserDefaults.standard.synchronize()
         let gitract1 =  CoreDataHandler().fetchAllGITractDataUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
         
-        for  j in 0..<gitract1.count
-        {
-            if ((gitract1.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
-                
-                let gitract2 : GITract = gitract1.object(at: j) as! GITract
-                
-                if gitract2.measure! == "Y,N" || gitract2.measure == "Actual" {
-                    
-                    let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
+        for j in 0..<gitract1.count {
+            guard
+                let gitract2 = gitract1.object(at: j) as? GITract,
+                let visibility = (gitract1.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as? NSNumber,
+                visibility.intValue == 1
+            else { continue }
+
+            let necId = getNecIdChicken()
+            let measure = gitract2.measure?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            
+            let obsPoint: Int = {
+                if measure == "Y,N" || measure == "Actual" {
+                    return 0
+                } else {
+                    let components = measure.components(separatedBy: ",")
+                    return Int(components.first ?? "0") ?? 0
                 }
-               
-                else
-                {
-                    let trimmed = gitract2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    let array = (trimmed.components(separatedBy: ",") as [String])
-                    let necId = getNecIdChicken()
-                    
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
-                }
-                
-                
-            }
+            }()
+            
+            let observation = SkeletalObservationData(
+                catName: "GITract",
+                obsName: gitract2.observationField ?? "",
+                formName: formName,
+                obsVisibility: false,
+                birdNo: NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count),
+                obsPoint: obsPoint,
+                obsId: gitract2.observationId?.intValue ?? 0,
+                measure: gitract2.measure ?? "",
+                quickLink: gitract2.quicklinks ?? 0,
+                necId: necId as NSNumber,
+                isSync: true,
+                lngId: lngId as NSNumber,
+                refId: gitract2.refId ?? 0,
+                actualText: ""
+            )
+
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation,index:self.items.count)
         }
-        
         
         self.dataArrayGiTract.removeAllObjects()
         
         let necId = getNecIdChicken()
         
-        self.dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+        self.dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, farmname: formName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
         completion (true)
         
@@ -3847,15 +4041,68 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if resp2.measure! == "Y,N" || resp2.measure == "Actual"  {
                     let necId = getNecIdChicken()
                     
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,  obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
-                }
-              
-                else
-                {
+                    guard let respField = resp2.observationField,
+                          let respId = resp2.observationId,
+                          let measure = resp2.measure,
+                          let quickLink = resp2.quicklinks,
+                          let refId = resp2.refId else {
+                        // Optionally handle nil values here
+                        return
+                    }
+
+                    let observation = SkeletalObservationData(
+                        catName: "Resp",
+                        obsName: respField,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count),
+                        obsPoint: 0,
+                        obsId: respId.intValue,
+                        measure: measure,
+                        quickLink: quickLink,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: refId,
+                        actualText: ""
+                    )
+
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: self.items.count)
+                } else  {
                     let trimmed = resp2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     let necId = getNecIdChicken()
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
+                    guard let obsField = resp2.observationField,
+                          let obsId = resp2.observationId,
+                          let measure = resp2.measure,
+                          let quickLink = resp2.quicklinks,
+                          let refId = resp2.refId,
+                          let firstComponent = array.first,
+                          let obsPoint = Int(firstComponent) else {
+                        // Handle missing or malformed data if necessary
+                        return
+                    }
+
+                    let birdCount = NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count)
+
+                    let observation = SkeletalObservationData(
+                        catName: "Resp",
+                        obsName: obsField,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: birdCount,
+                        obsPoint: obsPoint,
+                        obsId: obsId.intValue,
+                        measure: measure,
+                        quickLink: quickLink,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: refId,
+                        actualText: ""
+                    )
+
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: self.items.count)
                 }
             }
         }
@@ -3872,38 +4119,97 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         var formName  = UserDefaults.standard.value(forKey: "farm") as! String
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         UserDefaults.standard.synchronize()
-        let immu1 =   CoreDataHandler().fetchAllImmuneUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        
-        
-        for  j in 0..<immu1.count
-        {
+        let immu1 = CoreDataHandler().fetchAllImmuneUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
+        for j in 0..<immu1.count {
             if ((immu1.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                 let immune2 : Immune = immu1.object(at: j) as! Immune
                 if immune2.measure! == "Y,N" {
-                    
+                    let necId = getNecIdChicken()
+                    let observation = SkeletalObservationData(
+                        catName: "Immune",
+                        obsName: immune2.observationField ?? "",
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count),
+                        obsPoint: 0,
+                        obsId: immune2.observationId?.intValue ?? 0,
+                        measure: immune2.measure ?? "",
+                        quickLink: immune2.quicklinks ?? 0,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: immune2.refId ?? 0,
+                        actualText: "0.0"
+                    )
+
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation,index:j)
+                } else if ( immune2.measure! == "Actual") {
                     let necId = getNecIdChicken()
                     
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
-                }
-                else if ( immune2.measure! == "Actual"){
-                    let necId = getNecIdChicken()
                     
+                    guard let obsField = immune2.observationField,
+                          let obsId = immune2.observationId,
+                          let measure = immune2.measure,
+                          let quickLink = immune2.quicklinks,
+                          let refId = immune2.refId else {
+                        return
+                    }
+
+                    let birdCount = NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count)
+
+                    let observation = SkeletalObservationData(
+                        catName: "Immune",
+                        obsName: obsField,
+                        formName: formName,
+                        obsVisibility: false,
+                        birdNo: birdCount,
+                        obsPoint: 0,
+                        obsId: obsId.intValue,
+                        measure: measure,
+                        quickLink: quickLink,
+                        necId: necId as NSNumber,
+                        isSync: true,
+                        lngId: lngId as NSNumber,
+                        refId: refId,
+                        actualText: "0.0"
+                    )
                     
-                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
-                }
-                
-                else if ( immune2.measure! == "F,M"){  /// New Addition for Bird Sex
+                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: self.items.count)
+                } else if ( immune2.measure! == "F,M") {
                  
-                    if immune2.observationField == Constants.maleFemaleStr
-                    {
+                    if immune2.observationField == Constants.maleFemaleStr {
                         let necId = getNecIdChicken()
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0")
+                        guard let obsField = immune2.observationField,
+                              let obsId = immune2.observationId,
+                              let measure = immune2.measure,
+                              let quickLink = immune2.quicklinks,
+                              let refId = immune2.refId else {
+                            return // Handle the nil case if needed
+                        }
+
+                        let birdCount = NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count)
+
+                        let observation = SkeletalObservationData(
+                            catName: "Immune",
+                            obsName: obsField,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: birdCount,
+                            obsPoint: 0,
+                            obsId: obsId.intValue,
+                            measure: measure,
+                            quickLink: quickLink,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: refId,
+                            actualText: "0"
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: self.items.count)
                     }
-                }
-                
-                else
-                {
+                } else {
                     
                     let trimmed = immune2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
@@ -3912,14 +4218,60 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         
                         let necId = getNecIdChicken()
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[3])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
+                        guard let obsField = immune2.observationField,
+                              let obsId = immune2.observationId,
+                              let measure = immune2.measure,
+                              let quickLink = immune2.quicklinks,
+                              let refId = immune2.refId,
+                              array.count > 3,
+                              let obsPoint = Int(array[3]) else {
+                            // Handle missing/invalid data safely
+                            return
+                        }
+
+                        let birdCount = NSNumber(value: (noOfBirdsArr1[self.farmRow] as AnyObject).count)
+
+                        let observation = SkeletalObservationData(
+                            catName: "Immune",
+                            obsName: obsField,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: birdCount,
+                            obsPoint: obsPoint,
+                            obsId: obsId.intValue,
+                            measure: measure,
+                            quickLink: quickLink,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: refId,
+                            actualText: "0.0"
+                        )
+
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: self.items.count)
                     }
                     else
                     {
                         
                         let necId = getNecIdChicken()
                         
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
+                        let observationData = SkeletalObservationData(
+                            catName: "Immune",
+                            obsName: immune2.observationField!,
+                            formName: formName,
+                            obsVisibility: false,
+                            birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,
+                            obsPoint: Int(array[0])!,
+                            obsId: immune2.observationId!.intValue,
+                            measure: immune2.measure!,
+                            quickLink: immune2.quicklinks!,
+                            necId: necId as NSNumber,
+                            isSync: true,
+                            lngId: lngId as NSNumber,
+                            refId: immune2.refId!,
+                            actualText: "0.0"
+                        )
+                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observationData, index: self.items.count)
                     }
                 }
             }

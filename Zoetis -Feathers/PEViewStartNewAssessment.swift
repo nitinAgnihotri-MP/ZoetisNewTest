@@ -1032,16 +1032,17 @@ extension PEViewStartNewAssessment{
         pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
         let categoryCount = filterCategoryCount()
         if categoryCount > 0 {
-            var peNewAssessmentWas = PENewAssessment()
-            peNewAssessmentWas = self.peNewAssessment
+
+            let peNewAssessmentWas = self.peNewAssessment ?? PENewAssessment()
             
             CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", peNewAssessmentWas.userID ?? 0, peNewAssessmentWas.serverAssessmentId ?? ""))
             CoreDataHandler().deleteAllData("PE_Refrigator")
             
             for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
                 for (index, ass) in cat.assessmentQuestions.enumerated(){
-                    var peNewAssessmentNew = PENewAssessment()
-                    peNewAssessmentNew = peNewAssessmentWas
+                    
+                    let peNewAssessmentNew = peNewAssessmentWas ?? PENewAssessment()
+                    
                     peNewAssessmentNew.cID = index
                     peNewAssessmentNew.catID = cat.id
                     peNewAssessmentNew.catName = cat.categoryName
@@ -1916,18 +1917,6 @@ extension PEViewStartNewAssessment{
 		}
 	}
 	
-	private func fetchSanitationData(for assessmentIds: [String]) -> [PESanitationDTO] {
-		var result: [PESanitationDTO] = []
-		let userId = UserContext.sharedInstance.userDetailsObj?.userId ?? ""
-		
-		for id in assessmentIds {
-			let data = SanitationEmbrexQuestionMasterDAO.sharedInstance
-				.sendExtendedPEFilledDTO(userId: userId, assessmentId: id)
-			result.append(contentsOf: data)
-		}
-		
-		return result
-	}
 
 	// For data arrays that are [CustomStruct], not [JSONDictionary]
 	private func appendSyncPayloadsFromStructs<T>(
@@ -1977,9 +1966,7 @@ extension PEViewStartNewAssessment{
 			residueMolds: vaccineResidueMoldsDataArr,
 			microSamples: vaccineMicroSamplesDataArr
 		)
-		
-		let idArr = extractAssessmentIds(from: mainSyncData)
-		
+				
 		let finalParams: JSONDictionary = [
 			"AssessmentData": mainSyncData,
 			"appVersion": Bundle.main.versionNumber,

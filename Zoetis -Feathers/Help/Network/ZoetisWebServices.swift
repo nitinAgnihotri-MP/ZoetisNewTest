@@ -1299,15 +1299,17 @@ extension ZoetisWebServices {
     
     func postRequest(shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
-    
+        
         ZoetisApiManager.POST(endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api with End Point -- " , endPoint)
             
-            shouldErrorRequired ? completion(JSON([:]), error) : completion(JSON([:]), error)
+            // Directly call completion, no need for the ternary operator
+            completion(JSON([:]), error)
         }
     }
+
     
     func handlecompletionResponse(_ json: JSON, shouldErrorRequired: Bool = false, completion: @escaping CompletionBlock) {
         

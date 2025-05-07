@@ -844,25 +844,25 @@ class ApiSync: NSObject {
 				noOfBirds: Int(noOfBirds)!,
 				necropsyId: captureNecropsyData.necropsyId
 			)
+
+            let farmInput = chickenCoreDataHandlerModels.chickenFarmInputData(
+                   farmName: farmName,
+                   houseNo: captureNecropsyData.houseNo,
+                   noOfBirds: Int(noOfBirds)!,
+                   farmId: captureNecropsyData.farmId,
+                   imageId: captureNecropsyData.imageId,
+                   feedProgram: captureNecropsyData.feedProgram,
+                   feedId: captureNecropsyData.feedId as? Int ?? 0,
+                   age: captureNecropsyData.age,
+                   customerId: captureNecropsyData.custmerId,
+                   customerName: captureNecropsyData.complexName,
+                   sick: "\(captureNecropsyData.sick ?? 0)",
+                   flockId: (captureNecropsyData.flockId != nil) ? NSNumber(value: Int(captureNecropsyData.flockId!) ?? 0) : nil,
+                   complexDate: captureNecropsyData.complexDate,
+                   birdDetails: birdDetails
+            )
 			
-			let farmDict = createFarmDict(
-				farmName: farmName,
-				houseNo: captureNecropsyData.houseNo,
-				noOfBirds: Int(noOfBirds)!,
-				farmId: captureNecropsyData.farmId,
-				imageId: captureNecropsyData.imageId,
-				feedProgram: captureNecropsyData.feedProgram,
-				feedId: captureNecropsyData.feedId as? Int ?? 0,
-				age: captureNecropsyData.age,
-				customerId: captureNecropsyData.custmerId,
-				customerName: captureNecropsyData.complexName,
-				sick: "\(captureNecropsyData.sick ?? 0)",
-				flockId: Int(captureNecropsyData.flockId!) as NSNumber?,
-				complexDate: captureNecropsyData.complexDate,
-				birdDetails: birdDetails
-			)
-			
-			farmDetails.add(farmDict)
+			farmDetails.add(farmInput)
 		}
 		
 		return farmDetails
@@ -903,24 +903,26 @@ class ApiSync: NSObject {
 		return dict
 	}
 	
-	private func createFarmDict(farmName: String?, houseNo: String?, noOfBirds: Int, farmId: NSNumber?, imageId: NSNumber?, feedProgram: String?, feedId: Int, age: String?, customerId: NSNumber?, customerName: String?, sick: String?, flockId: NSNumber?, complexDate: String?, birdDetails: NSMutableArray) -> NSMutableDictionary {
-		let dict = NSMutableDictionary()
-		dict.setValue(birdDetails, forKey: NecropsyConstants.birdDetailsKey)
-		dict.setValue(farmName, forKey: "farmName")
-		dict.setValue(houseNo, forKey: "houseNo")
-		dict.setValue(noOfBirds, forKey: "birds")
-		dict.setValue(farmId, forKey: "SortId")
-		dict.setValue(imageId, forKey: "ImgId")
-		dict.setValue(feedProgram, forKey: "feedProgram")
-		dict.setValue(feedId, forKey: "DeviceFeedId")
-		dict.setValue(age, forKey: "age")
-		dict.setValue(customerId, forKey: "customerId")
-		dict.setValue(customerName, forKey: "customerName")
-		dict.setValue(sick, forKey: "sick")
-		dict.setValue(flockId, forKey: "flockId")
-		dict.setValue(complexDate, forKey: "ComplexDate")
-		return dict
-	}
+    private func createFarmDict(from input: chickenCoreDataHandlerModels.chickenFarmInputData) -> NSMutableDictionary {
+        let dict = NSMutableDictionary()
+        dict.setValue(input.birdDetails, forKey: NecropsyConstants.birdDetailsKey)
+        dict.setValue(input.farmName, forKey: "farmName")
+        dict.setValue(input.houseNo, forKey: "houseNo")
+        dict.setValue(input.noOfBirds, forKey: "birds")
+        dict.setValue(input.farmId, forKey: "SortId")
+        dict.setValue(input.imageId, forKey: "ImgId")
+        dict.setValue(input.feedProgram, forKey: "feedProgram")
+        dict.setValue(input.feedId, forKey: "DeviceFeedId")
+        dict.setValue(input.age, forKey: "age")
+        dict.setValue(input.customerId, forKey: "customerId")
+        dict.setValue(input.customerName, forKey: "customerName")
+        dict.setValue(input.sick, forKey: "sick")
+        dict.setValue(input.flockId, forKey: "flockId")
+        dict.setValue(input.complexDate, forKey: "ComplexDate")
+        return dict
+    }
+
+    
 	
 	// MARK: - Server Communication
 	private func sendNecropsyDataToServer(_ data: NSMutableDictionary) {

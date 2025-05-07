@@ -1829,14 +1829,13 @@ extension PEStartNewAssessment{
     
     func filterCategoryCount() -> Int {
         var peCategoryFilteredArray: [PECategory] =  []
-        for object in pECategoriesAssesmentsResponse.peCategoryArray{
-            if peNewAssessment.evaluationID == object.evaluationID{
-                if object.id != 36{
-                    peCategoryFilteredArray.append(object)
-                }
-                //                peCategoryFilteredArray.append(object)
+        for object in pECategoriesAssesmentsResponse.peCategoryArray
+        {
+            if peNewAssessment.evaluationID == object.evaluationID && object.id != 36 {
+                peCategoryFilteredArray.append(object)
             }
         }
+
         pECategoriesAssesmentsResponse.peCategoryArray = peCategoryFilteredArray
         return pECategoriesAssesmentsResponse.peCategoryArray.count
     }

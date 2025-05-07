@@ -264,6 +264,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         self?.domainsName = domainName.rawValue as? String
                         let apiKeyId = apiKeys["Id"]
                         self?.apiKeyIdIs = apiKeyId.rawValue as? NSNumber
+                     
                         
                         let environmentIs = Constants.Api.versionUrl
                         let environmentMap: [String: Int] = [
@@ -271,15 +272,13 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                             "devapi": 1,
                             "supportapi": 2
                         ]
-                        // Find the first match from the environment map
-                        let match = environmentMap.first { environmentIs.contains($0.key) }
-                        let liveAlbums = match?.value as? Int ?? 3
 
-                        // Determine the API key based on liveAlbums
+                        let match = self!.findEnvironmentMatch(environmentMap: environmentMap, environmentIs: environmentIs)
+                        let liveAlbums = match?.value ?? 3  // No need to cast, it's already Int
                         let apiKey = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKeyIs ?? "")
-
-                        // Initialize Gigya with the API key
                         self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainsName)
+                        
+
 
                     }
 
@@ -293,7 +292,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
-    
+    private func findEnvironmentMatch(environmentMap: [String: Int], environmentIs: String) -> (key: String, value: Int)? {
+        return environmentMap.first { environmentIs.contains($0.key) }
+    }
     
     // MARK:  /*********** Fetch Gigya Country Languages List **************/
     private func encryptUserName(emailId: String){
@@ -1506,14 +1507,13 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
             let catstr = mapCategoryName(catName)
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(
+            let observation = SkeletalObservationData(
                 catName: catstr,
                 obsName: obsName,
                 formName: farmName,
                 obsVisibility: chkKey!,
                 birdNo: (m+1) as NSNumber,
                 obsPoint: chkKey1!,
-                index: m,
                 obsId: obsId,
                 measure: measure,
                 quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
@@ -1717,52 +1717,66 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let farmArr = item["Farms"].arrayValue
 
         for farmItem in farmArr {
-            self.saveFarmNecropsyStep1(farmItem, sessionId: sessionId, devSessionId: devSessionId, lngId: lngId, custId: custId, complexId: complexId, complexName: complexName, seesDat: seesDat)
+            
+            let farmData = chickenCoreDataHandlerModels.submitdNecrStep1Data(
+                farmItem: farmItem,
+                sessionId: sessionId,
+                devSessionId: devSessionId,
+                lngId: lngId,
+                custId: custId,
+                complexId: complexId,
+                complexName: complexName,
+                seesDat: seesDat
+            )
+
+            self.saveFarmNecropsyStep1(farmData)
+            
         }
     }
-
-    private func saveFarmNecropsyStep1(_ farmItem: JSON, sessionId: Int, devSessionId: String, lngId: NSNumber, custId: Int, complexId: Int, complexName: String, seesDat: String) {
-        let farmName = farmItem["farmName"].stringValue
-        let postingArr = CoreDataHandler().fetchAllPostingSession(sessionId as NSNumber)
+    
+    private func saveFarmNecropsyStep1(_ data: chickenCoreDataHandlerModels.submitdNecrStep1Data) {
+        let farmName = data.farmItem["farmName"].stringValue
+        let postingArr = CoreDataHandler().fetchAllPostingSession(data.sessionId as NSNumber)
         for postItem in postingArr {
             guard let posttingSes = postItem as? PostingSession else { continue }
             let vetId = posttingSes.veterinarianId
-            CoreDataHandler().updateFinalizeDataWithNec(sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
+            CoreDataHandler().updateFinalizeDataWithNec(data.sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
         }
-        let age = farmItem["age"].stringValue
-        let birds = farmItem["birds"].stringValue
-        let houseNo = farmItem["houseNo"].stringValue
-        let flockId = farmItem["flockId"].stringValue
-        let feedProgram = farmItem["feedProgram"].stringValue
-        let sick = farmItem["sick"].boolValue
-        let feedId = farmItem["FeedId"].intValue
-        let farmId = farmItem["DeviceFarmId"].intValue
-        let ImgId = farmItem["ImgId"].intValue
+        
+        let age = data.farmItem["age"].stringValue
+        let birds = data.farmItem["birds"].stringValue
+        let houseNo = data.farmItem["houseNo"].stringValue
+        let flockId = data.farmItem["flockId"].stringValue
+        let feedProgram = data.farmItem["feedProgram"].stringValue
+        let sick = data.farmItem["sick"].boolValue
+        let feedId = data.farmItem["FeedId"].intValue
+        let farmId = data.farmItem["DeviceFarmId"].intValue
+        let ImgId = data.farmItem["ImgId"].intValue
         
         let necropsyData = chickenCoreDataHandlerModels.saveNecropsyStep1Data(
-            postingId: sessionId as NSNumber,
-               age: age,
-               farmName: farmName,
-               feedProgram: feedProgram,
-               flockId: flockId,
-               houseNo: houseNo,
-               noOfBirds: birds,
-               sick: sick as NSNumber,
-               necId: sessionId as NSNumber,
-               compexName: complexName,
-               complexDate: seesDat,
-               complexId: complexId as NSNumber,
-               custmerId: custId as NSNumber,
-               feedId: feedId as NSNumber,
-               isSync: false,
-               timeStamp: devSessionId,
-               actualTimeStamp: devSessionId,
-               lngId: lngId,
-               farmId: farmId as NSNumber,
-               imageId: ImgId as NSNumber,
-               count: 0
+            postingId: data.sessionId as NSNumber,
+            age: age,
+            farmName: farmName,
+            feedProgram: feedProgram,
+            flockId: flockId,
+            houseNo: houseNo,
+            noOfBirds: birds,
+            sick: sick as NSNumber,
+            necId: data.sessionId as NSNumber,
+            compexName: data.complexName,
+            complexDate: data.seesDat,
+            complexId: data.complexId as NSNumber,
+            custmerId: data.custId as NSNumber,
+            feedId: feedId as NSNumber,
+            isSync: false,
+            timeStamp: data.devSessionId,
+            actualTimeStamp: data.devSessionId,
+            lngId: data.lngId,
+            farmId: farmId as NSNumber,
+            imageId: ImgId as NSNumber,
+            count: 0
         )
-
+        
         CoreDataHandler().SaveNecropsystep1(data: necropsyData)
     }
 
@@ -2052,62 +2066,77 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let seesDat = self.convertDateFormater(sessionDate)
         guard let farmArr = sessionDict["Farms"] as? [[String: Any]], !farmArr.isEmpty else { return }
         for farmDict in farmArr {
-            self.saveTurkeyFarmNecropsyStep1(farmDict, sessionId: sessionId, devSessionId: devSessionId, lngId: lngId, custId: custId, complexId: complexId, complexName: complexName, seesDat: seesDat)
+            
+            let input = CoreDataHandlerTurkeyModels.TurkeyFarmNecropsyInput(
+                farmDict: farmDict,
+                sessionId: sessionId,
+                devSessionId: devSessionId,
+                lngId: lngId,
+                custId: custId,
+                complexId: complexId,
+                complexName: complexName,
+                seesDat: seesDat
+            )
+
+            self.saveTurkeyFarmNecropsyStep1(input)
+            
         }
     }
-
-    private func saveTurkeyFarmNecropsyStep1(_ farmDict: [String: Any], sessionId: Int, devSessionId: String, lngId: NSNumber, custId: Int, complexId: Int, complexName: String, seesDat: String) {
-        guard let farmName = farmDict["farmName"] as? String else { return }
-        let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
+    
+    private func saveTurkeyFarmNecropsyStep1(_ input: CoreDataHandlerTurkeyModels.TurkeyFarmNecropsyInput) {
+        guard let farmName = input.farmDict["farmName"] as? String else { return }
+        
+        let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(input.sessionId as NSNumber)
         for posttingSes in postingArr {
             guard let postSes = posttingSes as? PostingSessionTurkey else { continue }
             let vetId = postSes.veterinarianId
-            CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
+            CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(input.sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
         }
-        guard let age = farmDict["age"] as? Int,
-              let birds = farmDict["birds"] as? Int,
-              let houseNo = farmDict["houseNo"] as? String,
-              let flockId = farmDict["flockId"] as? String,
-              let feedProgram = farmDict["feedProgram"] as? String,
-              let sick = farmDict["sick"] as? Bool,
-              let feedId = farmDict["FeedId"] as? Int,
-              let farmId = farmDict["DeviceFarmId"] as? Int,
-              let imgId = farmDict["ImgId"] as? Int,
-              let farmWeight = farmDict["Farm_Weight"] as? String,
-              let abf = farmDict["ABF"] as? String,
-              let breed = farmDict["Breed"] as? String,
-              let sex = farmDict["Sex"] as? String,
-              let nameGen = farmDict["GenerationName"] as? String,
-              let idGen = farmDict["GenerationId"] as? Int else { return }
         
+        guard let age = input.farmDict["age"] as? Int,
+              let birds = input.farmDict["birds"] as? Int,
+              let houseNo = input.farmDict["houseNo"] as? String,
+              let flockId = input.farmDict["flockId"] as? String,
+              let feedProgram = input.farmDict["feedProgram"] as? String,
+              let sick = input.farmDict["sick"] as? Bool,
+              let feedId = input.farmDict["FeedId"] as? Int,
+              let farmId = input.farmDict["DeviceFarmId"] as? Int,
+              let imgId = input.farmDict["ImgId"] as? Int,
+              let farmWeight = input.farmDict["Farm_Weight"] as? String,
+              let abf = input.farmDict["ABF"] as? String,
+              let breed = input.farmDict["Breed"] as? String,
+              let sex = input.farmDict["Sex"] as? String,
+              let nameGen = input.farmDict["GenerationName"] as? String,
+              let idGen = input.farmDict["GenerationId"] as? Int else { return }
+
         let necropsyData = CoreDataHandlerTurkeyModels.saveTurkeyNecropsyStep1Data(
-              postingId: sessionId as NSNumber,
-              age: String(age),
-                 farmName: farmName,
-                 feedProgram: feedProgram,
-                 flockId: flockId,
-                 houseNo: houseNo,
-                 noOfBirds: String(birds),
-                 sick: sick as NSNumber,
-                 necId: sessionId as NSNumber,
-                 compexName: complexName,
-                 complexDate: seesDat,
-                 complexId: complexId as NSNumber,
-                 customerId: custId as NSNumber,
-                 feedId: feedId as NSNumber,
-                 isSync: false,
-                 timeStamp: devSessionId,
-                 actualTimeStamp: devSessionId,
-                 lngId: lngId,
-                 farmWeight: String(farmWeight),
-                 abf: abf,
-                 breed: breed,
-                 sex: sex,
-                 farmId: farmId as NSNumber,
-                 imageId: imgId as NSNumber,
-                 count: 0,
-                 genName: nameGen,
-                 genId: idGen as NSNumber
+            postingId: input.sessionId as NSNumber,
+            age: String(age),
+            farmName: farmName,
+            feedProgram: feedProgram,
+            flockId: flockId,
+            houseNo: houseNo,
+            noOfBirds: String(birds),
+            sick: sick as NSNumber,
+            necId: input.sessionId as NSNumber,
+            compexName: input.complexName,
+            complexDate: input.seesDat,
+            complexId: input.complexId as NSNumber,
+            customerId: input.custId as NSNumber,
+            feedId: feedId as NSNumber,
+            isSync: false,
+            timeStamp: input.devSessionId,
+            actualTimeStamp: input.devSessionId,
+            lngId: input.lngId,
+            farmWeight: farmWeight,
+            abf: abf,
+            breed: breed,
+            sex: sex,
+            farmId: farmId as NSNumber,
+            imageId: imgId as NSNumber,
+            count: 0,
+            genName: nameGen,
+            genId: idGen as NSNumber
         )
 
         CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necropsyData)
@@ -2213,42 +2242,57 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let measure = obsObj.value(forKey: "Measure") as! String
             let quickLink = obsObj.value(forKey: "DefaultQLink")
             let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
-            processTurkeyBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, quickLink: quickLink, sessionId: sessionId, languageId: languageId, refId: refId)
+            
+            let input = CoreDataHandlerTurkeyModels.TurkeyBirdProcessingInput(
+                birdArr: birdArr,
+                catName: catName,
+                obsName: obsName,
+                farmName: farmName,
+                obsId: obsId,
+                measure: measure,
+                quickLink: quickLink,
+                sessionId: sessionId,
+                languageId: languageId,
+                refId: refId
+            )
+
+            processTurkeyBirds(input)
+            
         }
     }
+    
+    
+    private func processTurkeyBirds(_ input: CoreDataHandlerTurkeyModels.TurkeyBirdProcessingInput) {
+        guard let birdArr = input.birdArr as? NSObject else { return }
 
-    private func processTurkeyBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, quickLink: Any?, sessionId: Int, languageId: NSNumber, refId: NSNumber) {
-        guard let birdArr = birdArr as? NSObject else { return }
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
             let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
-            if chkKey3 == "NA" {
-                break
-            }
+            if chkKey3 == "NA" { break }
+
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
-            let catstr = mapTurkeyCategoryName(catName)
-          
+            let catstr = mapTurkeyCategoryName(input.catName)
+
             let data = CoreDataHandlerTurkeyModels.switchCaseCaptureSkeletaDataTurkey(
-                   catName: catstr,
-                   obsName: obsName,
-                   formName: farmName,
-                   obsVisibility: chkKey!,
-                   birdNo: (m + 1) as NSNumber,
-                   obsPoint: chkKey1!,
-                   index: m,
-                   obsId: obsId,
-                   measure: measure,
-                   quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
-                   necId: sessionId as NSNumber,
-                   isSync: false,
-                   lngId: languageId,
-                   refId: refId,
-                   actualText: chkKey3
+                catName: catstr,
+                obsName: input.obsName,
+                formName: input.farmName,
+                obsVisibility: chkKey!,
+                birdNo: (m + 1) as NSNumber,
+                obsPoint: chkKey1!,
+                index: m,
+                obsId: input.obsId,
+                measure: input.measure,
+                quickLink: (input.quickLink! as AnyObject).integerValue! as NSNumber,
+                necId: input.sessionId as NSNumber,
+                isSync: false,
+                lngId: input.languageId,
+                refId: input.refId,
+                actualText: chkKey3
             )
 
             CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(data)
-            
         }
     }
 

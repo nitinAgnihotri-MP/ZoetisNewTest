@@ -332,7 +332,7 @@ class ReportComposer: NSObject {
         let mm = item["mm"] as? Float ?? 0
         let tg = item["tg"] as? Float ?? 0
         let birds = item["birds"] as? String ?? "0"
-        let meanAge = item["meanAge"] as? String ?? "0"
+        let ageMean = item["meanAge"] as? String ?? "0"
         let farmName = isCocciHistory ? (item["sessionDate"] as? String ?? "") : (item["farmName"] as? String ?? "")
         let isSick = (item["isSick"] as? Int ?? 0) == 0 ? "" : "checked"
 
@@ -347,7 +347,7 @@ class ReportComposer: NSObject {
             .replacingOccurrences(of: "#tgMean#", with: String(format: "%.1f", meanValues[3].isNaN ? 0 : meanValues[3]))
             .replacingOccurrences(of: "#FarmName#", with: farmName)
             .replacingOccurrences(of: "#birds#", with: birds)
-            .replacingOccurrences(of: "#MeanAge#", with: meanAge)
+            .replacingOccurrences(of: "#MeanAge#", with: ageMean)
             .replacingOccurrences(of: "#Sick#", with: isSick)
             .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.visibilityHidden : "")
 
@@ -365,10 +365,10 @@ class ReportComposer: NSObject {
         let mm = item["mm"] as? Float ?? 0
         let tg = item["tg"] as? Float ?? 0
         let birds = item["birds"] as? Int ?? 0
-        let meanAge = item["meanAge"] as? Float ?? 0
+        let meanAgeupdate = item["meanAge"] as? Float ?? 0
 
         totals.birds += birds
-        totals.meanAge += meanAge
+        totals.meanAge += meanAgeupdate
         totals.ag += acer
         totals.mg += mg
         totals.mm += mm
@@ -383,7 +383,7 @@ class ReportComposer: NSObject {
         totals.tgMeanBirds += meanValues[3] > 0 ? 1 : 0
 
         splitterTotals.birds += birds
-        splitterTotals.meanAge += meanAge
+        splitterTotals.meanAge += meanAgeupdate
         splitterTotals.ag += acer
         splitterTotals.mg += mg
         splitterTotals.mm += mm
@@ -405,9 +405,9 @@ class ReportComposer: NSObject {
         splitFlags: inout SplitFlags
     ) {
         let arrayIndex = index + 1 < items.count ? index + 1 : index
-        let meanAge = items[arrayIndex]["meanAge"] as? Int ?? 0
+        let meanAgeflag = items[arrayIndex]["meanAge"] as? Int ?? 0
 
-        if meanAge > 13 && meanAge < 25 {
+        if meanAgeflag > 13 && meanAgeflag < 25 {
             handleNeedToSplit0114(
                 &splitFlags.needToSplit0114,
                 &splitFlags.needToSplit3341,
@@ -416,7 +416,7 @@ class ReportComposer: NSObject {
                 &splitFlags.needToSplit1424,
                 &splitFlags.isCheckSum
             )
-        } else if meanAge > 24 && meanAge < 33 {
+        } else if meanAgeflag > 24 && meanAgeflag < 33 {
             handleNeedToSplit1424(
                 &splitFlags.needToSplit1424,
                 &splitFlags.needToSplit3341,
@@ -425,7 +425,7 @@ class ReportComposer: NSObject {
                 &splitFlags.needToSplit0114,
                 &splitFlags.isCheckSum1
             )
-        } else if meanAge > 32 && meanAge < 43 {
+        } else if meanAgeflag > 32 && meanAgeflag < 43 {
             handleNeedToSplit2532(
                 &splitFlags.needToSplit2532,
                 &splitFlags.needToSplit3341,
@@ -434,7 +434,7 @@ class ReportComposer: NSObject {
                 &splitFlags.needToSplit0114,
                 &splitFlags.isCheckSum2
             )
-        } else if meanAge > 42 && meanAge < 81 {
+        } else if meanAgeflag > 42 && meanAgeflag < 81 {
             handleNeedToSplit42(
                 &splitFlags.needToSplit42,
                 &splitFlags.needToSplit3341,
@@ -558,8 +558,8 @@ class ReportComposer: NSObject {
         _ needToSplit0114: inout Bool
     ) {
         let arrayIndex = index + 1 < items.count ? index + 1 : index
-        let meanAge = items[arrayIndex]["meanAge"] as? Int ?? 0
-        if meanAge > 32 && meanAge < 42 {
+        let spliMeanAge = items[arrayIndex]["meanAge"] as? Int ?? 0
+        if spliMeanAge > 32 && spliMeanAge < 42 {
             needToSplit3341 = true
             needToSplit0114 = false
         }

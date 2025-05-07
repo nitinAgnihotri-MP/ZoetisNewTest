@@ -182,17 +182,36 @@ class VaccineEvaluationCell: UITableViewCell {
             injMissed_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
         }
     }
+
     
-    fileprivate func extractedFunc5(_ injCenter_LeftWing: Int, _ leftRightInjTotal: Int, _ injCenter_RightWing: Int, _ injWingBand_LeftWing: Int, _ injWingBand_RightWing: Int, _ injMuscleHit_LeftWing: Int, _ injMuscleHit_RightWing: Int, _ injMissed_LeftWing: Int, _ injMissed_RightWing: Int) {
-        if (injCenter_LeftWing != 0 && leftRightInjTotal != 0) || (injCenter_RightWing != 0 && leftRightInjTotal != 0){
-            injCenter_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injCenter_LeftWing, RightValue: injCenter_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+    fileprivate func extractedFunc5(_ input: PVEDataModel.WingInjectionData) {
+        if (input.injCenter_LeftWing != 0 && input.leftRightInjTotal != 0) || (input.injCenter_RightWing != 0 && input.leftRightInjTotal != 0) {
+            injCenter_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(
+                leftValue: input.injCenter_LeftWing,
+                RightValue: input.injCenter_RightWing,
+                totalOfHashInjLeftRight: input.leftRightInjTotal
+            )
         }
-        if (injWingBand_LeftWing != 0 && leftRightInjTotal != 0) || (injWingBand_RightWing != 0 && leftRightInjTotal != 0){
-            injWingBand_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injWingBand_LeftWing, RightValue: injWingBand_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+
+        if (input.injWingBand_LeftWing != 0 && input.leftRightInjTotal != 0) || (input.injWingBand_RightWing != 0 && input.leftRightInjTotal != 0) {
+            injWingBand_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(
+                leftValue: input.injWingBand_LeftWing,
+                RightValue: input.injWingBand_RightWing,
+                totalOfHashInjLeftRight: input.leftRightInjTotal
+            )
         }
-        extractedFunc10(injMuscleHit_LeftWing, leftRightInjTotal, injMuscleHit_RightWing, injMissed_LeftWing, injMissed_RightWing)
+
+        extractedFunc10(
+            input.injMuscleHit_LeftWing,
+            input.leftRightInjTotal,
+            input.injMuscleHit_RightWing,
+            input.injMissed_LeftWing,
+            input.injMissed_RightWing
+        )
     }
+
     
+
     fileprivate func extractedFunc6(_ totalForMuscleMIssed: Int, _ injMuscleHit_IntramusculerInj: Int, _ injMuscleHit_SubcutaneousInj: Int, _ totalForMuscleHitInj: Int, _ injMissed_IntramusculerInj: Int, _ injMissed_SubcutaneousInj: Int, _ totalForMissedInj: Int) {
         injTotal_For_Inactivated.text = "\(totalForMuscleMIssed)"
         
@@ -263,7 +282,23 @@ class VaccineEvaluationCell: UITableViewCell {
             leftRightInjTotalLbl.text = ""
         }
         
-        extractedFunc5(injCenter_LeftWing, leftRightInjTotal, injCenter_RightWing, injWingBand_LeftWing, injWingBand_RightWing, injMuscleHit_LeftWing, injMuscleHit_RightWing, injMissed_LeftWing, injMissed_RightWing)
+        
+        let injectionData = PVEDataModel.WingInjectionData(
+                injCenter_LeftWing: injCenter_LeftWing,
+                leftRightInjTotal: leftRightInjTotal,
+                injCenter_RightWing: injCenter_RightWing,
+                injWingBand_LeftWing: injWingBand_LeftWing,
+                injWingBand_RightWing: injWingBand_RightWing,
+                injMuscleHit_LeftWing: injMuscleHit_LeftWing,
+                injMuscleHit_RightWing: injMuscleHit_RightWing,
+                injMissed_LeftWing: injMissed_LeftWing,
+                injMissed_RightWing: injMissed_RightWing
+        )
+
+        extractedFunc5(injectionData)
+        
+        
+        
         
         extractedFunc(injCenter_LeftWing, injWingBand_LeftWing, injMuscleHit_LeftWing, injMissed_LeftWing)
         

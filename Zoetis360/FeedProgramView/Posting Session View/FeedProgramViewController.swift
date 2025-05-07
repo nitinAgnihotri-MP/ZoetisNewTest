@@ -2735,9 +2735,53 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             coccidsisStartrDrinking.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidsisStartrDrinking.text ?? "", dosage:cocciDosFirstTextField.text ?? "", fromDays: FromstarterDurationTextField.text ?? "", toDays:toStarterTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text!,formName: addFarmSelectLbl.text!,isSync :true,feedType: feedTypeOne,cocoVacId: CocoiVacId,lngId:languageId as NSNumber, lbldate: lblDate.text ?? "", dosemoleculeId: firstMolID )
+            
+            let coccidiosisData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidsisStartrDrinking.text ?? "",
+                dosage: cocciDosFirstTextField.text ?? "",
+                fromDays: FromstarterDurationTextField.text ?? "",
+                toDays: toStarterTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",  // You can update this if needed
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeOne,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: firstMolID
+            )
+            
+            CoreDataHandler().saveCoccoiControlDatabase(coccidiosisData)
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidsisStartrDrinking.text ?? "", dosage:starterDosageTextField.text ?? "", fromDays: FromstarterDurationTextField.text ?? "", toDays:toStarterTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text!,formName: addFarmSelectLbl.text!,isSync :true,feedType: feedTypeOne,cocoVacId: CocoiVacId,lngId:languageId as NSNumber, lbldate: lblDate.text ?? "", dosemoleculeId: firstMolID )
+            let cocciData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidsisStartrDrinking.text ?? "",
+                dosage: starterDosageTextField.text ?? "",
+                fromDays: FromstarterDurationTextField.text ?? "",
+                toDays: toStarterTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeOne,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: firstMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(cocciData)
         }
     }
     
@@ -2746,9 +2790,51 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             coccidsisGrowerDrinking.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidsisGrowerDrinking.text ?? "", dosage:cocciDosSecTextField.text ?? "", fromDays: FromGrowerTextField.text ?? "", toDays:toGrowerTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeTwo,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: secoundMolID)
+            let cocciData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidsisGrowerDrinking.text ?? "",
+                dosage: cocciDosSecTextField.text ?? "",
+                fromDays: FromGrowerTextField.text ?? "",
+                toDays: toGrowerTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeTwo,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: secoundMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(cocciData)
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidsisGrowerDrinking.text ?? "", dosage:growerDosageCoccidiosisTEXT.text ?? "", fromDays: FromGrowerTextField.text ?? "", toDays:toGrowerTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeTwo,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: secoundMolID)
+            let growerCocciData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidsisGrowerDrinking.text ?? "",
+                dosage: growerDosageCoccidiosisTEXT.text ?? "",
+                fromDays: FromGrowerTextField.text ?? "",
+                toDays: toGrowerTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeTwo,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: secoundMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(growerCocciData)
         }
     }
     
@@ -2757,9 +2843,51 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             cocciFinisherDrinkingWater.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber , molecule  :cocciFinisherDrinkingWater.text ?? "", dosage:cocciDosThrdTextField.text ?? "", fromDays: fromFinisherTextField.text ?? "", toDays:toFinisherTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeThree ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: thirdMolID)
+            let finisherCocciData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: cocciFinisherDrinkingWater.text ?? "",
+                dosage: cocciDosThrdTextField.text ?? "",
+                fromDays: fromFinisherTextField.text ?? "",
+                toDays: toFinisherTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeThree,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: thirdMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(finisherCocciData)
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber , molecule  :cocciFinisherDrinkingWater.text ?? "", dosage:finisherDosageTxtField.text ?? "", fromDays: fromFinisherTextField.text ?? "", toDays:toFinisherTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeThree ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: thirdMolID)
+            let finisherData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: cocciFinisherDrinkingWater.text ?? "",
+                dosage: finisherDosageTxtField.text ?? "",
+                fromDays: fromFinisherTextField.text ?? "",
+                toDays: toFinisherTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeThree,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: thirdMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(finisherData)
         }
     }
     
@@ -2768,9 +2896,52 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             coccidiosisWdDrinking.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidiosisWdDrinking.text ?? "", dosage:cocciDosFourTextField.text ?? "", fromDays: fromWDtextField.text ?? "", toDays:toWdTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeFour,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: fourthMolID)
+            let wdData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidiosisWdDrinking.text ?? "",
+                dosage: cocciDosFourTextField.text ?? "",
+                fromDays: fromWDtextField.text ?? "",
+                toDays: toWdTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeFour,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: fourthMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(wdData)
+
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :coccidiosisWdDrinking.text ?? "", dosage:wdDosageTextField.text ?? "", fromDays: fromWDtextField.text ?? "", toDays:toWdTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeFour,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: fourthMolID)
+            let wdData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: coccidiosisWdDrinking.text ?? "",
+                dosage: wdDosageTextField.text ?? "",
+                fromDays: from5TextField.text ?? "",
+                toDays: toWdTextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeFour,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: fourthMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(wdData)
         }
     }
     
@@ -2779,9 +2950,54 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             fivthMoleculelBL.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :fivthMoleculelBL.text ?? "", dosage:cocciDosFiveTextField.text ?? "", fromDays: from5TextField.text ?? "", toDays:toFeed5TextFeidl.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeFive,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: fifthMolID)
+            let fifthMoleculeData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: fivthMoleculelBL.text ?? "",
+                dosage: cocciDosFiveTextField.text ?? "",
+                fromDays: from5TextField.text ?? "",
+                toDays: toFeed5TextFeidl.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeFive,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: fifthMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(fifthMoleculeData)
+            
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :fivthMoleculelBL.text ?? "", dosage:feed5textField.text ?? "", fromDays: from5TextField.text ?? "", toDays:toFeed5TextFeidl.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeFive,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: fifthMolID)
+            let fifthMoleculeData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: fivthMoleculelBL.text ?? "",
+                dosage: feed5textField.text ?? "",
+                fromDays: from5TextField.text ?? "",
+                toDays: toFeed5TextFeidl.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeFive,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: fifthMolID
+            )
+            
+            CoreDataHandler().saveCoccoiControlDatabase(fifthMoleculeData)
+
         }
     }
     
@@ -2790,9 +3006,51 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             sixthMoleculeLbl.text = ""
         }
         if languageId == 4 {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :sixthMoleculeLbl.text ?? "", dosage:cocciDosSixTextField.text ?? "", fromDays: from6teXTfield.text ?? "", toDays:toFeed6TextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeSix,cocoVacId: CocoiVacId ,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: sixthMolID)
+            let sixthMoleculeData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: sixthMoleculeLbl.text ?? "",
+                dosage: cocciDosSixTextField.text ?? "",
+                fromDays: from6teXTfield.text ?? "",
+                toDays: toFeed6TextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeSix,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: sixthMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(sixthMoleculeData)
         } else {
-            CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :sixthMoleculeLbl.text ?? "", dosage:feed6TextField.text ?? "", fromDays: from6teXTfield.text ?? "", toDays:toFeed6TextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: feedTypeSix,cocoVacId: CocoiVacId ,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: sixthMolID )
+            let sixthMoleculeData = CoccidiosisControlData(
+                loginSessionId: 1,
+                postingId: postingId as NSNumber,
+                molecule: sixthMoleculeLbl.text ?? "",
+                dosage: feed6TextField.text ?? "",
+                fromDays: from6teXTfield.text ?? "",
+                toDays: toFeed6TextField.text ?? "",
+                coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                targetWeight: "",
+                index: i,
+                dbArray: cocciControlArray,
+                feedId: feedId as NSNumber,
+                feedProgram: feedProgramTextField.text ?? "",
+                formName: addFarmSelectLbl.text ?? "",
+                isSync: true,
+                feedType: feedTypeSix,
+                cocoVacId: CocoiVacId,
+                lngId: languageId as NSNumber,
+                lbldate: lblDate.text ?? "",
+                doseMoleculeId: sixthMolID
+            )
+            CoreDataHandler().saveCoccoiControlDatabase(sixthMoleculeData)
         }
     }
     
@@ -2811,7 +3069,28 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             } else if i == 5 {
                 handleSaveCoccoiControlDatabaseCase5(postingId, i, feedId)
             } else if i == 6 {
-                CoreDataHandler().saveCoccoiControlDatabase(1, postingId:postingId as NSNumber, molecule  :"", dosage:"", fromDays: "", toDays:"", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: "",cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lbldate: lblDate.text ?? "", dosemoleculeId: sixthMolID)
+                let emptyData = CoccidiosisControlData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: "",  // Empty value
+                    dosage: "",    // Empty value
+                    fromDays: "",  // Empty value
+                    toDays: "",    // Empty value
+                    coccidiosisVaccine: coccidiosisVaccineDrinkin.text ?? "",
+                    targetWeight: "",
+                    index: i,
+                    dbArray: cocciControlArray,
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: "",  // Empty value
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    doseMoleculeId: sixthMolID
+                )
+                CoreDataHandler().saveCoccoiControlDatabase(emptyData)
             }
         }
         completion (true)
@@ -2845,10 +3124,6 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
 
                 // Call the refactored function with the AntibioticFeedData instance
                 CoreDataHandler().saveAntiboticDatabase(feedData: feedData)
-
-                
-                
-                
             } else if i == 1 {
                                 
                 let feedData = chickenCoreDataHandlerModels.saveChknAntibioticFeedData(
@@ -2978,25 +3253,122 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             if i == 0 {
                 
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType1Alternativ.text ?? "", dosage: alternativeDosageFirstText.text ?? "", fromDays: alternativeFromFirstTextField.text ?? "", toDays: alternativeToFirstTextField.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeOne,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "" )
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType1Alternativ.text ?? "",
+                    dosage: alternativeDosageFirstText.text ?? "",
+                    fromDays: alternativeFromFirstTextField.text ?? "",
+                    toDays: alternativeToFirstTextField.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeOne,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
+
                 
             } else if i == 1 {
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType2Alternativ.text ?? "", dosage: alternativeDosageSecoondText.text ?? "", fromDays: alternativeFromSecondTextField.text ?? "", toDays: alternativeToSecondTextField.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeTwo,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "" )
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType2Alternativ.text ?? "",
+                    dosage: alternativeDosageSecoondText.text ?? "",
+                    fromDays: alternativeFromSecondTextField.text ?? "",
+                    toDays: alternativeToSecondTextField.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeTwo,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
                 
             } else if i == 2 {
-                
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType3Alternativ.text ?? "", dosage: alternativeDosageThirdText.text ?? "", fromDays: alternativeFromthirdTextField.text ?? "", toDays: alternativeTothirdTextField.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeThree,cocoVacId: CocoiVacId ,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
-                
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType3Alternativ.text ?? "",
+                    dosage: alternativeDosageThirdText.text ?? "",
+                    fromDays: alternativeFromthirdTextField.text ?? "",
+                    toDays: alternativeTothirdTextField.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeThree,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
+
             } else if i == 3 {
                 
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType4Alternativ.text ?? "", dosage: alternativeDosageFourText.text ?? "", fromDays: alternativeFromFourTextField.text ?? "", toDays: alternativeToFourTextField.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFour,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "" )
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType4Alternativ.text ?? "",
+                    dosage: alternativeDosageFourText.text ?? "",
+                    fromDays: alternativeFromFourTextField.text ?? "",
+                    toDays: alternativeToFourTextField.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeFour,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
             } else if i == 4 {
                 
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType5Alternativ.text ?? "", dosage: altrNativeDosage5Text.text ?? "", fromDays: from5TextAlternative.text ?? "", toDays: to5TextAlternative.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFive,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType5Alternativ.text ?? "",
+                    dosage: altrNativeDosage5Text.text ?? "",
+                    fromDays: from5TextAlternative.text ?? "",
+                    toDays: to5TextAlternative.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeFive,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
                 
             } else if i == 5 {
                 
-                CoreDataHandler().saveAlternativeDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType6Alternativ.text ?? "", dosage: altrNativeDosage6Text.text ?? "", fromDays: from6TextAlternative.text ?? "", toDays: to6TextAlternative.text ?? "", index: i, dbArray: AlternativeArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeSix ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                let alternativeFeedData = AlternativeFeedData(
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType6Alternativ.text ?? "",
+                    dosage: altrNativeDosage6Text.text ?? "",
+                    fromDays: from6TextAlternative.text ?? "",
+                    toDays: to6TextAlternative.text ?? "",
+                    feedId: feedId as NSNumber,
+                    feedProgram: feedProgramTextField.text ?? "",
+                    formName: addFarmSelectLbl.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeSix,
+                    cocoVacId: CocoiVacId,
+                    lngId: languageId as NSNumber,
+                    lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveAlternativeDatabase(alternativeFeedData, index: i, dbArray: AlternativeArray)
             }
         }
         completion (true)

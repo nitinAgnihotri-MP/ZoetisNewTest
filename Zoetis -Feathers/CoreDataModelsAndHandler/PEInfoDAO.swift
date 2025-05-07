@@ -47,6 +47,9 @@ class PEInfoDAO {
         }
     }
     
+
+    
+
     func saveData(userId:String, isExtendedPE:Bool, assessmentId:String, date:Date?, override:Bool = true, subcutaneousTxt:String? = "", dayOfAgeTxt:String? = "", hasChlorineStrips:Bool = false, isAutomaticFail:Bool = false) {
         let vaccinationCertificationArr = fetchInfoMoObj(userId: userId, assessmentId: assessmentId)
         if vaccinationCertificationArr.count > 0 {
@@ -82,7 +85,7 @@ class PEInfoDAO {
             managedContext.rollback()
         }
     }
-    
+
     func fetchInfoMoObj(userId:String, assessmentId:String)-> [PE_Info]{
         var vaccinationCertificationArr = [PE_Info]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Info")

@@ -168,7 +168,8 @@ class SingleSyncData: NSObject {
             
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 self.internalSyncError()
-            } else if let data = response.data{
+            }
+            else if response.data != nil {
                 if let s = statusCode {
                     self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                 } else {
@@ -1274,18 +1275,10 @@ class SingleSyncData: NSObject {
     
     fileprivate func handleSaveAllSettings(_ response: AFDataResponse<Any>, _ statusCode: Int?) {
         switch response.result {
-            
         case .success(let responseObject):
             print(responseObject)
-            
         case .failure(let encodingError):
-            
-            if let err = encodingError as? URLError, err.code == .notConnectedToInternet
-            {
-                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-            }
-            else if response.data != nil 
-            {
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet,response.data != nil {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
             }
         }
@@ -1391,33 +1384,54 @@ class SingleSyncData: NSObject {
         }
     }
     // MARK: - Update Core Data
-    fileprivate func handleUpdateisSyncOnHetchary(_ success: Bool,pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
-        if success == true {
-            CoreDataHandler().updateisSyncOnPostingSession(pId , isSync: false, { (success) in
-                if success == true {
-                    self.updadateNacDataOnCoreData(nId: pId, { (success) in
-                        if success == true {
-                            completion(success)
-                            self.delegeteSyncApiData.didFinishApiSyncdata()
-                        }
-                    })
+    fileprivate func handleUpdateisSyncOnHetchary(_ success: Bool, pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        guard success else {
+            completion(false)
+            return
+        }
+
+        CoreDataHandler().updateisSyncOnPostingSession(pId, isSync: false) { postingUpdated in
+            guard postingUpdated else {
+                completion(false)
+                return
+            }
+            
+            self.updadateNacDataOnCoreData(nId: pId) { nacUpdated in
+                guard nacUpdated else {
+                    completion(false)
+                    return
                 }
-            })
+
+                completion(true)
+                self.delegeteSyncApiData.didFinishApiSyncdata()
+            }
         }
     }
     
-    fileprivate func handleUpdateSyncOnAntibiotic(_ success: Bool,pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
-        if success == true {
-            CoreDataHandler().updateisSyncOnAllCocciControlviaPostingid(pId , isSync: false, { (success) in
-                if success == true {
-                    CoreDataHandler().updateisSyncOnHetcharyVacDataWithPostingId(pId , isSync: false, { (success) in
-                        handleUpdateisSyncOnHetchary(success,pId: pId) { (status) in
-                            completion(status)
-                        }
-                    })
-                }
-            })
+    fileprivate func handleUpdateSyncOnAntibiotic(_ success: Bool, pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        guard success else {
+            completion(false)
+            return
         }
+
+        updateCocciControl(pId) { cocciUpdated in
+            guard cocciUpdated else {
+                completion(false)
+                return
+            }
+
+            self.updateHatcheryVac(pId) { hatcheryUpdated in
+                self.handleUpdateisSyncOnHetchary(hatcheryUpdated, pId: pId, completion)
+            }
+        }
+    }
+
+    private func updateCocciControl(_ pId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnAllCocciControlviaPostingid(pId, isSync: false, completion)
+    }
+
+    private func updateHatcheryVac(_ pId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnHetcharyVacDataWithPostingId(pId, isSync: false, completion)
     }
     
     func updadateDataOnCoreData(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
@@ -1458,32 +1472,50 @@ class SingleSyncData: NSObject {
         }
     }
     
-    fileprivate func handleUpdateisSyncNecropsystep1neccId(_ success: Bool,nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
-        if success == true {
-            
-            CoreDataHandler().updateisSyncOnCaptureInDatabase(nId , isSync: false, { (success) in
-                if success == true {
-                    CoreDataHandler().updateisSyncOnBirdPhotoCaptureDatabase(nId , isSync: false, { (success) in
-                        self.handleUpdateSyncOnBirdPhoto(success, nId: nId) { (status) in
-                            completion(status)
-                        }
-                    })
-                }
-            })
+    fileprivate func handleUpdateisSyncNecropsystep1neccId(_ success: Bool, nId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        guard success else {
+            completion(false)
+            return
+        }
+
+        updateCaptureInDatabase(nId) { captureUpdated in
+            guard captureUpdated else {
+                completion(false)
+                return
+            }
+
+            self.updateBirdPhotoCaptureDatabase(nId) { photoUpdated in
+                self.handleUpdateSyncOnBirdPhoto(photoUpdated, nId: nId, completion)
+            }
         }
     }
+
+    private func updateCaptureInDatabase(_ nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnCaptureInDatabase(nId, isSync: false, completion)
+    }
+
+    private func updateBirdPhotoCaptureDatabase(_ nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnBirdPhotoCaptureDatabase(nId, isSync: false, completion)
+    }
     
-    
-    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
-        
-        CoreDataHandler().updateisSyncOnCaptureSkeletaInDatabase(nId , isSync: false, { (success) in
-            if success == true {
-                CoreDataHandler().updateisSyncNecropsystep1neccId(nId , isSync: false, { (success) in
-                    self.handleUpdateisSyncNecropsystep1neccId(success, nId: nId) { status in
-                        completion(status)
-                    }
-                })
+    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        updateCaptureSkeletaInDatabase(nId) { captureUpdated in
+            guard captureUpdated else {
+                completion(false)
+                return
             }
-        })
+            
+            self.updateNecropsystep1neccId(nId) { necropsysUpdated in
+                self.handleUpdateisSyncNecropsystep1neccId(necropsysUpdated, nId: nId, completion)
+            }
+        }
+    }
+
+    private func updateCaptureSkeletaInDatabase(_ nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncOnCaptureSkeletaInDatabase(nId, isSync: false, completion)
+    }
+
+    private func updateNecropsystep1neccId(_ nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().updateisSyncNecropsystep1neccId(nId, isSync: false, completion)
     }
 }

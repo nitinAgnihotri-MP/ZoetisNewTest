@@ -624,6 +624,7 @@ class JSONAny: Codable {
     static func encode(to container: inout KeyedEncodingContainer<JSONCodingKey>, dictionary: [String: Any]) throws {
         for (key, value) in dictionary {
             let key = JSONCodingKey(stringValue: key)!
+            debugPrint(key)
             if let value = value as? Bool {
                 try container.encode(value, forKey: key)
             } else if let value = value as? Int64 {

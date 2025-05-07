@@ -1171,7 +1171,15 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         let index = self.currentRequisition.actualCreatedHeaders.count - 1
         
         for lValue in locationValues {
-            let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
+           // let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
+            
+            let limit: Int
+               if templateType == (tempValue == 0 ? .STD20 : .STD) {
+                   limit = (tempValue == 0) ? lValue.rep20!.intValue : lValue.stnRep!.intValue
+               } else {
+                   limit = lValue.rep40!.intValue
+               }
+            
             
             
             for _ in 0..<limit {

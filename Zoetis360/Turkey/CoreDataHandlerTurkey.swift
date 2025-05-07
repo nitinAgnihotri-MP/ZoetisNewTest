@@ -5188,35 +5188,27 @@ class CoreDataHandlerTurkey: NSObject {
         
     }
     
-    func updateisSyncOnMyCotxinViaFeedProgramTurkey(postingId :NSNumber , feedId : NSNumber,feedProgram:String)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateisSyncOnMyCotxinViaFeedProgramTurkey(postingId :NSNumber , feedId : NSNumber,feedProgram:String) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
                     let objTable: MyCotoxinBindersFeedTurkey = (fetchedResult![i] as? MyCotoxinBindersFeedTurkey)!
                     objTable.setValue(feedProgram, forKey:"feedProgram")
-                    do
-                    {
+                    do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
                     }
                 }
             }
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
     }
@@ -5228,20 +5220,12 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
-        do
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
+            if let results = fetchedResult {
                 MyCoxtinBindersArray = results as NSArray
             }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         return MyCoxtinBindersArray
@@ -5858,82 +5842,96 @@ class CoreDataHandlerTurkey: NSObject {
         }
     }
 
-    fileprivate func handleCoxinVal(_ feedId: NSNumber, _ index: Int, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
+    fileprivate func handleCoxinVal(_ input: CoreDataHandlerTurkeyModels.TurkeyCoxinmodel) {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
         self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
-        
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, input.feedId)
         
-        do
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0 {
-                
+            if let fetchedResult = fetchedResult, !fetchedResult.isEmpty {
                 let feedData = CoreDataHandlerTurkeyModels.myCoxtinFeedData(
-                    loginSessionId: loginSessionId,
-                    postingId: postingId,
-                    molecule: molecule,
-                    dosage: dosage,
-                    fromDays: fromDays,
-                    toDays: toDays,
-                    feedId: feedId,
-                    feedProgram: feedProgram,
-                    isSync: isSync,
-                    feedType: feedType,
-                    cocoVacId: cocoVacId,
-                    lngId: lngId,
-                    lbldate: lbldate,
-                    formName: formName
+                    loginSessionId: input.loginSessionId,
+                    postingId: input.postingId,
+                    molecule: input.molecule,
+                    dosage: input.dosage,
+                    fromDays: input.fromDays,
+                    toDays: input.toDays,
+                    feedId: input.feedId,
+                    feedProgram: input.feedProgram,
+                    isSync: input.isSync,
+                    feedType: input.feedType,
+                    cocoVacId: input.cocoVacId,
+                    lngId: input.lngId,
+                    lbldate: input.lbldate,
+                    formName: input.formName
                 )
-
-                handleIfFetchedResultLessThan4(fetchedResult, index, managedContext, feedData)
                 
+                handleIfFetchedResultLessThan4(fetchedResult, input.index, managedContext, feedData)
             } else {
-                let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
-                let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                person.setValue(loginSessionId, forKey:"loginSessionId")
-                person.setValue( postingId , forKey:"postingId")
-                person.setValue( molecule , forKey:"molecule")
-                person.setValue(dosage, forKey:"dosage")
-                person.setValue(fromDays, forKey:"fromDays")
-                person.setValue(toDays , forKey:"toDays")
-                person.setValue(feedId , forKey:"feedId")
-                person.setValue(feedProgram , forKey:"feedProgram")
-                person.setValue(isSync , forKey:"isSync")
-                person.setValue(feedType, forKey:"feedType")
-                person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                person.setValue(lngId, forKey:"lngId")
-                person.setValue(lbldate, forKey:"feedDate")
-                do
-                {
+                let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)!
+                let person = NSManagedObject(entity: entity, insertInto: managedContext)
+                
+                person.setValue(input.loginSessionId, forKey: "loginSessionId")
+                person.setValue(input.postingId, forKey: "postingId")
+                person.setValue(input.molecule, forKey: "molecule")
+                person.setValue(input.dosage, forKey: "dosage")
+                person.setValue(input.fromDays, forKey: "fromDays")
+                person.setValue(input.toDays, forKey: "toDays")
+                person.setValue(input.feedId, forKey: "feedId")
+                person.setValue(input.feedProgram, forKey: "feedProgram")
+                person.setValue(input.isSync, forKey: "isSync")
+                person.setValue(input.feedType, forKey: "feedType")
+                person.setValue(input.cocoVacId, forKey: "coccidiosisVaccineId")
+                person.setValue(input.lngId, forKey: "lngId")
+                person.setValue(input.lbldate, forKey: "feedDate")
+                
+                do {
                     try managedContext.save()
-                }
-                catch
-                {
+                } catch {
+                    // handle error appropriately
                 }
                 
                 cocciMyCoxtinBinders.append(person)
-                
             }
         } catch {
-            
+            // handle fetch error
         }
     }
+
     
     /////////////
     ///
-    func saveMyCoxtinDatabaseTurkey(coxtinData: CoreDataHandlerTurkeyModels.saveTukryCoxtinData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    func saveMyCoxtinDatabaseTurkey(coxtinData: CoreDataHandlerTurkeyModels.TurkeyCoxinmodel,dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        MyCoxtinBindersArray = coxtinData.dbArray
+        MyCoxtinBindersArray = dbArray
         
         if MyCoxtinBindersArray.count > 0 {
-            handleCoxinVal(coxtinData.feedId, coxtinData.index, coxtinData.loginSessionId, coxtinData.postingId, coxtinData.molecule, coxtinData.dosage, coxtinData.fromDays, coxtinData.toDays, coxtinData.feedProgram, coxtinData.isSync, coxtinData.feedType, coxtinData.cocoVacId, coxtinData.lngId, coxtinData.lbldate, coxtinData.formName)
+            let coxinInput = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                feedId: coxtinData.feedId,
+                index: coxtinData.index,
+                loginSessionId: coxtinData.loginSessionId,
+                postingId: coxtinData.postingId,
+                molecule: coxtinData.molecule,
+                dosage: coxtinData.dosage,
+                fromDays: coxtinData.fromDays,
+                toDays: coxtinData.toDays,
+                feedProgram: coxtinData.feedProgram,
+                isSync: coxtinData.isSync,
+                feedType: coxtinData.feedType,
+                cocoVacId: coxtinData.cocoVacId,
+                lngId: coxtinData.lngId,
+                lbldate: coxtinData.lbldate,
+                formName: coxtinData.formName
+            )
+
+            handleCoxinVal(coxinInput)
+//            handleCoxinVal(coxtinData.feedId, coxtinData.index, coxtinData.loginSessionId, coxtinData.postingId, coxtinData.molecule, coxtinData.dosage, coxtinData.fromDays, coxtinData.toDays, coxtinData.feedProgram, coxtinData.isSync, coxtinData.feedType, coxtinData.cocoVacId, coxtinData.lngId, coxtinData.lbldate, coxtinData.formName)
         } else {
             let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
             let person  = NSManagedObject(entity: entity!, insertInto: managedContext)

@@ -352,7 +352,7 @@ class ReportComposerDaignostic: NSObject {
         lngId: Int
     ) -> String {
         var result = content
-        let meanAge = item["meanAge"]?.intValue ?? 0
+        let meanAgeIs = item["meanAge"]?.intValue ?? 0
         let ageRanges = [
             (0...13, "01 - 13 Days"),
             (14...24, "14 - 24 Days"),
@@ -362,13 +362,15 @@ class ReportComposerDaignostic: NSObject {
         ]
         
         let shouldSplit = ageRanges.contains { range, _ in
-            range.contains(meanAge) && (index == items.count - 1 || items[index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
+            range.contains(meanAgeIs) && (index == items.count - 1 || items[index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
         }
         
         if shouldSplit || index == items.count - 1 {
-            let ageLabel = ageRanges.first { $0.0.contains(meanAge) }?.1 ?? "Unknown"
-            result = result.replacingOccurrences(of: Constants.complexTotal, with: ageLabel)
-            result = result.replacingOccurrences(of: displayStr, with: "")
+            let ageLabel = ageRanges.first { $0.0.contains(meanAgeIs) }?.1 ?? "Unknown"
+
+            result = result
+                  .replacingOccurrences(of: Constants.complexTotal, with: ageLabel)
+                  .replacingOccurrences(of: displayStr, with: "")
             
             // Replace totals
             result = replaceTotals(
@@ -380,8 +382,12 @@ class ReportComposerDaignostic: NSObject {
             )
             
             // Reset spliter values
-            for key in metrics.keys { metrics[key]!.resetSpliter() }
-            for key in simpleMetrics.keys { simpleMetrics[key]! = 0 }
+            for key in metrics.keys {
+                metrics[key]!.resetSpliter()
+            }
+            for key in simpleMetrics.keys {
+                simpleMetrics[key]! = 0
+            }
             reportData.birdsTotalSpliter = 0
             reportData.meanAgeSpliter = 0
             reportData.indexSpliter = 0
@@ -485,11 +491,6 @@ class ReportComposerDaignostic: NSObject {
         
         return result
     }
-
-//    struct Regions {
-//        static let countryId: String = "US"
-//        static let languageID: String = "EN"
-//    }
 
     struct Constants {
         static let leftMargin: String = "0px"

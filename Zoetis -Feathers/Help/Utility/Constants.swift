@@ -6,6 +6,8 @@
 
 import Foundation
 import UIKit
+import SwiftyJSON
+
 struct Constants {
     static var isFromRejected = false
     static var isDataLoaded = false
@@ -872,6 +874,64 @@ struct CoreDataHandlerPEModels
         let isNA: Bool
         let serverAssessmentId: Int
     }
+    
+    struct updateDraftRefrigeratorData {
+        let id: Int
+        let labelText: String
+        let rollOut: String
+        let unit: String
+        let value: Double
+        let catID: NSNumber
+        let isCheck: Bool
+        let isNA: Bool
+        let serverAssessmentId: Int
+    }
+    
+    struct ExtntdMicroFuncParams {
+        var statusType: Int
+        var dict: PENewAssessment
+        var json: [String: Any]
+        var serverAssessmentId: Int64
+        var userId: Int?
+        var evaluationId: Int?
+        var saveType: Int
+        var isEMRequested: Bool
+        var appVersion: String
+        var extendedData: [[String: Any]]?
+    }
+    
+    struct ValidationData {
+        var refrigratorDataArr: [[String: Any]]
+        var inovojectDataArr: [[String: Any]]
+        var dayOfAgeDataArr: [[String: Any]]
+        var dayOfAgeSDataArr: [[String: Any]]
+        var certificateDataArr: [[String: Any]]
+        var vaccineResidueMoldsDataArr: [[String: Any]]
+        var vaccineMicroSamplesDataArr: [[String: Any]]
+    }
+    
+    
+    struct AssessmentInput {
+        let frequencyValue: String
+        let qcCount: String
+        let personName: String
+        let amPmText: String
+        let ppmValue: String
+        let assessmentScore: Int
+        let isNA: Bool
+        let questionMark: [String: Any]
+    }
+
+    struct CertificateInfo {
+        let id: Int
+        let name: String
+        let date: String
+        let isCertExpired: Bool
+        let isReCert: Bool
+        let vacOperatorId: Int
+        let signatureImg: String
+        let fsrSign: String
+    }
 
 }
 
@@ -1394,24 +1454,24 @@ struct CoreDataHandlerTurkeyModels
     }
 
     
-    struct saveTukryCoxtinData {
-        var loginSessionId: NSNumber
-        var postingId: NSNumber
-        var molecule: String
-        var dosage: String
-        var fromDays: String
-        var toDays: String
-        var index: Int
-        var dbArray: NSArray
-        var feedId: NSNumber
-        var feedProgram: String
-        var formName: String
-        var isSync: Bool
-        var feedType: String
-        var cocoVacId: NSNumber
-        var lngId: NSNumber
-        var lbldate: String
+    struct TurkeyCoxinmodel {
+        let feedId: NSNumber
+        let index: Int
+        let loginSessionId: NSNumber
+        let postingId: NSNumber
+        let molecule: String
+        let dosage: String
+        let fromDays: String
+        let toDays: String
+        let feedProgram: String
+        let isSync: Bool
+        let feedType: String
+        let cocoVacId: NSNumber
+        let lngId: NSNumber
+        let lbldate: String
+        let formName: String
     }
+    
     struct updateWeightSkeletaData {
         let catName: String
         let obsName: String
@@ -1434,17 +1494,33 @@ struct CoreDataHandlerTurkeyModels
         let necId: NSNumber
         let isSync: Bool
     }
-    
+    struct TurkeyFarmNecropsyInput {
+        let farmDict: [String: Any]
+        let sessionId: Int
+        let devSessionId: String
+        let lngId: NSNumber
+        let custId: Int
+        let complexId: Int
+        let complexName: String
+        let seesDat: String
+    }
 
-    
-    
-    
- 
+    struct TurkeyBirdProcessingInput {
+        let birdArr: Any?
+        let catName: String
+        let obsName: String
+        let farmName: String
+        let obsId: Int
+        let measure: String
+        let quickLink: Any?
+        let sessionId: Int
+        let languageId: NSNumber
+        let refId: NSNumber
+    }
 }
 
-struct chickenCoreDataHandlerModels
-{
-    struct saveSkeletaSettingsInDB{
+struct chickenCoreDataHandlerModels {
+    struct saveSkeletaSettingsInDB {
         let strObservationField: String
         let visibilityCheck: Bool
         let quicklinks: Bool
@@ -1843,6 +1919,186 @@ struct chickenCoreDataHandlerModels
         let lngId: NSNumber
         let lblDate: String
     }
+    
+    struct submitdNecrStep1Data {
+        let farmItem: JSON
+        let sessionId: Int
+        let devSessionId: String
+        let lngId: NSNumber
+        let custId: Int
+        let complexId: Int
+        let complexName: String
+        let seesDat: String
+    }
+
+    struct manBreedValidationData {
+        var manufacturerName: String
+        var manufacturerNames: NSArray
+        var manufacturerIDs: NSArray
+        
+        var breedName: String
+        var breedNames: NSArray
+        var breedIDs: NSArray
+        
+        var eggName: String
+        var eggNames: NSArray
+        var eggIDs: NSArray
+
+        // Output values
+        var manufacturerId: Int = 0
+        var breedId: Int = 0
+        var eggId: Int = 0
+    }
+
+    struct chickenFarmInputData {
+        let farmName: String?
+        let houseNo: String?
+        let noOfBirds: Int
+        let farmId: NSNumber?
+        let imageId: NSNumber?
+        let feedProgram: String?
+        let feedId: Int
+        let age: String?
+        let customerId: NSNumber?
+        let customerName: String?
+        let sick: String?
+        let flockId: NSNumber?
+        let complexDate: String?
+        let birdDetails: NSMutableArray
+    }
+
 
 }
 
+struct ReportComposerDaignosticModels
+{
+    struct PlaceholderTemplate {
+        let htmlContent: String
+        let complexName: String
+        let customerName: String
+        let vetanatrionName: String
+        let salesRepName: String
+        let customerRepName: String
+        let typeDate: String
+        let isCocciHistory: Bool
+        let logoImageURL: String
+    }
+
+}
+
+
+struct PVEDataModel{
+    struct WingInjectionData {
+        let injCenter_LeftWing: Int
+        let leftRightInjTotal: Int
+        let injCenter_RightWing: Int
+        let injWingBand_LeftWing: Int
+        let injWingBand_RightWing: Int
+        let injMuscleHit_LeftWing: Int
+        let injMuscleHit_RightWing: Int
+        let injMissed_LeftWing: Int
+        let injMissed_RightWing: Int
+    }
+}
+struct NecropsyFarmModel {
+    let farmName: String
+    let age: String
+    let birds: String
+    let houseNo: String
+    let flockId: String
+    let feedProgram: String
+    let sick: Bool
+    let feedId: Int
+    let farmWeight: String
+    let abf: String
+    let sex: String
+    let breed: String
+    let farmId: Int
+    let generationName: String
+    let generationId: Int
+    let imgId: Int
+}
+
+struct NecropsySessionInput {
+    var farms: [NecropsyFarmModel]
+    var sessionId: Int
+    var postingId: Int
+    var complexName: String
+    var seesDate: String
+    var complexId: Int
+    var customerId: Int
+    var deviceSessionId: String
+}
+
+struct CoxinInputModel {
+    let feedId: NSNumber
+    let index: Int
+    let loginSessionId: NSNumber
+    let postingId: NSNumber
+    let molecule: String
+    let dosage: String
+    let fromDays: String
+    let toDays: String
+    let feedProgram: String
+    let isSync: Bool
+    let feedType: String
+    let cocoVacId: NSNumber
+    let lngId: NSNumber
+    let lbldate: String
+    let formName: String
+}
+
+struct CoccidiosisControlData {
+    let loginSessionId: NSNumber
+    let postingId: NSNumber
+    let molecule: String
+    let dosage: String
+    let fromDays: String
+    let toDays: String
+    let coccidiosisVaccine: String
+    let targetWeight: String
+    let index: Int
+    let dbArray: NSArray
+    let feedId: NSNumber
+    let feedProgram: String
+    let formName: String
+    let isSync: Bool
+    let feedType: String
+    let cocoVacId: NSNumber
+    let lngId: NSNumber
+    let lbldate: String
+    let doseMoleculeId: Int
+}
+
+struct AlternativeFeedData {
+    var loginSessionId: NSNumber
+    var postingId: NSNumber
+    var molecule: String
+    var dosage: String
+    var fromDays: String
+    var toDays: String
+    var feedId: NSNumber
+    var feedProgram: String
+    var formName: String?
+    var isSync: Bool
+    var feedType: String
+    var cocoVacId: NSNumber
+    var lngId: NSNumber
+    var lblDate: String
+}
+struct SkeletalObservationData {
+    let catName: String
+    let obsName: String
+    let formName: String
+    let obsVisibility: Bool
+    let birdNo: NSNumber
+    let obsPoint: NSInteger
+    let obsId: NSInteger
+    let measure: String
+    let quickLink: NSNumber
+    let necId: NSNumber
+    let isSync: Bool
+    let lngId: NSNumber
+    let refId: NSNumber
+    let actualText: String
+}

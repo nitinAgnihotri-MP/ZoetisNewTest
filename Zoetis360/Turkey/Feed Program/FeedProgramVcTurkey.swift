@@ -2189,6 +2189,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func handleSaveCocciControlDatabase(_ status: Bool) {
+        if status == true {
+            self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                self.handleAntibioticDatabaseCompletion(status: status)
+            })
+        }
+    }
+    
     fileprivate func saveUnlinkedSessionData() {
         if UserDefaults.standard.bool(forKey:"Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey:"necUnLinked") as NSNumber
@@ -2202,11 +2210,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 
                 self.saveCoccoiControlDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
                     
-                    if status == true {
-                        self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                            self.handleAntibioticDatabaseCompletion(status: status)
-                        })
-                    }
+                    self.handleSaveCocciControlDatabase(status)
                 })
             }
         })
@@ -2952,153 +2956,135 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         completion (true)
     }
     
-    func saveMyCoxtinDatabase ( feedId : Int,postingId:Int, completion: (_ status: Bool) -> Void) {
+    func saveMyCoxtinDatabase (feedId : Int,postingId:Int, completion: (_ status: Bool) -> Void) {
         
-        for i in 0..<6{
+        for i in 0..<6 {
             
             if i == 0 {
-                
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
                     loginSessionId: 1,
-                        postingId: postingId as NSNumber,
-                        molecule: moleculeFeedType1MyCoxtin.text ?? "",
-                        dosage: myCoxtinStarterDosage.text ?? "",
-                        fromDays: myFromFirstTextField.text ?? "",
-                        toDays: myToFirstTextField.text ?? "",
-                        index: i,
-                        dbArray: MyCoxtinBindersArray,
-                        feedId: feedId as NSNumber,
-                        feedProgram: feedProgramTextField.text ?? "",
-                        formName: addFarmSelectLbl.text!,
-                        isSync: true,
-                        feedType: feedTypeOne,
-                        cocoVacId: CocoiVacId,
-                        lngId: lngId as NSNumber,
-                        lbldate: lblDate.text ?? ""
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType1MyCoxtin.text ?? "",
+                    dosage: myCoxtinStarterDosage.text ?? "",
+                    fromDays: myFromFirstTextField.text ?? "",
+                    toDays: myToFirstTextField.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeOne,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text!
                 )
 
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
                 
-            }
-            else if i == 1 {
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
+            } else if i == 1 {
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
                     loginSessionId: 1,
-                        postingId: postingId as NSNumber,
-                        molecule: moleculeFeedType2MyCoxtin.text ?? "",
-                        dosage: myCoxtinGrowerDosage.text ?? "",
-                        fromDays: myFromSecondTextField.text ?? "",
-                        toDays: myToSecondTextField.text ?? "",
-                        index: i,
-                        dbArray: MyCoxtinBindersArray,
-                        feedId: feedId as NSNumber,
-                        feedProgram: feedProgramTextField.text ?? "",
-                        formName: addFarmSelectLbl.text ?? "",
-                        isSync: true,
-                        feedType: feedTypeTwo,
-                        cocoVacId: CocoiVacId,
-                        lngId: lngId as NSNumber,
-                        lbldate: lblDate.text ?? ""
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType2MyCoxtin.text ?? "",
+                    dosage: myCoxtinGrowerDosage.text ?? "",
+                    fromDays: myFromSecondTextField.text ?? "",
+                    toDays: myToSecondTextField.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeTwo,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text ?? ""
                 )
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
-            }
-            
-            else if i == 2 {
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
+            } else if i == 2 {
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
                     loginSessionId: 1,
-                        postingId: postingId as NSNumber,
-                        molecule: moleculeFeedType3MyCoxtin.text ?? "",
-                        dosage: myCoxtinFinisherDosge.text ?? "",
-                        fromDays: myFromThirdTextField.text ?? "",
-                        toDays: myToThirdTextField.text ?? "",
-                        index: i,
-                        dbArray: MyCoxtinBindersArray,
-                        feedId: feedId as NSNumber,
-                        feedProgram: feedProgramTextField.text ?? "",
-                        formName: addFarmSelectLbl.text ?? "",
-                        isSync: true,
-                        feedType: feedTypeThree,
-                        cocoVacId: CocoiVacId,
-                        lngId: lngId as NSNumber,
-                        lbldate: lblDate.text ?? ""
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType3MyCoxtin.text ?? "",
+                    dosage: myCoxtinFinisherDosge.text ?? "",
+                    fromDays: myFromThirdTextField.text ?? "",
+                    toDays: myToThirdTextField.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedTypeThree,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text ?? ""
                 )
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
-            }
-            else if i == 3 {
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
+            } else if i == 3 {
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
                     loginSessionId: 1,
-                        postingId: postingId as NSNumber,
-                        molecule: moleculeFeedType4MyCoxtin.text ?? "",
-                        dosage: myCoxtinWDDosage.text ?? "",
-                        fromDays: myFromFourTextField.text ?? "",
-                        toDays: myToFourTextField.text ?? "",
-                        index: i,
-                        dbArray: MyCoxtinBindersArray,
-                        feedId: feedId as NSNumber,
-                        feedProgram: feedProgramTextField.text ?? "",
-                        formName: addFarmSelectLbl.text ?? "",
-                        isSync: true,
-                        feedType: feedFour,
-                        cocoVacId: CocoiVacId,
-                        lngId: lngId as NSNumber,
-                        lbldate: lblDate.text ?? ""
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType4MyCoxtin.text ?? "",
+                    dosage: myCoxtinWDDosage.text ?? "",
+                    fromDays: myFromFourTextField.text ?? "",
+                    toDays: myToFourTextField.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedFour,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text ?? ""
                 )
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
                 
-            }
-            else if i == 4 {
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
-                        loginSessionId: 1,
-                        postingId: postingId as NSNumber,
-                        molecule: moleculeFeedType5MyCoxtin.text ?? "",
-                        dosage: myCoxtin5DosageTextField.text ?? "",
-                        fromDays: from5TextFieldMycoxtin.text ?? "",
-                        toDays: to5TextFieldMycoxtin.text ?? "",
-                        index: i,
-                        dbArray: MyCoxtinBindersArray,
-                        feedId: feedId as NSNumber,
-                        feedProgram: feedProgramTextField.text ?? "",
-                        formName: addFarmSelectLbl.text ?? "",
-                        isSync: true,
-                        feedType: feedFive,
-                        cocoVacId: CocoiVacId,
-                        lngId: lngId as NSNumber,
-                        lbldate: lblDate.text ?? ""
+            } else if i == 4 {
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
+                    loginSessionId: 1,
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType5MyCoxtin.text ?? "",
+                    dosage: myCoxtin5DosageTextField.text ?? "",
+                    fromDays: from5TextFieldMycoxtin.text ?? "",
+                    toDays: to5TextFieldMycoxtin.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedFive,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text ?? ""
                 )
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
-            }
-            else if i == 5 {
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
+            } else if i == 5 {
                                 
-                let coxtinData = CoreDataHandlerTurkeyModels.saveTukryCoxtinData(
+                let coxtinData = CoreDataHandlerTurkeyModels.TurkeyCoxinmodel(
+                    feedId: feedId as NSNumber,
+                    index: i,
                     loginSessionId: 1,
-                       postingId: postingId as NSNumber,
-                       molecule: moleculeFeedType6MyCoxtin.text ?? "",
-                       dosage: myCoxtin6DosageTextField.text ?? "",
-                       fromDays: from6TextFieldMycoxtin.text ?? "",
-                       toDays: to6TextFieldMycoxtin.text ?? "",
-                       index: i,
-                       dbArray: MyCoxtinBindersArray,
-                       feedId: feedId as NSNumber,
-                       feedProgram: feedProgramTextField.text ?? "",
-                       formName: addFarmSelectLbl.text ?? "",
-                       isSync: true,
-                       feedType: feedSix,
-                       cocoVacId: CocoiVacId,
-                       lngId: lngId as NSNumber,
-                       lbldate: lblDate.text ?? ""
+                    postingId: postingId as NSNumber,
+                    molecule: moleculeFeedType6MyCoxtin.text ?? "",
+                    dosage: myCoxtin6DosageTextField.text ?? "",
+                    fromDays: from6TextFieldMycoxtin.text ?? "",
+                    toDays: to6TextFieldMycoxtin.text ?? "",
+                    feedProgram: feedProgramTextField.text ?? "",
+                    isSync: true,
+                    feedType: feedSix,
+                    cocoVacId: CocoiVacId,
+                    lngId: lngId as NSNumber,
+                    lbldate: lblDate.text ?? "",
+                    formName: addFarmSelectLbl.text ?? ""
                 )
-                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData)
+                CoreDataHandlerTurkey().saveMyCoxtinDatabaseTurkey(coxtinData: coxtinData,dbArray: MyCoxtinBindersArray)
             }
         }
         completion (true)
     }
     
-    
-    
-    
     func buttonAction(sender: UIButton!) {
         buttonPopUP.alpha = 0
-        ////print("Button tapped")
-        
     }
     
     func clickHelpPopUp() {
