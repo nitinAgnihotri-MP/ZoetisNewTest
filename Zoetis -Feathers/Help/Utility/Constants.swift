@@ -932,7 +932,32 @@ struct CoreDataHandlerPEModels
         let signatureImg: String
         let fsrSign: String
     }
+    
+    struct doaVaccinationSaveData {
+        let userId: String
+        let isExtendedPE: Bool
+        let assessmentId: String
+        let date: Date?
+        var override: Bool? = true
+        var subcutaneousTxt: String?  // Optional String
+        var dayOfAgeTxt: String?      // Optional String
+        var hasChlorineStrips: Bool? = false  // Optional Bool
+        var isAutomaticFail: Bool? = false    // Optional Bool
+    }
 
+    
+    struct RefrigatorDetails {
+        var id: NSNumber
+        var labelText: String
+        var rollOut: String
+        var unit: String
+        var value: Double
+        var catID: NSNumber
+        var isCheck: Bool
+        var isNA: Bool
+        var schAssmentId: Int
+    }
+    
 }
 
 

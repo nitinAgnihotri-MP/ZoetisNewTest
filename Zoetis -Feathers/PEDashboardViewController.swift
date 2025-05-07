@@ -2651,34 +2651,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             params.json["Status_Type"] = params.statusType
         }
     }
-
-    
-    
-    
-    /*
-    fileprivate func extractedFunc9(_ statusType: inout Int, _ dict: PENewAssessment, _ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ saveType: Int, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
-        
-        json = [
-            "AssessmentId":serverAssessmentId,
-            "DeviceId": deviceIDFORSERVER,
-            "UserId": UserId,
-            "EvaluationId": EvaluationId ?? 0,
-            "SaveType":saveType,
-            "Status_Type":statusType,
-            "IsEMRequested" : isEMRequested,
-            "IsSendEmail": true,
-            "appVersion": appVersion,
-            "SanitationEmbrexScoresDataModel":extendedData
-        ] as JSONDictionary
-        
-        if statusType == 2 {
-            if dict.isEMRejected == true  || dict.isPERejected == true {
-                statusType = 0
-            }
-            json["Status_Type"] = statusType
-        }
-    }
-    */
     fileprivate func extractedFunc10(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
         
         json = [
@@ -4293,33 +4265,6 @@ extension PEDashboardViewController{
             isNaSelectedArray.append(input.questionMark)
         }
     }
-
-    
-    /*
-    fileprivate func extractedFunc(_ FrequencyValueStr: String, _ QCCount: String, _ PersonName: String, _ TextAmPm: String, _ PPMValue: String, _ AssessmentScore: Int, _ isNAValue: Bool, _ filterScoreData: inout [[String : Any]], _ questionMark: [String : Any], _ isNaSelectedArray: inout [[String : Any]]) {
-        if FrequencyValueStr.count > 0 {
-            CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
-        }
-        if QCCount.count > 0 {
-            CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount:QCCount)
-        }
-        if PersonName.count > 0 {
-            CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: PersonName)
-        }
-        if TextAmPm.count > 0 {
-            CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
-        }
-        if PPMValue.count > 0 {
-            CoreDataHandlerPE().updatePPMValueInAssessmentInProgress(PpmValue: PPMValue)
-        }
-        if AssessmentScore  ==  0 || (isNAValue)  {
-            filterScoreData.append(questionMark)
-        }
-        if isNAValue{
-            isNaSelectedArray.append(questionMark)
-        }
-    }
-    */
     private func handlGetPostingAssessmentListByUser(_ json: JSON) {
         let dataArray = extractDataArray(from: json)
         if dataArray.count > 0 {
@@ -4862,13 +4807,18 @@ extension PEDashboardViewController{
     private func handleSanitationCommon(_ objDic: [String: Any], serverAssessmentId: String) {
         let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
         if sanitationEmbrexValue {
-            PEInfoDAO.sharedInstance.saveData(
-                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                isExtendedPE: sanitationEmbrexValue,
-                assessmentId: serverAssessmentId,
-                date: nil,
-                override: false
+     
+            let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                   userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                   isExtendedPE: sanitationEmbrexValue,
+                   assessmentId: serverAssessmentId,
+                   date: nil,
+                   override: false
             )
+            
+            PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+            
+            
         }
         let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String: Any]] ?? []
         let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)

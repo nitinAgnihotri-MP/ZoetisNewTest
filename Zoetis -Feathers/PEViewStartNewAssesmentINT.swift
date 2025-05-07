@@ -1544,24 +1544,6 @@ extension PEViewStartNewAssesmentINT{
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
     }
-    /*
-    fileprivate func handleManBreedValidation(_ man: String, _ manufacutrerNameArray: NSArray, _ ManufacturerId: inout Int, _ manufacutrerIDArray: NSArray, _ breeedd: String, _ BirdBreedNameArray: NSArray, _ breeddId: inout Int, _ BirdBreedIDArray: NSArray, _ eggg: String, _ EggsNameArray: NSArray, _ EggID: inout Int, _ EggsIDArray: NSArray) {
-        if man != "" {
-            let indexOfd = manufacutrerNameArray.index(of: man)
-            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
-        }
-        
-        if breeedd != "" {
-            let indexOfe = BirdBreedNameArray.index(of: breeedd)
-            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
-        }
-        if eggg != "" {
-            let indexOfp = EggsNameArray.index(of: eggg)
-            EggID = EggsIDArray[indexOfp] as? Int ?? 0
-        }
-    }
-    */
-    
     
     fileprivate func handleManBreedValidation(_ data: inout chickenCoreDataHandlerModels.manBreedValidationData) {
         if data.manufacturerName != "" {

@@ -256,8 +256,22 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
-                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
-                    peNewAssessmentArray.append(peNewAssessment)
+                    
+                    let refrigatorDetails = CoreDataHandlerPEModels.RefrigatorDetails(
+                           id: result.value(forKey: "id") as! NSNumber,
+                            labelText: result.value(forKey: "labelText") as! String,
+                            rollOut: result.value(forKey: "rollOut") as! String,
+                            unit: result.value(forKey: "unit") as! String,
+                            value: result.value(forKey: "value") as! Double,
+                            catID: result.value(forKey: "catID") as! NSNumber,
+                            isCheck: result.value(forKey: "isCheck") as! Bool,
+                            isNA: result.value(forKey: "isNA") as! Bool,
+                            schAssmentId: result.value(forKey: "schAssmentId") as! Int
+                    )
+                    let datanew = PE_Refrigators(details: refrigatorDetails)
+                    
+                    
+                    peNewAssessmentArray.append(datanew)
                 }
             }
         } catch {
@@ -277,16 +291,21 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
-                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber,
-                                                         labelText: result.value(forKey: "labelText") as! String,
-                                                         rollOut: result.value(forKey: "rollOut") as! String,
-                                                         unit: result.value(forKey: "unit") as! String,
-                                                         value: result.value(forKey: "value") as! Double,
-                                                         catID: result.value(forKey: "catID") as! NSNumber,
-                                                         isCheck: result.value(forKey: "isCheck") as! Bool,
-                                                         isNA: result.value(forKey: "isNA") as! Bool,
-                                                         schAssmentId: result.value(forKey: "schAssmentId") as! Int)
-                    peNewAssessmentArray.append(peNewAssessment)
+                    
+                    let refrigatorDetails = CoreDataHandlerPEModels.RefrigatorDetails(
+                           id: result.value(forKey: "id") as! NSNumber,
+                           labelText: result.value(forKey: "labelText") as! String,
+                           rollOut: result.value(forKey: "rollOut") as! String,
+                           unit: result.value(forKey: "unit") as! String,
+                           value: result.value(forKey: "value") as! Double,
+                           catID: result.value(forKey: "catID") as! NSNumber,
+                           isCheck: result.value(forKey: "isCheck") as! Bool,
+                           isNA: result.value(forKey: "isNA") as! Bool,
+                           schAssmentId: result.value(forKey: "schAssmentId") as! Int
+                    )
+                    let refData = PE_Refrigators(details: refrigatorDetails)
+                    peNewAssessmentArray.append(refData)
+                    
                 }
             }
         } catch {
@@ -306,8 +325,22 @@ class CoreDataHandlerPE: NSObject {
         do {
             if let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject] {
                 for result in fetchedResult {
-                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut") as! String, unit: result.value(forKey: "unit") as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID") as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
-                    peNewAssessmentArray.append(peNewAssessment)
+                    
+                    let refrigatorDetails = CoreDataHandlerPEModels.RefrigatorDetails(
+                          id: result.value(forKey: "id") as! NSNumber,
+                          labelText: result.value(forKey: "labelText") as! String,
+                          rollOut: result.value(forKey: "rollOut") as! String,
+                          unit: result.value(forKey: "unit") as! String,
+                          value: result.value(forKey: "value") as! Double,
+                          catID: result.value(forKey: "catID") as! NSNumber,
+                          isCheck: result.value(forKey: "isCheck") as! Bool,
+                          isNA: result.value(forKey: "isNA") as! Bool,
+                          schAssmentId: result.value(forKey: "schAssmentId") as! Int
+                    )
+                    let refData = PE_Refrigators(details: refrigatorDetails)
+                    peNewAssessmentArray.append(refData)
+                    
+                    
                 }
             }
         } catch {
@@ -329,8 +362,22 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
-                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
-                    peNewAssessmentArray.append(peNewAssessment)
+                    
+                    let refrigatorDetails = CoreDataHandlerPEModels.RefrigatorDetails(
+                            id: result.value(forKey: "id") as! NSNumber,
+                            labelText: result.value(forKey: "labelText") as! String,
+                            rollOut: result.value(forKey: "rollOut") as! String,
+                            unit: result.value(forKey: "unit") as! String,
+                            value: result.value(forKey: "value") as! Double,
+                            catID: result.value(forKey: "catID") as! NSNumber,
+                            isCheck: result.value(forKey: "isCheck") as! Bool,
+                            isNA: result.value(forKey: "isNA") as! Bool,
+                            schAssmentId: result.value(forKey: "schAssmentId") as! Int
+                    )
+                    let refData = PE_Refrigators(details: refrigatorDetails)
+                    
+                    
+                    peNewAssessmentArray.append(refData)
                 }
             }
         } catch {

@@ -155,9 +155,7 @@ public class PECertificateData: NSObject {
     var vacOperatorId: Int?
     var isSigned = false
     var fsrSign = ""
-    
-    
-    
+
     init(info: CoreDataHandlerPEModels.CertificateInfo) {
         self.id = info.id
         self.name = info.name
@@ -168,18 +166,6 @@ public class PECertificateData: NSObject {
         self.vacOperatorId = info.vacOperatorId
         self.fsrSign = info.fsrSign
     }
-    
-     
-//    init(id:Int,name:String,date:String,isCertExpired:Bool,isReCert:Bool,vacOperatorId:Int,signatureImg:String , fsrSign : String) {
-//        self.id = id
-//        self.name = name
-//        self.certificateDate = date
-//        self.isCertExpired = isCertExpired
-//        self.isReCert = isReCert
-//        self.signatureImg = signatureImg
-//        self.vacOperatorId = vacOperatorId
-//        self.fsrSign = fsrSign
-//    }
 }
 
 
@@ -216,6 +202,39 @@ public class InovojectData: NSObject {
     }
 }
 
+
+public class PE_Refrigators: NSObject {
+    var id: NSNumber?
+    var labelText: String?
+    var rollOut: String?
+    var unit: String?
+    var value: Double?
+    var catID: NSNumber?
+    var isCheck: Bool?
+    var isNA: Bool?
+    var schAssmentId: Int?
+
+    // Define the struct that holds the related properties
+   
+
+    // Update the initializer to accept a single parameter of type RefrigatorDetails
+    init(details: CoreDataHandlerPEModels.RefrigatorDetails) {
+        self.id = details.id
+        self.labelText = details.labelText
+        self.rollOut = details.rollOut
+        self.unit = details.unit
+        self.value = details.value
+        self.catID = details.catID
+        self.isCheck = details.isCheck
+        self.isNA = details.isNA
+        self.schAssmentId = details.schAssmentId
+    }
+}
+
+
+
+
+/*
 public class PE_Refrigators: NSObject {
     var id : NSNumber?
     var labelText: String?
@@ -239,3 +258,4 @@ public class PE_Refrigators: NSObject {
         self.schAssmentId = schAssmentId
     }
 }
+*/

@@ -1910,14 +1910,6 @@ extension PEViewStartNewAssessment{
 		]
 	}
 	
-	private func extractAssessmentIds(from dataArray: [JSONDictionary]) -> [String] {
-		return dataArray.compactMap { data in
-			guard let id = data["AssessmentId"] as? Int64, id != 0 else { return nil }
-			return "\(id)"
-		}
-	}
-	
-
 	// For data arrays that are [CustomStruct], not [JSONDictionary]
 	private func appendSyncPayloadsFromStructs<T>(
 		to targetArray: inout [JSONDictionary],

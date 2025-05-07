@@ -1192,9 +1192,8 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         if arr.count>0 {
             CoreDataHandlerTurkey().deleteDataWithPostingIdCaptureStepDataTurkey(self.postingId)
             for i in 0..<arr.count {
-                var postingId = 0
+                var postingIdInternal = 0
                 let obj = arr.object(at: i) as AnyObject
-                
                 let sessionId = obj.value(forKey: "SessionId") as! Int
                 let devSessionId = obj.value(forKey: "deviceSessionId") as! String
                 let custId = obj.value(forKey: "CustomerId") as! Int
@@ -1231,15 +1230,14 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 let sessionInput = NecropsySessionInput(
                     farms: farms,
                     sessionId: sessionId,
-                    postingId: postingId,
+                    postingId: postingIdInternal,
                     complexName: complexName,
                     seesDate: seesDate,
                     complexId: complexId,
                     customerId: custId,
                     deviceSessionId: devSessionId
                 )
-
-                self.saveNecropsyDataInDataBase(sessionInput, &postingId)
+                self.saveNecropsyDataInDataBase(sessionInput, &postingIdInternal)
             }
             
             let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()

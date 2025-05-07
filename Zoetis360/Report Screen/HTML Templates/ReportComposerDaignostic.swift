@@ -326,7 +326,7 @@ class ReportComposerDaignostic: NSObject {
             index: index,
             items: [item]
         )
-        if !dataVars.isCocciHistory {            
+        if !dataVars.isCocciHistory {
             result = handleAgeSplitting(dataVars: layout,
                                         metrics: &metrics,
                                         simpleMetrics: &simpleMetrics,
@@ -358,17 +358,7 @@ class ReportComposerDaignostic: NSObject {
             range.contains(meanAgeIs) && (dataVars.index == dataVars.items.count - 1 || dataVars.items[dataVars.index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
         }
         
-        if shouldSplit || dataVars.index == dataVars.items.count - 1 {
-            let ageLabel = ageRanges.first { $0.0.contains(meanAgeIs) }?.1 ?? "Unknown"
-            
-            let result = replaceTotals(
-                content: result,
-                metrics: metrics,
-                simpleMetrics: simpleMetrics,
-                reportData: reportData,
-                lngId: lngId
-            )
-            
+        if shouldSplit || dataVars.index == dataVars.items.count - 1 {            
             // Reset spliter values
             for key in metrics.keys {
                 metrics[key]!.resetSpliter()

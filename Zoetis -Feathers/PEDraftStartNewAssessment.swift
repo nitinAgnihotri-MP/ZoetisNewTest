@@ -1680,7 +1680,18 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch.isOn, assessmentId: peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
+        
+        let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+               userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+               isExtendedPE: extendedPESwitch.isOn,
+               assessmentId: peNewAssessment.serverAssessmentId ?? "",
+               date: nil,
+               hasChlorineStrips:chlorineStripsSwitch.isOn,
+               isAutomaticFail: self.isAutomaticSwitch.isOn
+        )
+        
+        PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+        
         
         self.checkBackAndSave()
     }

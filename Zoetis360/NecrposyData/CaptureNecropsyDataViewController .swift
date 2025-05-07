@@ -348,7 +348,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: skleta.observationId ?? 0)
         let birdNo = birdnumber as! NSNumber
         let quickLink = skleta.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = skleta.refId!
         let observationField = skleta.observationField!
         let formName = farmArray[i] as! String
@@ -367,7 +367,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -441,7 +441,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: cocoiDis.observationId ?? 0)
         let birdNo = birdnumber as! NSNumber
         let quickLink = cocoiDis.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = cocoiDis.refId!
         let observationField = cocoiDis.observationField!
         let formName = farmArray[i] as! String
@@ -460,7 +460,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -527,7 +527,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: gitract.observationId!)
         let birdNo = birdnumber as! NSNumber
         let quickLink = gitract.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = gitract.refId!
         let observationField = gitract.observationField!
 
@@ -545,7 +545,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -617,7 +617,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: resp.observationId!)
         let birdNo = birdnumber as! NSNumber
         let quickLink = resp.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = resp.refId!
         let observationField = resp.observationField!
         
@@ -635,7 +635,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -707,7 +707,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: immune.observationId!)
         let birdNo = birdnumber as! NSNumber
         let quickLink = immune.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = immune.refId!
         let observationField = immune.observationField!
         
@@ -725,7 +725,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -747,7 +747,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let obsId = Int(truncating: immune.observationId!)
         let birdNo = birdnumber as! NSNumber
         let quickLink = immune.quicklinks!
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = immune.refId!
         let observationField = immune.observationField!
 
@@ -765,7 +765,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -3857,7 +3857,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     // MARK: 🟢 Save Skelaton Data to Server
     func addSkeltonResponseData(_ noOfBirdsArr1: NSMutableArray, completion: (_ status: Bool) -> Void) {
         let formName = UserDefaults.standard.value(forKey: "farm") as! String
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         let skeletenArr = CoreDataHandler().fetchAllSeettingdataWithLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
         let birdCount = (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber
 

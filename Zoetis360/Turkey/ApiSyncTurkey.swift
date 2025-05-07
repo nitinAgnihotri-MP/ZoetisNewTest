@@ -155,28 +155,18 @@ class ApiSyncTurkey: NSObject {
         }
         
         switch response.result {
-            
         case .success(let responseObject):
             self.isSyncPostingArrWithData = false
             self.isSyncPostingIdArr = false
             self.addVaccination()
             
         case .failure(let encodingError):
-            
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                
-                
-                
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
                 debugPrint(err)
-            } else if let data = response.data{
-                // other failures
-                debugPrint (encodingError)
-               
+            } else if let _ = response.data {
                 if let s = statusCode {
-                    
                     self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                    
                 }  else {
                     self.delegeteSyncApiTurkey.failWithErrorInternal()
                 }
@@ -188,12 +178,10 @@ class ApiSyncTurkey: NSObject {
         for i in 0..<fetchMyBinde.count {
             
             dataSet+=1
-            
             let mainDict = NSMutableDictionary()
-            
             let antiboticFeed = fetchMyBinde.object(at: i) as! MyCotoxinBindersFeedTurkey
             let dosage = antiboticFeed.dosage
-            var feedId = antiboticFeed.feedId as! Int
+            let feedId = antiboticFeed.feedId as! Int
             
             let feedProgram = antiboticFeed.feedProgram
             let fromDays = antiboticFeed.fromDays
@@ -716,13 +704,8 @@ class ApiSyncTurkey: NSObject {
     fileprivate func necropsyDataApiFailed(_ encodingError: AFError, _ response: AFDataResponse<Any>) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApiTurkey.failWithErrorInternal()
-            debugPrint(err)
-        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-            // other failures
-            debugPrint (encodingError)
-            debugPrint (responseString)
+        } else if let data = response.data, let _ = String(data: data, encoding: String.Encoding.utf8) {
             self.delegeteSyncApiTurkey.failWithErrorInternal()
-            
         }
     }
     

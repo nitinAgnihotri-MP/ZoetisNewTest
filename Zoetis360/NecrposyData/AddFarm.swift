@@ -494,7 +494,6 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                     } else {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        let array = (trimmed.components(separatedBy: ",") as [String])
                         let cocciData = SkeletalObservationData(
                             catName: "Coccidiosis",
                             obsName: cocoiDis.observationField ?? "",
@@ -665,7 +664,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         let obsId = Int(truncating: immune.observationId ?? 0)
         let birdNo = NSNumber(value: j + 1)
         let quickLink = immune.quicklinks ?? 0
-        let lngId = lngId as NSNumber
+        let lngIdInternal = lngId as NSNumber
         let refId = immune.refId ?? 0
         let observationField = immune.observationField ?? ""
         
@@ -683,7 +682,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 quickLink: quickLink,
                 necId: necId as NSNumber,
                 isSync: true,
-                lngId: lngId,
+                lngId: lngIdInternal,
                 refId: refId,
                 actualText: actualText
             )
@@ -703,8 +702,6 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 saveImmuneData(actualText: "0")
             }
         } else {
-            let array = trimmed.components(separatedBy: ",")
-            let point = (immune.refId == 58) ? Int(array[3])! : Int(array[0])!
             saveImmuneData(actualText: immune.measure ?? "")
         }
     }

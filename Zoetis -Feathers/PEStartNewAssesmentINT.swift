@@ -152,14 +152,32 @@ class PEStartNewAssessmentINT: BaseViewController {
             enableExtendedPE(flag: false)
             extendedPEBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
             Constants.isExtendedPopup = false
-            PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: true, assessmentId: peNewAssessment?.serverAssessmentId ?? "", date: nil)
+            
+            let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                   userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                   isExtendedPE: true,
+                   assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                   date: nil
+            )
+            
+            PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+            
         } else {
             showExtendedPE(flag: false)
             extendedPESwitch = false
             extendedPEBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
             enableExtendedPE(flag: true)
             Constants.isExtendedPopup = true
-            PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: false, assessmentId: peNewAssessment?.serverAssessmentId ?? "", date: nil)
+            
+            let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                   userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                   isExtendedPE: false,
+                   assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                   date: nil
+            )
+            
+            PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+            
         }
         
     }
@@ -1575,7 +1593,18 @@ class PEStartNewAssessmentINT: BaseViewController {
         if selectedVal.contains("Non") {
             let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
             if infoObj != nil{
-                PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: false, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
+                
+                let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                       userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                       isExtendedPE: false,
+                       assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                       date: nil,
+                       hasChlorineStrips: self.chlorineStripsSwitch.isOn,
+                       isAutomaticFail: self.isAutomaticSwitch.isOn
+                )
+                
+                PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+                
             }
             self.allProductionViewHeightConstraint.constant = 60
             self.flockAgeLower.isHidden = true
@@ -1693,7 +1722,17 @@ class PEStartNewAssessmentINT: BaseViewController {
             }
         }
         
-        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch, assessmentId: peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: false, isAutomaticFail: self.isAutomaticSwitch.isOn)
+        let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+               userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+               isExtendedPE: extendedPESwitch,
+               assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+               date: nil,
+               hasChlorineStrips: false,
+               isAutomaticFail: self.isAutomaticSwitch.isOn
+        )
+        
+        PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+        
         
         self.checkBackAndSave()
     }
@@ -2082,7 +2121,21 @@ extension PEStartNewAssessmentINT {
                     peNewAssessmentNew.rollOut = ass.rollOut
                     peNewAssessmentNew.qSeqNo = ass.qSeqNo
                     CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:self.peNewAssessment)
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: false, isAutomaticFail: self.isAutomaticSwitch.isOn)
+                    
+                    
+                    let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                           userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                           isExtendedPE: extendedPESwitch,
+                           assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                           date: nil,
+                           override: true,
+                           subcutaneousTxt: "",
+                           dayOfAgeTxt: "",
+                           hasChlorineStrips: false,
+                           isAutomaticFail: self.isAutomaticSwitch.isOn
+                    )
+                    
+                    PEInfoDAO.sharedInstance.saveData(vaccineData: data)
                 }
             }
         }

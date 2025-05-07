@@ -512,14 +512,20 @@ extension PELandingPoupViewController {
         // Save info object
         let userId = UserContext.sharedInstance.userDetailsObj?.userId ?? ""
         let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: userId, assessmentId: "\(serverAssessmentId)")
-        PEInfoDAO.sharedInstance.saveData(
+    
+        
+        let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
             userId: userId,
-            isExtendedPE: sanitationEmbrexValue,
-            assessmentId: "\(serverAssessmentId)",
-            date: nil,
-            subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt,
-            dayOfAgeTxt: antibioticInfo
+               isExtendedPE: sanitationEmbrexValue,
+               assessmentId: "\(serverAssessmentId)",
+               date: nil,
+               subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt,
+               dayOfAgeTxt: antibioticInfo
         )
+        
+        PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+        
+        
 
         // Save InovojectData
         let doaData = InovojectData(
@@ -733,14 +739,19 @@ extension PELandingPoupViewController {
         pe.hatcheryAntibioticsDoaSText = AntibioticInformation
 
         let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-        PEInfoDAO.sharedInstance.saveData(
-            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-            isExtendedPE: sanitationEmbrexValue,
-            assessmentId: "\(serverAssessmentId)",
-            date: nil,
-            subcutaneousTxt: AntibioticInformation,
-            dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic
+   
+        
+        let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+               userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+               isExtendedPE: sanitationEmbrexValue,
+               assessmentId: "\(serverAssessmentId)",
+               date: nil,
+               subcutaneousTxt: AntibioticInformation,
+               dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic
         )
+        
+        PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+        
 
         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: pe, fromDoaS: true)
 
@@ -1151,7 +1162,17 @@ extension PELandingPoupViewController {
         
         let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
         if sanitationEmbrexValue {
-            PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil, override: false)
+            
+            let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                   userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                   isExtendedPE: sanitationEmbrexValue,
+                   assessmentId: "\(serverAssessmentId)",
+                   date: nil,
+                   override: false
+            )
+            
+            PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+            
         }
         
         let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String:Any]] ?? []
@@ -1288,7 +1309,18 @@ extension PELandingPoupViewController {
         let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
         let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
         if sanitationEmbrexValue {
-            PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil, override: false)
+            
+            
+                   let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                          userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                          isExtendedPE: sanitationEmbrexValue,
+                          assessmentId: "\(serverAssessmentId)",
+                          date: nil,
+                          override: false
+                   )
+                   
+                   PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+            
         }
         
         let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String:Any]] ?? []

@@ -3468,7 +3468,19 @@ fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ ass
             
             headerView.txtAntiBioticCompletion = {[unowned self] ( txtAntiBioTic) in
                 self.peNewAssessment.hatcheryAntibioticsDoaText = txtAntiBioTic
-                PEInfoDAO.sharedInstance.saveData(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , isExtendedPE: infoObj?.isExtendedPE ?? false, assessmentId: self.scheduledAssessment?.serverAssessmentId ?? "", date: nil, subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt, dayOfAgeTxt: txtAntiBioTic)
+                
+                let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                       userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                       isExtendedPE: infoObj?.isExtendedPE ?? false,
+                       assessmentId: self.scheduledAssessment?.serverAssessmentId ?? "",
+                       date: nil,
+                       subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt,
+                       dayOfAgeTxt: txtAntiBioTic
+                )
+                
+                PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+                
+                
                 CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoa: true)
             }
             
@@ -3605,7 +3617,21 @@ fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ ass
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn2)
             headerView.txtAntiBioticCompletion = {[unowned self] ( txtAntiBioTic) in
-                PEInfoDAO.sharedInstance.saveData(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , isExtendedPE: infoObj?.isExtendedPE ?? false, assessmentId: self.scheduledAssessment?.serverAssessmentId ?? "", date: nil, subcutaneousTxt: txtAntiBioTic, dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic)
+                
+                
+                let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+                       userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                       isExtendedPE: infoObj?.isExtendedPE ?? false,
+                       assessmentId: self.scheduledAssessment?.serverAssessmentId ?? "",
+                       date: nil,
+                       subcutaneousTxt: txtAntiBioTic,
+                       dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic
+                )
+                
+                PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+                
+                
+                
                 self.peNewAssessment.hatcheryAntibioticsDoaSText = txtAntiBioTic
                 CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true)
             }

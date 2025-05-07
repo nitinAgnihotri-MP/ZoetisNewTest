@@ -1784,7 +1784,20 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             CoreDataHandlerPE().updateDraftInDoGInProgressInDB(newAssessment:peNewAssessment)
         }
         
-        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch, assessmentId: peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: false, isAutomaticFail: self.isAutomaticSwitch.isOn)
+        
+        let data = CoreDataHandlerPEModels.doaVaccinationSaveData(
+               userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+               isExtendedPE: extendedPESwitch,
+               assessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+               date: nil,
+               hasChlorineStrips: false,
+               isAutomaticFail: self.isAutomaticSwitch.isOn
+        )
+        
+        PEInfoDAO.sharedInstance.saveData(vaccineData: data)
+        
+        
+        
         
         self.checkBackAndSave()
     }

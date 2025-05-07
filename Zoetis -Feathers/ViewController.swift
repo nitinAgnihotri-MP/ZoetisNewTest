@@ -1491,11 +1491,11 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let measure = obsObj.value(forKey: "Measure") as! String
             let quickLink = obsObj.value(forKey: "DefaultQLink")
             let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
-            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, (quickLink, sessionId, languageId, refId))
+            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, (quickLink, sessionId, languageId, refId), index: l)
         }
     }
 
-    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, _ dataVar:(Any?,Int,NSNumber,NSNumber)) {
+    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, _ dataVar:(Any?,Int,NSNumber,NSNumber),index:Int) {
         guard let birdArr = birdArr as? NSObject else { return }
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
@@ -1523,6 +1523,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 refId: dataVar.3,
                 actualText: chkKey3
             )
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: index)
         }
     }
 
@@ -2268,8 +2269,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
             let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
-            if chkKey3 == "NA" { break }
-
+            if chkKey3 == "NA" {
+                break
+            }
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
             let catstr = mapTurkeyCategoryName(input.catName)

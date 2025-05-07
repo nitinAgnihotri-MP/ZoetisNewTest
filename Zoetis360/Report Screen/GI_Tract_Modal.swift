@@ -910,11 +910,9 @@ class GI_Tract_Modal: NSObject {
                                                   _ proventriculitis: inout Float,
                                                   _ proventriculitis_Mean: inout Float,
                                                   _ proventriculitis_Updated: inout Float) {
-        var intV = dataVar.1
-        var floatV = dataVar.2
+        let intV = dataVar.1
         if (dataVar.0.object(at: intV) as AnyObject).value(forKey: "refId") as! NSNumber == 32 {
             let value = (dataVar.0.object(at: intV) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-            floatV = floatV + (value.floatValue > 0 ? 1 : 0)
             enterties_Mean = enterties_Mean + value.floatValue
             if value.floatValue > 0 {
                 enterties_Updated += 1
