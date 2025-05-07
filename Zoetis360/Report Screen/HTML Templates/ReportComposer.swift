@@ -106,7 +106,7 @@ class ReportComposer: NSObject {
         }
     }
     
-    fileprivate func handleNeedToSplit42(_ needToSplit42: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit2532: inout Bool, _ needToSplit1424: inout Bool, _ needToSplit0114: inout Bool, _ isCheckSum3: inout Bool, _ items: [[String : AnyObject]], _ i: Int) {
+    fileprivate func handleNeedToSplit42(_ needToSplit42: inout Bool, _ needToSplit3341: inout Bool, _ needToSplit2532: inout Bool, _ needToSplit1424: inout Bool, _ needToSplit0114: inout Bool, _ isCheckSum3: inout Bool, data:([[String : Any]],Int)) {
         if needToSplit42 == true {
             needToSplit3341 = false
             needToSplit42 = false
@@ -115,7 +115,7 @@ class ReportComposer: NSObject {
             needToSplit0114 = false
             isCheckSum3 = true
         } else if needToSplit3341 == true {
-            if (items.count == i + 1) {
+            if (data.0.count == data.1 + 1) {
                 needToSplit42 = true
                 needToSplit3341 = false
                 needToSplit2532 = false
@@ -131,7 +131,7 @@ class ReportComposer: NSObject {
             }
         } else {
             
-            if (items.count == i + 1) {
+            if (data.0.count == data.1 + 1) {
                 needToSplit42 = true
                 needToSplit3341 = false
                 needToSplit2532 = false
@@ -197,8 +197,7 @@ class ReportComposer: NSObject {
                 vetanatrionName: vetanatrionName,
                 salesRepName: salesRepName,
                 customerRepName: customerRepName,
-                typeDate: typeDate,
-                items: items
+                data: (typeDate, items)
             )
             let allItems = processItems(items)
             content = content.replacingOccurrences(of: "#ITEMS#", with: allItems)
@@ -217,11 +216,10 @@ class ReportComposer: NSObject {
         vetanatrionName: String,
         salesRepName: String,
         customerRepName: String,
-        typeDate: String,
-        items: [[String: Any]]
+        data:(String,[[String: Any]])
     ) -> String {
         var content = htmlContent
-        let isCocciHistory = items.first?["isCocciHistory"] as? Bool ?? false
+        let isCocciHistory = data.1.first?["isCocciHistory"] as? Bool ?? false
         let reportTitle = isCocciHistory ? NSLocalizedString("\(categoryName) Historical Report", comment: "") : NSLocalizedString("\(categoryName) Summary Report", comment: "")
         let farmLabel = isCocciHistory ? "Date" : NSLocalizedString("Farm", comment: "")
 
@@ -231,7 +229,7 @@ class ReportComposer: NSObject {
             .replacingOccurrences(of: "#salesRepName#", with: salesRepName.isEmpty ? "NA" : salesRepName)
             .replacingOccurrences(of: "#customerRepName#", with: customerRepName.isEmpty ? "NA" : customerRepName)
             .replacingOccurrences(of: "#reportTitle#", with: reportTitle)
-            .replacingOccurrences(of: "#typeDate#", with: typeDate)
+            .replacingOccurrences(of: "#typeDate#", with: data.0)
             .replacingOccurrences(of: "#Farm#", with: farmLabel)
             .replacingOccurrences(of: "#LOGO_IMAGE#", with: logoImageURL ?? "")
             .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.visibilityHidden : "")
@@ -252,8 +250,7 @@ class ReportComposer: NSObject {
             var itemHTMLContent: String
             if i < items.count {
                 itemHTMLContent = processSingleItem(
-                    items[i],
-                    index: i,
+                    dataVar: (items[i], i),
                     items: items,
                     meanArray: meanArray,
                     totals: &totals,
@@ -272,8 +269,7 @@ class ReportComposer: NSObject {
     }
 
     private func processSingleItem(
-        _ item: [String: Any],
-        index: Int,
+        dataVar:([String: Any],Int),
         items: [[String: Any]],
         meanArray: [[Float]],
         totals: inout ReportTotals,
@@ -288,20 +284,20 @@ class ReportComposer: NSObject {
         }
 
         indexSplitter += 1
-        let meanValues = meanArray[index]
-        let isCocciHistory = item["isCocciHistory"] as? Bool ?? false
+        let meanValues = meanArray[dataVar.1]
+        let isCocciHistory = dataVar.0["isCocciHistory"] as? Bool ?? false
         var updatedContent = updateItemContent(
             content: content,
-            item: item,
+            item: dataVar.0,
             meanValues: meanValues,
             isCocciHistory: isCocciHistory
         )
 
-        updateTotals(item: item, meanValues: meanValues, totals: &totals, splitterTotals: &splitterTotals)
-        updateSplitFlags(item: item, index: index, items: items, splitFlags: &splitFlags)
+        updateTotals(item: dataVar.0, meanValues: meanValues, totals: &totals, splitterTotals: &splitterTotals)
+        updateSplitFlags(item: dataVar.0, index: dataVar.1, items: items, splitFlags: &splitFlags)
 
         let shouldSplit = shouldSplitItems(splitFlags: splitFlags, isCocciHistory: isCocciHistory)
-        let isLastItem = index == items.count - 1 && !isCocciHistory
+        let isLastItem = dataVar.1 == items.count - 1 && !isCocciHistory
 
         if shouldSplit || isLastItem {
             updatedContent = updateSplitterTotals(
@@ -310,7 +306,7 @@ class ReportComposer: NSObject {
                 indexSplitter: indexSplitter,
                 isCocciHistory: isCocciHistory
             )
-            handleItemHTMLContextValidations(&updatedContent, items: items, index: index)
+            handleItemHTMLContextValidations(&updatedContent, items: items, index: dataVar.1)
             resetSplitter(&splitterTotals, &indexSplitter, &splitFlags)
             indexTotal += 1
         } else {
@@ -442,8 +438,7 @@ class ReportComposer: NSObject {
                 &splitFlags.needToSplit1424,
                 &splitFlags.needToSplit0114,
                 &splitFlags.isCheckSum3,
-                items: items,
-                index: index
+                data: (items,index)
             )
         }
 
@@ -540,8 +535,7 @@ class ReportComposer: NSObject {
         _ needToSplit1424: inout Bool,
         _ needToSplit0114: inout Bool,
         _ isCheckSum3: inout Bool,
-        items: [[String: Any]],
-        index: Int
+        dataVar:([[String: Any]],Int)
     ) {
         needToSplit42 = true
         needToSplit3341 = false

@@ -2102,3 +2102,38 @@ struct SkeletalObservationData {
     let refId: NSNumber
     let actualText: String
 }
+struct ReportPlaceholderData {
+    let complexName: String
+    let customerName: String
+    let vetanatrionName: String
+    let salesRepName: String
+    let customerRepName: String
+    let typeDate: String
+    let isCocciHistory: Bool
+    let logoImageURL: String
+}
+struct ReportLayoutConfigProcessItems {
+    let birdsMarginHistory: String
+    let birdsMarginSummary: String
+    let ageMarginHistory: String
+    let ageMarginSummary: String
+}
+
+struct ReportConfigDiagnosticVariable {
+    let template: String
+    let meanArray: [[AnyObject]]
+    let lngId: Int
+    let isCocciHistory: Bool
+}
+struct ReportConfigDiagnosticHandleAgeSplitting {
+    let content: String
+    let item: [String: AnyObject]
+    let index: Int
+    let items: [[String: AnyObject]]
+}
+struct GITractModelDataVars {
+    let quickLink: Any
+    let sessionId: Int
+    let languageId: NSNumber
+    let refId: NSNumber
+}

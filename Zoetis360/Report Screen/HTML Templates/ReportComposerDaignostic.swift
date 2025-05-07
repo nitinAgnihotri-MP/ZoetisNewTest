@@ -118,8 +118,7 @@ class ReportComposerDaignostic: NSObject {
         guard let (reportTemplate, singleItemTemplate, lastItemTemplate) = loadTemplates(isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true) else { return nil }
         guard let htmlContent = loadMainTemplate(path: reportTemplate) else { return nil }
         
-        let replacedContent = replaceMainPlaceholders(
-            htmlContent: htmlContent,
+        let placeholderData = ReportPlaceholderData(
             complexName: complexName,
             customerName: customerName,
             vetanatrionName: vetanatrionName,
@@ -127,18 +126,22 @@ class ReportComposerDaignostic: NSObject {
             customerRepName: customerRepName,
             typeDate: typeDate,
             isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true,
-            logoImageURL: logoImageURL!
+            logoImageURL: logoImageURL ?? ""
         )
-        
+
+        let replacedContent = replaceMainPlaceholders(htmlContent: htmlContent, with: placeholderData)
+        let layout = ReportLayoutConfigProcessItems(
+            birdsMarginHistory: birdsMarginHistory,
+            birdsMarginSummary: birdsMarginSummary,
+            ageMarginHistory: ageMarginHistory,
+            ageMarginSummary: ageMarginSummary
+        )
         let allItemsContent = processItems(
             items: items,
             singleItemTemplate: singleItemTemplate,
             lastItemTemplate: lastItemTemplate,
             isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true,
-            birdsMarginHistory: birdsMarginHistory,
-            birdsMarginSummary: birdsMarginSummary,
-            ageMarginHistory: ageMarginHistory,
-            ageMarginSummary: ageMarginSummary
+            layout: layout
         )
         
         let finalContent = replacedContent.replacingOccurrences(of: "#ITEMS#", with: allItemsContent)
@@ -181,39 +184,33 @@ class ReportComposerDaignostic: NSObject {
 
     func replaceMainPlaceholders(
         htmlContent: String,
-        complexName: String,
-        customerName: String,
-        vetanatrionName: String,
-        salesRepName: String,
-        customerRepName: String,
-        typeDate: String,
-        isCocciHistory: Bool,
-        logoImageURL: String
+        with data: ReportPlaceholderData
     ) -> String {
         var content = htmlContent
-        content = content.replacingOccurrences(of: "#complexName#", with: complexName)
-        content = content.replacingOccurrences(of: "#CustomerName#", with: customerName)
-        content = content.replacingOccurrences(of: "#vetanatrionName#", with: vetanatrionName)
-        content = content.replacingOccurrences(of: "#salesRepName#", with: salesRepName.isEmpty ? "NA" : salesRepName)
-        content = content.replacingOccurrences(of: "#customerRepName#", with: customerRepName.isEmpty ? "NA" : customerRepName)
-        content = content.replacingOccurrences(of: "#reportTitle#", with: isCocciHistory ? NSLocalizedString("Necropsy Historical Report", comment: "") : NSLocalizedString("Necropsy Summary Report", comment: ""))
-        content = content.replacingOccurrences(of: "#digHisMargn#", with: isCocciHistory ? "margin-left:-20px" : Constants.leftMargin)
-        content = content.replacingOccurrences(of: "#typeDate#", with: typeDate)
-        content = content.replacingOccurrences(of: "#Farm#", with: isCocciHistory ? "Date" : NSLocalizedString("Farm", comment: ""))
-        content = content.replacingOccurrences(of: "#LOGO_IMAGE#", with: logoImageURL)
-        content = content.replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.noneDisplay : "")
+        content = content.replacingOccurrences(of: "#complexName#", with: data.complexName)
+        content = content.replacingOccurrences(of: "#CustomerName#", with: data.customerName)
+        content = content.replacingOccurrences(of: "#vetanatrionName#", with: data.vetanatrionName)
+        content = content.replacingOccurrences(of: "#salesRepName#", with: data.salesRepName.isEmpty ? "NA" : data.salesRepName)
+        content = content.replacingOccurrences(of: "#customerRepName#", with: data.customerRepName.isEmpty ? "NA" : data.customerRepName)
+        content = content.replacingOccurrences(of: "#reportTitle#", with: data.isCocciHistory ? NSLocalizedString("Necropsy Historical Report", comment: "") : NSLocalizedString("Necropsy Summary Report", comment: ""))
+        content = content.replacingOccurrences(of: "#digHisMargn#", with: data.isCocciHistory ? "margin-left:-20px" : Constants.leftMargin)
+        content = content.replacingOccurrences(of: "#typeDate#", with: data.typeDate)
+        content = content.replacingOccurrences(of: "#Farm#", with: data.isCocciHistory ? "Date" : NSLocalizedString("Farm", comment: ""))
+        content = content.replacingOccurrences(of: "#LOGO_IMAGE#", with: data.logoImageURL)
+        content = content.replacingOccurrences(of: Constants.displayNone, with: data.isCocciHistory ? Constants.noneDisplay : "")
         return content
     }
+//    let birdsMarginHistory: String
+//    let birdsMarginSummary: String
+//    let ageMarginHistory: String
+//    let ageMarginSummary: String
 
     func processItems(
         items: [[String: AnyObject]],
         singleItemTemplate: String,
         lastItemTemplate: String,
         isCocciHistory: Bool,
-        birdsMarginHistory: String,
-        birdsMarginSummary: String,
-        ageMarginHistory: String,
-        ageMarginSummary: String
+        layout:ReportLayoutConfigProcessItems
     ) -> String {
         var metrics: [String: Metric] = [
             "FP": Metric(), "trac": Metric(), "TD": Metric(), "Bone": Metric(), "air": Metric(),
@@ -229,7 +226,11 @@ class ReportComposerDaignostic: NSObject {
         var allItems = ""
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         let meanArray = AllValidSessions.sharedInstance.meanValues as! [[AnyObject]]
-        
+        let dataVars = ReportConfigDiagnosticVariable(
+            template: singleItemTemplate,
+            meanArray: meanArray,
+            lngId: lngId,
+            isCocciHistory: isCocciHistory)
         for i in 0...items.count {
             if i < items.count {
                 allItems += processSingleItem(
@@ -238,14 +239,8 @@ class ReportComposerDaignostic: NSObject {
                     metrics: &metrics,
                     simpleMetrics: &simpleMetrics,
                     reportData: &reportData,
-                    template: singleItemTemplate,
-                    meanArray: meanArray,
-                    lngId: lngId,
-                    isCocciHistory: isCocciHistory,
-                    birdsMarginHistory: birdsMarginHistory,
-                    birdsMarginSummary: birdsMarginSummary,
-                    ageMarginHistory: ageMarginHistory,
-                    ageMarginSummary: ageMarginSummary
+                    dataVars: dataVars,
+                    layout: layout
                 )
             } else {
                 allItems += processLastItem(
@@ -255,10 +250,7 @@ class ReportComposerDaignostic: NSObject {
                     template: lastItemTemplate,
                     lngId: lngId,
                     isCocciHistory: isCocciHistory,
-                    birdsMarginHistory: birdsMarginHistory,
-                    birdsMarginSummary: birdsMarginSummary,
-                    ageMarginHistory: ageMarginHistory,
-                    ageMarginSummary: ageMarginSummary
+                    layout: layout
                 )
             }
         }
@@ -272,22 +264,15 @@ class ReportComposerDaignostic: NSObject {
         }
     }
     
-    func processSingleItem(
-        item: [String: AnyObject],
-        index: Int,
-        metrics: inout [String: Metric],
-        simpleMetrics: inout [String: Float],
-        reportData: inout ReportData,
-        template: String,
-        meanArray: [[AnyObject]],
-        lngId: Int,
-        isCocciHistory: Bool,
-        birdsMarginHistory: String,
-        birdsMarginSummary: String,
-        ageMarginHistory: String,
-        ageMarginSummary: String
-    ) -> String {
-        guard let content = try? String(contentsOfFile: template, encoding: .utf8) else { return "" }
+    func processSingleItem(item: [String: AnyObject],
+                           index: Int,
+                           metrics: inout [String: Metric],
+                           simpleMetrics: inout [String: Float],
+                           reportData: inout ReportData,
+                           dataVars: ReportConfigDiagnosticVariable,
+                           layout:ReportLayoutConfigProcessItems) -> String {
+        
+        guard let content = try? String(contentsOfFile: dataVars.template, encoding: .utf8) else { return "" }
         var result = content
         let metricKeys = ["FP", "trac", "TD", "Bone", "air", "ge", "pro", "enterties", "BLS"]
         let meanPlaceholders = [
@@ -297,14 +282,14 @@ class ReportComposerDaignostic: NSObject {
         ]
         
         // Replace margins
-        result = result.replacingOccurrences(of: "margin-left:-40px;", with: isCocciHistory ? birdsMarginHistory : SingleItemBirdsMargin(countryID: Regions.countryId))
-        result = result.replacingOccurrences(of: "margin-left: -20px;", with: isCocciHistory ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
+        result = result.replacingOccurrences(of: "margin-left:-40px;", with: dataVars.isCocciHistory ? birdsMarginHistory : SingleItemBirdsMargin(countryID: Regions.countryId))
+        result = result.replacingOccurrences(of: "margin-left: -20px;", with: dataVars.isCocciHistory ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
         
         // Update and replace metrics
         var meanIndex = 0
         for (key, placeholder) in zip(metricKeys, meanPlaceholders) {
             let value = item[key]?.floatValue ?? 0
-            let meanValue = (meanArray[index][meanIndex] as? Float) ?? 0
+            let meanValue = (dataVars.meanArray[index][meanIndex] as? Float) ?? 0
             metrics[key]!.update(with: value, meanValue: meanValue.isNaN ? 0 : meanValue)
             result = result.replacingOccurrences(of: "#\(key)#", with: String(format: "%.1f", value))
             result = result.replacingOccurrences(of: placeholder, with: String(format: "%.1f", meanValue.isNaN ? 0 : meanValue))
@@ -320,8 +305,8 @@ class ReportComposerDaignostic: NSObject {
         }
         
         // Handle special cases
-        result = result.replacingOccurrences(of: "#FarmName#", with: isCocciHistory ? (item["sessionDate"] as? String ?? "") : (item["farmName"] as? String ?? ""))
-        result = result.replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.noneDisplay : "")
+        result = result.replacingOccurrences(of: "#FarmName#", with: dataVars.isCocciHistory ? (item["sessionDate"] as? String ?? "") : (item["farmName"] as? String ?? ""))
+        result = result.replacingOccurrences(of: Constants.displayNone, with: dataVars.isCocciHistory ? Constants.noneDisplay : "")
         result = result.replacingOccurrences(of: "#birds#", with: item["birds"] as? String ?? "0")
         result = result.replacingOccurrences(of: "#MeanAge#", with: item["meanAge"] as? String ?? "0")
         result = result.replacingOccurrences(of: "#Sick#", with: (item["isSick"]?.intValue ?? 0) == 0 ? "" : "checked")
@@ -335,24 +320,32 @@ class ReportComposerDaignostic: NSObject {
         
         // Handle age splitting
         result = result.replacingOccurrences(of: displayStr, with: Constants.noneDisplay)
-        if !isCocciHistory {
-            result = handleAgeSplitting(content: result,item: item,index: index,items: [item],metrics: &metrics,simpleMetrics: &simpleMetrics,reportData: &reportData,lngId: lngId)
+        let layout = ReportConfigDiagnosticHandleAgeSplitting(
+            content: result,
+            item: item,
+            index: index,
+            items: [item]
+        )
+        if !dataVars.isCocciHistory {            
+            result = handleAgeSplitting(dataVars: layout,
+                                        metrics: &metrics,
+                                        simpleMetrics: &simpleMetrics,
+                                        reportData: &reportData,
+                                        lngId: dataVars.lngId)
+
         }
         return result
     }
 
     func handleAgeSplitting(
-        content: String,
-        item: [String: AnyObject],
-        index: Int,
-        items: [[String: AnyObject]],
+        dataVars:ReportConfigDiagnosticHandleAgeSplitting,
         metrics: inout [String: Metric],
         simpleMetrics: inout [String: Float],
         reportData: inout ReportData,
         lngId: Int
     ) -> String {
-        var result = content
-        let meanAgeIs = item["meanAge"]?.intValue ?? 0
+        var result = dataVars.content
+        let meanAgeIs = dataVars.item["meanAge"]?.intValue ?? 0
         let ageRanges = [
             (0...13, "01 - 13 Days"),
             (14...24, "14 - 24 Days"),
@@ -362,18 +355,13 @@ class ReportComposerDaignostic: NSObject {
         ]
         
         let shouldSplit = ageRanges.contains { range, _ in
-            range.contains(meanAgeIs) && (index == items.count - 1 || items[index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
+            range.contains(meanAgeIs) && (dataVars.index == dataVars.items.count - 1 || dataVars.items[dataVars.index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
         }
         
-        if shouldSplit || index == items.count - 1 {
+        if shouldSplit || dataVars.index == dataVars.items.count - 1 {
             let ageLabel = ageRanges.first { $0.0.contains(meanAgeIs) }?.1 ?? "Unknown"
-
-            result = result
-                  .replacingOccurrences(of: Constants.complexTotal, with: ageLabel)
-                  .replacingOccurrences(of: displayStr, with: "")
             
-            // Replace totals
-            result = replaceTotals(
+            let result = replaceTotals(
                 content: result,
                 metrics: metrics,
                 simpleMetrics: simpleMetrics,
@@ -406,10 +394,7 @@ class ReportComposerDaignostic: NSObject {
         template: String,
         lngId: Int,
         isCocciHistory: Bool,
-        birdsMarginHistory: String,
-        birdsMarginSummary: String,
-        ageMarginHistory: String,
-        ageMarginSummary: String
+        layout:ReportLayoutConfigProcessItems
     ) -> String {
         guard let content = try? String(contentsOfFile: template, encoding: .utf8) else { return "" }
         var result = content

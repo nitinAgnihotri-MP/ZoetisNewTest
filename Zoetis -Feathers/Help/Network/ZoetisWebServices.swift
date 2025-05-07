@@ -617,11 +617,11 @@ extension ZoetisWebServices {
     
     
     func sendPostDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(endPoint: EndPoint.postAddAttachmentDetails.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.postAddAttachmentDetails.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendPostDataToServerVaccination(controller: UIViewController, parameters: JSONDictionary,url:String,  completion: @escaping CompletionBlock) {
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
  
     func sendAssessmentStatusTOWeb(controller: UIViewController, parameters: JSONDictionary,  completion: @escaping CompletionBlock) {
@@ -632,7 +632,7 @@ extension ZoetisWebServices {
         let AppVersion = parameters["appVersion"] as? String ?? ""
         
         let url = EndPoint.postUpdateStatus.latestUrl + assesId + "&saveType=" + String(saveType) + "&userId=" + String(userId) + "&appVersion=" + AppVersion
-        postRequest(endPoint: url , controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url , controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     
@@ -641,37 +641,37 @@ extension ZoetisWebServices {
         let assId = parameters["assessmentId"] as? String ?? ""
         let sType = parameters["saveType"] as? Int ?? 0
         let urls = EndPoint.postUpdateStatus.latestUrl + assId + "&userId=\(UserContext.sharedInstance.userDetailsObj?.userId ?? "")" + "&saveType=\(sType)" + "&appVersion=\(Bundle.main.versionNumber)"
-        postRequest(endPoint: urls, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: urls, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendFCMTokenDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
-        postRequest(endPoint: Constants.Api.fcmUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: Constants.Api.fcmUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     
     func sendScoresDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         print("scccccccoooooooo",parameters)
-        postRequest(endPoint: EndPoint.postAddScores.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.postAddScores.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendMultipleImagesBase64ToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(endPoint: EndPoint.postImagesBase64.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.postImagesBase64.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     
     func sendAddDayOfAgeAndInvoject(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(endPoint: EndPoint.postAddDayOfAgeAndInvoject.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.postAddDayOfAgeAndInvoject.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendExtendedMicroToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
    //     print("Extended Micro ",parameters)
-        postRequest(endPoint: EndPoint.postExtendedMicro.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.postExtendedMicro.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func submitFinalStatusOfAssessmentToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
    //     print("Extended Micro ",parameters)
-        postRequest(endPoint: EndPoint.finalAssessmentStatus.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: EndPoint.finalAssessmentStatus.latestUrl, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     
@@ -829,13 +829,13 @@ extension ZoetisWebServices {
     
     func postStartNewAssessmentDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.postSNADetailsPVE.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
         
     }
     
     func postScoreDetailsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.postScoreDetailsPVE.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
         
     }
     
@@ -852,7 +852,7 @@ extension ZoetisWebServices {
         {
             
         }
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
         
     }
     
@@ -930,7 +930,7 @@ extension ZoetisWebServices {
         }else{
             url = EndPoint.syncFeathurePulp.latestUrl
         }
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func getAllHatcherySitesForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -1080,7 +1080,7 @@ extension ZoetisWebServices {
         
         let Id = UserDefaults.standard.value(forKey: "Id") as! Int
         let url = EndPoint.getChickenAndTurkeyComplexByUserId.latestUrl + "\(Id)"
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func getSalesRepresentativeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1154,12 +1154,12 @@ extension ZoetisWebServices {
     
     func getBirdSizeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getBirdSizeTurkey.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func getTermConditionResponceResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.termAndCondtion.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     func getBirdBreedChickenAndTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1199,7 +1199,7 @@ extension ZoetisWebServices {
     
     func getFarmListTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getFarmListTurkey.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
     
     
@@ -1247,7 +1247,7 @@ extension ZoetisWebServices {
 
     func getFeedProgramResponceResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.postFeedProgramToServer.latestUrl
-        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest((endPoint: url, controller: controller), parameters: parameters, headers: [:], completion: completion)
     }
 
     
@@ -1297,13 +1297,13 @@ extension ZoetisWebServices {
         }
     }
     
-    func postRequest(shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
-        viewController = controller
+    func postRequest(shouldErrorRequired: Bool = false, _ dataVar:(String,UIViewController), parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
+        viewController = dataVar.1
         
-        ZoetisApiManager.POST(endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
+        ZoetisApiManager.POST(endPoint: dataVar.0, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
-            print("error in api with End Point -- " , endPoint)
+            print("error in api with End Point -- " , dataVar.0)
             
             // Directly call completion, no need for the ternary operator
             completion(JSON([:]), error)

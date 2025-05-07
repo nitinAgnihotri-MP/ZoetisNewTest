@@ -1491,11 +1491,11 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let measure = obsObj.value(forKey: "Measure") as! String
             let quickLink = obsObj.value(forKey: "DefaultQLink")
             let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
-            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, quickLink: quickLink, sessionId: sessionId, languageId: languageId, refId: refId)
+            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, (quickLink, sessionId, languageId, refId))
         }
     }
 
-    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, quickLink: Any?, sessionId: Int, languageId: NSNumber, refId: NSNumber) {
+    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, _ dataVar:(Any?,Int,NSNumber,NSNumber)) {
         guard let birdArr = birdArr as? NSObject else { return }
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
@@ -1516,11 +1516,11 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 obsPoint: chkKey1!,
                 obsId: obsId,
                 measure: measure,
-                quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
-                necId: sessionId as NSNumber,
+                quickLink: (dataVar.0! as AnyObject).integerValue! as NSNumber,
+                necId: dataVar.1 as NSNumber,
                 isSync: false,
-                lngId: languageId,
-                refId: refId,
+                lngId: dataVar.2,
+                refId: dataVar.3,
                 actualText: chkKey3
             )
         }

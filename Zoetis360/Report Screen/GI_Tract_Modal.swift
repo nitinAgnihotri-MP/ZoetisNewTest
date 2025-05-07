@@ -903,21 +903,29 @@ class GI_Tract_Modal: NSObject {
         }
     }
     
-    fileprivate func handleEntriesMeanUpdatedData(_ aArray: NSArray, _ j: Int, _ enterties: inout Float, _ enterties_Mean: inout Float, _ enterties_Updated: inout Float, _ litter_Eater: inout Float, _ proventriculitis: inout Float, _ proventriculitis_Mean: inout Float, _ proventriculitis_Updated: inout Float) {
-        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 32 {
-            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-            enterties=enterties+(value.floatValue > 0 ? 1 : 0)
+    fileprivate func handleEntriesMeanUpdatedData(_ dataVar: (NSArray,Int, Float),
+                                                  _ enterties_Mean: inout Float,
+                                                  _ enterties_Updated: inout Float,
+                                                  _ litter_Eater: inout Float,
+                                                  _ proventriculitis: inout Float,
+                                                  _ proventriculitis_Mean: inout Float,
+                                                  _ proventriculitis_Updated: inout Float) {
+        var intV = dataVar.1
+        var floatV = dataVar.2
+        if (dataVar.0.object(at: intV) as AnyObject).value(forKey: "refId") as! NSNumber == 32 {
+            let value = (dataVar.0.object(at: intV) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            floatV = floatV + (value.floatValue > 0 ? 1 : 0)
             enterties_Mean = enterties_Mean + value.floatValue
             if value.floatValue > 0 {
                 enterties_Updated += 1
             }
         }
-        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 31 {
-            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+        if (dataVar.0.object(at: intV) as AnyObject).value(forKey: "refId") as! NSNumber == 31 {
+            let value = (dataVar.0.object(at: intV) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
             litter_Eater=litter_Eater+(value.floatValue > 0 ? 1 : 0)
         }
-        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 28 {
-            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+        if (dataVar.0.object(at: intV) as AnyObject).value(forKey: "refId") as! NSNumber == 28 {
+            let value = (dataVar.0.object(at: intV) as AnyObject).value(forKey: "obsPoint") as! NSNumber
             proventriculitis=proventriculitis+(value.floatValue > 0 ? 1 : 0)
             proventriculitis_Mean = proventriculitis_Mean + value.floatValue
             if value.floatValue > 0 {
@@ -960,92 +968,92 @@ class GI_Tract_Modal: NSObject {
         }
     }
     
-    fileprivate func handleStageAPIDataParams(_ lngId: Int, _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
-        if lngId == 1 {
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1952 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+    fileprivate func handleStageAPIDataParams(_ dataVar:(Int,NSArray), _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if dataVar.0 == 1 {
+            if (dataVar.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1952 {
+                let value = (dataVar.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Pericarditis = Pericarditis+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1956 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
+            if (dataVar.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1956 {
+                let value = (dataVar.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+                Septicemia = Septicemia+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1957 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataVar.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1957 {
+                let value = (dataVar.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
             }
             
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1955 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataVar.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1955 {
+                let value = (dataVar.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
             }
             
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1960 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataVar.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1960 {
+                let value = (dataVar.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
             }
         }
     }
     
-    fileprivate func handleDevAPIDataParams(_ lngId: Int, _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
-        if lngId == 1 {
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1870 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+    fileprivate func handleDevAPIDataParams(_ dataArr:(Int,NSArray), _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if dataArr.0 == 1 {
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1870 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Pericarditis = Pericarditis+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1874 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1874 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1875 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1875 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
             }
             
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1873 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1873 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1878 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1878 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
             }
         }
     }
     
-    fileprivate func handleElseCaseAPIDataParams(_ lngId: Int, _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
-        if lngId == 1 {
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2030 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+    fileprivate func handleElseCaseAPIDataParams(_ dataArr:(Int,NSArray), _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if dataArr.0 == 1 {
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2030 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Pericarditis = Pericarditis+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2034 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2034 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2035 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2035 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
             }
             
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
             }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2037 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            if (dataArr.1.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2037 {
+                let value = (dataArr.1.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
                 Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
             }
         }
     }
     
-    fileprivate func handleDataAsPerEnvioronments(_ environmentIs: String, _ lngId: Int, _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
-        if environmentIs.contains("stageapi") {
-            handleStageAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
-        } else if environmentIs.contains("devapi") {
-            handleDevAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+    fileprivate func handleDataAsPerEnvioronments(_ dataVar:(String,Int), _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if dataVar.0.contains("stageapi") {
+            handleStageAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+        } else if dataVar.0.contains("devapi") {
+            handleDevAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
         } else {
-            handleElseCaseAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+            handleElseCaseAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
         }
     }
     
@@ -1120,10 +1128,10 @@ class GI_Tract_Modal: NSObject {
                 handleSynovitisBursaSizeData(aArray, j, &Synovitis, &Bursa_Size)
                 handleIpAirSacData(aArray, j, &IP, &air_Sac, &air_Sac_Mean, &air_Sac_Updated)
                 handleRetainedYolkFeedPassageOtherData(aArray, j, &retained_Yolk, &feed_Passage, &gizzard_Erosions, &gizzard_Erosions_Mean, &gizzard_Erosions_Updated)
-                handleEntriesMeanUpdatedData(aArray, j, &enterties, &enterties_Mean, &enterties_Updated, &litter_Eater, &proventriculitis, &proventriculitis_Mean, &proventriculitis_Updated)
+                handleEntriesMeanUpdatedData((aArray,j,enterties), &enterties_Mean, &enterties_Updated, &litter_Eater, &proventriculitis, &proventriculitis_Mean, &proventriculitis_Updated)
                 handleRoundWormsTapeWormsData(aArray, j, &roundworms, &tapeworms, &Intestinal_Content, &Thin_Intestine)
                 handleMuscularLesionScoreData(aArray, j, &Muscular_Hemorrhages, &Bursa_Lesion_Score, &Bursa_Lesion_Score_Mean, &Bursa_Lesion_Score_Updated)
-                handleDataAsPerEnvioronments(environmentIs, lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+                handleDataAsPerEnvioronments((environmentIs, lngId), aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
             }
         }
         

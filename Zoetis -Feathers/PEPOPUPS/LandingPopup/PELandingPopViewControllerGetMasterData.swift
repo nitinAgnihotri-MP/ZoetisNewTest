@@ -603,10 +603,11 @@ extension PELandingPoupViewController {
         inVoDataNew.id = id
     }
     
-    fileprivate func saveSubDateOfAgeDataInDB(_ inoDic: Any, _ serverAssessmentId: Int, _ sanitationEmbrexValue: Bool, _ allAssesmentArr: NSArray) {
+    //IdenticleImplementation of func: draftSaveDAyOfAgeSubDatainDB()
+    fileprivate func saveDraftSubDateOfAgeDataInDB(_ inoDic: Any, _ serverAssessmentId: Int, _ sanitationEmbrexValue: Bool, _ allAssesmentArr: NSArray) {
         let data = processDayOfAgeSubcutaneousData(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
         let id = self.saveDOAInPEModule(inovojectData: data, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(), fromDoaS: true)
-          data.id = id
+        data.id = id
     }
     
     fileprivate func saveDraftedinovojectData(_ inoDic: Any, _ allAssesmentArr: NSArray) {
@@ -744,17 +745,6 @@ extension PELandingPoupViewController {
         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: pe, fromDoaS: true)
 
         return InovojectData(id: 0, vaccineMan: VManufacturerName, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg)
-    }
-
-    
-    
-
-    fileprivate func draftSaveDAyOfAgeSubDatainDB(_ inoDic: Any, _ serverAssessmentId: Int, _ sanitationEmbrexValue: Bool, _ allAssesmentArr: NSArray) {
-   
-        let data = processDayOfAgeSubcutaneousData(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
-         let id = self.saveDOAInPEModule(inovojectData: data, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(), fromDoaS: true)
-         data.id = id
-        
     }
 
     fileprivate func handleAssessmentScoresPostingDataForLoopUpdateLocalDB(_ assessmentScoresPostingData: [[String : Any]], _ filterScoreData: inout [[String : Any]]) {
@@ -1022,7 +1012,7 @@ extension PELandingPoupViewController {
         }
         
         for inoDic in DayAgeSubcutaneousDetailsPostingData {
-            draftSaveDAyOfAgeSubDatainDB(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
+            saveDraftSubDateOfAgeDataInDB(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
         }
     }
     
@@ -1264,7 +1254,7 @@ extension PELandingPoupViewController {
             }
             let DayAgeSubcutaneousDetailsPostingData = objDic["DayAgeSubcutaneousDetailsPostingData"] as? [Any] ?? []
             for inoDic in DayAgeSubcutaneousDetailsPostingData {
-                saveSubDateOfAgeDataInDB(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
+                saveDraftSubDateOfAgeDataInDB(inoDic, serverAssessmentId, sanitationEmbrexValue, allAssesmentArr)
             }
             handleVaccineMixerObservedPostingDataValidations(VaccineMixerObservedPostingData)
             let VaccineMicroSamplesPostingData = objDic["VaccineMicroSamplesPostingData"] as? [Any] ?? []

@@ -361,19 +361,20 @@ class SingleSyncData: NSObject {
             }
         }
     }
-    
-    fileprivate func handleAllCocciControlAndOtherVariable(_ allCocciControl: NSArray, _ fetchAntibotic: NSArray, _ fetchAlternative: NSArray, _ fetchMyBinde: NSArray, _ mainDict: NSMutableDictionary, _ sessionId: NSNumber, _ tempArrTime: NSMutableArray, _ i: Int, _ mainFeeds: NSMutableArray, _ sessionArray: NSMutableArray, _ sessionDictMain: inout NSMutableDictionary) {
-        if (allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0) {
+    ///DataVar1 = allCocciControl: NSArray, _ fetchAntibotic: NSArray, _ fetchAlternative: NSArray
+    ///DataVar2 = _ fetchMyBinde: NSArray, _ mainDict: NSMutableDictionary, _ sessionId: NSNumber
+    fileprivate func handleAllCocciControlAndOtherVariable(_ dataVar: (NSArray,NSArray,NSArray), _ dataVar2: (NSArray,NSMutableDictionary,NSNumber), _ tempArrTime: NSMutableArray, _ i: Int, _ mainFeeds: NSMutableArray, _ sessionArray: NSMutableArray, _ sessionDictMain: inout NSMutableDictionary) {
+        if (dataVar.0.count > 0 || dataVar.1.count > 0 || dataVar.2.count > 0 || dataVar2.0.count > 0) {
             
-            mainDict.setValue(sessionId, forKey: "sessionId")
+            dataVar2.1.setValue(dataVar2.2, forKey: "sessionId")
             let acttimeStamp = tempArrTime.object(at: i)
             var fullData = acttimeStamp as! String
-            mainDict.setValue(fullData, forKey: "deviceSessionId")
+            dataVar2.1.setValue(fullData, forKey: "deviceSessionId")
             let langId =  UserDefaults.standard.integer(forKey: "lngId")
             
             let id = UserDefaults.standard.integer(forKey: "Id")
-            mainDict.setValue(id, forKey: "UserId")
-            mainDict.setValue(false, forKey: "finalized")
+            dataVar2.1.setValue(id, forKey: "UserId")
+            dataVar2.1.setValue(false, forKey: "finalized")
             
             let sessionDict: NSMutableDictionary = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
             sessionArray.add(sessionDict)
@@ -437,7 +438,7 @@ class SingleSyncData: NSObject {
             index = 0
             handleFetchMyBindeFeedProgram(fetchMyBinde, &dataSet, &FinalArray1, mainFeeds, &index, &feeds)
             
-            handleAllCocciControlAndOtherVariable(allCocciControl, fetchAntibotic, fetchAlternative, fetchMyBinde, mainDict, sessionId, tempArrTime, i, mainFeeds, sessionArray, &sessionDictMain)
+            handleAllCocciControlAndOtherVariable((allCocciControl, fetchAntibotic, fetchAlternative), (fetchMyBinde, mainDict, sessionId), tempArrTime, i, mainFeeds, sessionArray, &sessionDictMain)
         }
         
         do {

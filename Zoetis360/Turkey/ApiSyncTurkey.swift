@@ -1575,23 +1575,32 @@ class ApiSyncTurkey: NSObject {
                 return
             }
             
-            self.updateSyncOnCocciControl(pId: pId) { success in
-                guard success else {
+            self.updateSyncOnCocciControl(pId: pId) { cocciSuccess in
+                guard cocciSuccess else {
                     completion(false)
                     return
                 }
-                
-                self.updateSyncOnHatcheryVac(pId: pId) { success in
-                    guard success else {
-                        completion(false)
-                        return
-                    }
-                    self.continueSyncUpdate(pId: Int(pId), cNecArr: cNecArr as! [Any], completion: completion)
-                }
+                self.handleHatcherySyncAndContinue(pId: pId, cNecArr: cNecArr, completion: completion)
             }
         }
     }
-
+    
+    private func handleHatcherySyncAndContinue(pId: NSNumber, cNecArr: Any, completion: @escaping (Bool) -> Void) {
+        self.updateSyncOnHatcheryVac(pId: pId) { hatcherySuccess in
+            guard hatcherySuccess else {
+                completion(false)
+                return
+            }
+            
+            guard let safeCnecArr = cNecArr as? [Any] else {
+                completion(false)
+                return
+            }
+            
+            self.continueSyncUpdate(pId: Int(truncating: pId), cNecArr: safeCnecArr, completion: completion)
+        }
+    }
+    
     private func continueSyncUpdate(pId: Int, cNecArr: [Any], completion: @escaping (Bool) -> Void) {
         self.handleUpdateisSyncOnPostingSessionTurkey(pId: pId as NSNumber, cNecArr: cNecArr as NSArray) { status in
             completion(status)

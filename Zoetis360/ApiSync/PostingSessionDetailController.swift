@@ -1777,10 +1777,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 farmName: farmName,
                 obsId: obsId,
                 measure: measure,
-                quickLink: quickLink,
-                sessionId: sessionId,
-                languageId: languageId,
-                refId: refId
+                dataVar: GITractModelDataVars(quickLink: quickLink, sessionId: sessionId, languageId: languageId, refId: refId)
             )
         }
     }
@@ -1813,10 +1810,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         farmName: String,
         obsId: Int,
         measure: String,
-        quickLink: Any,
-        sessionId: Int,
-        languageId: NSNumber,
-        refId: NSNumber
+        dataVar: GITractModelDataVars
     ) {
         for m in 0..<10 {
             let key = "BirdNumber\(m + 1)"
@@ -1835,12 +1829,12 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 index: m,
                 obsId: obsId,
                 measure: measure,
-                quickLink: ((quickLink as AnyObject).integerValue ?? 0) as NSNumber,
-                necId: NSNumber(value: sessionId),
+                quickLink: ((dataVar.quickLink as AnyObject).integerValue ?? 0) as NSNumber,
+                necId: NSNumber(value: dataVar.sessionId),
                 isSync: false,
                 necIdSingle: self.postingId,
-                lngId: languageId,
-                refId: refId,
+                lngId: dataVar.languageId,
+                refId: dataVar.refId,
                 actualText: birdText
             )
 

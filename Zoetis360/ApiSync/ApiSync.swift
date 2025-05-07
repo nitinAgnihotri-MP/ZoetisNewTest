@@ -901,28 +901,7 @@ class ApiSync: NSObject {
 		dict.setValue(farmDetails, forKey: NecropsyConstants.farmDetailsKey)
 		dict.setValue(UserDefaults.standard.integer(forKey: NecropsyConstants.userIdKey), forKey: "UserId")
 		return dict
-	}
-	
-    private func createFarmDict(from input: chickenCoreDataHandlerModels.chickenFarmInputData) -> NSMutableDictionary {
-        let dict = NSMutableDictionary()
-        dict.setValue(input.birdDetails, forKey: NecropsyConstants.birdDetailsKey)
-        dict.setValue(input.farmName, forKey: "farmName")
-        dict.setValue(input.houseNo, forKey: "houseNo")
-        dict.setValue(input.noOfBirds, forKey: "birds")
-        dict.setValue(input.farmId, forKey: "SortId")
-        dict.setValue(input.imageId, forKey: "ImgId")
-        dict.setValue(input.feedProgram, forKey: "feedProgram")
-        dict.setValue(input.feedId, forKey: "DeviceFeedId")
-        dict.setValue(input.age, forKey: "age")
-        dict.setValue(input.customerId, forKey: "customerId")
-        dict.setValue(input.customerName, forKey: "customerName")
-        dict.setValue(input.sick, forKey: "sick")
-        dict.setValue(input.flockId, forKey: "flockId")
-        dict.setValue(input.complexDate, forKey: "ComplexDate")
-        return dict
-    }
-
-    
+	}    
 	
 	// MARK: - Server Communication
 	private func sendNecropsyDataToServer(_ data: NSMutableDictionary) {

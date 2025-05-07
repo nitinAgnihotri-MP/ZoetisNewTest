@@ -623,23 +623,23 @@ class JSONAny: Codable {
     
     static func encode(to container: inout KeyedEncodingContainer<JSONCodingKey>, dictionary: [String: Any]) throws {
         for (key, value) in dictionary {
-            let key = JSONCodingKey(stringValue: key)!
+            let key2 = JSONCodingKey(stringValue: key)!
             debugPrint(key)
             if let value = value as? Bool {
-                try container.encode(value, forKey: key)
+                try container.encode(value, forKey: key2)
             } else if let value = value as? Int64 {
-                try container.encode(value, forKey: key)
+                try container.encode(value, forKey: key2)
             } else if let value = value as? Double {
-                try container.encode(value, forKey: key)
+                try container.encode(value, forKey: key2)
             } else if let value = value as? String {
-                try container.encode(value, forKey: key)
+                try container.encode(value, forKey: key2)
             } else if value is JSONNull {
-                try container.encodeNil(forKey: key)
+                try container.encodeNil(forKey: key2)
             } else if let value = value as? [Any] {
-                var container = container.nestedUnkeyedContainer(forKey: key)
+                var container = container.nestedUnkeyedContainer(forKey: key2)
                 try encode(to: &container, array: value)
             } else if let value = value as? [String: Any] {
-                var container = container.nestedContainer(keyedBy: JSONCodingKey.self, forKey: key)
+                var container = container.nestedContainer(keyedBy: JSONCodingKey.self, forKey: key2)
                 try encode(to: &container, dictionary: value)
             } else {
                 throw encodingError(forValue: value, codingPath: container.codingPath)
