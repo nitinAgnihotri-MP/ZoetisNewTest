@@ -1,9 +1,9 @@
 import Foundation
 
+
 class GetSubmittedModuleAssessmentsDTO: Codable {
     var assessment2: JSONNull?
     var types: String?
-   // var types: Types?
     var locationPhone: JSONNull?
     var comments: String?
     var sequenceNo: Int?
@@ -25,17 +25,17 @@ class GetSubmittedModuleAssessmentsDTO: Codable {
         case id = "Id"
     }
 
-    init(assessment2: JSONNull?, types: String?, locationPhone: JSONNull?, comments: String?, sequenceNo: Int?, moduleCatID: Int?, recordID: Int?, assessment: String?, answer: Bool?, id: Int?) {
-        self.assessment2 = assessment2
-        self.types = types
-        self.locationPhone = locationPhone
-        self.comments = comments
-        self.sequenceNo = sequenceNo
-        self.moduleCatID = moduleCatID
-        self.recordID = recordID
-        self.assessment = assessment
-        self.answer = answer
-        self.id = id
+    init(config: CoreDataHandlerPEModels.SubmittedAssessmentConfig) {
+        self.assessment2 = config.assessment2
+        self.types = config.types
+        self.locationPhone = config.locationPhone
+        self.comments = config.comments
+        self.sequenceNo = config.sequenceNo
+        self.moduleCatID = config.moduleCatID
+        self.recordID = config.recordID
+        self.assessment = config.assessment
+        self.answer = config.answer
+        self.id = config.id
     }
 }
 

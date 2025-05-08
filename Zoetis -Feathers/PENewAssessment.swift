@@ -168,40 +168,35 @@ public class PECertificateData: NSObject {
     }
 }
 
-
 public class InovojectData: NSObject {
-    var id:Int?
+    var id: Int?
     var vaccineMan: String?
     var name: String?
-    
     var ampuleSize: String?
     var ampulePerBag: String?
-    var bagSizeType:String?
-    var dosage:String?
-    var dilute:String?
-    
-    var invoHatchAntibiotic:Int = 0
-    var invoHatchAntibioticText:String = ""
-    var invoProgramName:String = ""
-    var doaDilManOther:String = ""
-    
-    init(id:Int,vaccineMan:String,name:String,ampuleSize:String,ampulePerBag:String,bagSizeType:String,dosage:String,dilute:String, invoHatchAntibiotic:Int? = 0, invoHatchAntibioticText:String? = "", invoProgramName:String? = "",doaDilManOther:String? = ""){
-        self.id = id
-        self.vaccineMan = vaccineMan
-        self.name = name
-        self.ampuleSize = ampuleSize
-        self.ampulePerBag = ampulePerBag
-        self.bagSizeType = bagSizeType
-        self.dosage = dosage
-        self.dilute = dilute
-      
-        self.invoHatchAntibiotic = invoHatchAntibiotic ?? 0
-        self.invoHatchAntibioticText = invoHatchAntibioticText ?? ""
-        self.invoProgramName = invoProgramName ?? ""
-        self.doaDilManOther = doaDilManOther  ?? ""
+    var bagSizeType: String?
+    var dosage: String?
+    var dilute: String?
+    var invoHatchAntibiotic: Int = 0
+    var invoHatchAntibioticText: String = ""
+    var invoProgramName: String = ""
+    var doaDilManOther: String = ""
+
+    init(info: CoreDataHandlerPEModels.InovojectInfo) {
+        self.id = info.id
+        self.vaccineMan = info.vaccineMan
+        self.name = info.name
+        self.ampuleSize = info.ampuleSize
+        self.ampulePerBag = info.ampulePerBag
+        self.bagSizeType = info.bagSizeType
+        self.dosage = info.dosage
+        self.dilute = info.dilute
+        self.invoHatchAntibiotic = info.invoHatchAntibiotic ?? 0
+        self.invoHatchAntibioticText = info.invoHatchAntibioticText ?? ""
+        self.invoProgramName = info.invoProgramName ?? ""
+        self.doaDilManOther = info.doaDilManOther ?? ""
     }
 }
-
 
 public class PE_Refrigators: NSObject {
     var id: NSNumber?
@@ -231,31 +226,3 @@ public class PE_Refrigators: NSObject {
     }
 }
 
-
-
-
-/*
-public class PE_Refrigators: NSObject {
-    var id : NSNumber?
-    var labelText: String?
-    var rollOut: String?
-    var unit: String?
-    var value: Double?
-    var catID: NSNumber?
-    var isCheck: Bool?
-    var isNA: Bool?
-    var schAssmentId:Int?
-   
-    init(id:NSNumber,labelText:String,rollOut:String,unit:String,value:Double,catID:NSNumber,isCheck:Bool , isNA : Bool,schAssmentId : Int) {
-        self.id = id
-        self.labelText = labelText
-        self.rollOut = rollOut
-        self.unit = unit
-        self.value = value
-        self.catID = catID
-        self.isCheck = isCheck
-        self.isNA = isNA
-        self.schAssmentId = schAssmentId
-    }
-}
-*/

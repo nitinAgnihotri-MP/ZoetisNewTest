@@ -52,31 +52,32 @@ class GetSubmittedOperatorInfoDTO: Codable {
         case toDate = "ToDate"
     }
 
-    init(customerName: JSONNull?, languageName: String?, roles: [GetSubmittedRolesDTO]?, middleName: String?, certificateTypeList: [JSONAny]?, tshirtSize: String?, tshirtSizeID: Int?, certificateDate: JSONNull?, languageID: Int?, siteID: Int?, isSelected: Bool?, firstName: String?, lastName: String?, hatcheryName: JSONNull?, categoriesList: String?, fromDate: String?, signatureBase64: String?, operatorUniqueID: String?, customerID: Int?, signatureFilePath: String?, certificateName: JSONNull?, id: Int?, isRemoved: Bool?, signatureFileName: String?, toDate: JSONNull?) {
-        self.customerName = customerName
-        self.languageName = languageName
-        self.roles = roles
-        self.middleName = middleName
-        self.certificateTypeList = certificateTypeList
-        self.tshirtSize = tshirtSize
-        self.tshirtSizeID = tshirtSizeID
-        self.certificateDate = certificateDate
-        self.languageID = languageID
-        self.siteID = siteID
-        self.isSelected = isSelected
-        self.firstName = firstName
-        self.lastName = lastName
-        self.hatcheryName = hatcheryName
-        self.categoriesList = categoriesList
-        self.fromDate = fromDate
-        self.signatureBase64 = signatureBase64
-        self.operatorUniqueID = operatorUniqueID
-        self.customerID = customerID
-        self.signatureFilePath = signatureFilePath
-        self.certificateName = certificateName
-        self.id = id
-        self.isRemoved = isRemoved
-        self.signatureFileName = signatureFileName
-        self.toDate = toDate
+    // Refactored initializer using a dictionary
+    init(data: [String: Any]) {
+        self.customerName = data["CustomerName"] as? JSONNull
+        self.languageName = data["LanguageName"] as? String
+        self.roles = data["Roles"] as? [GetSubmittedRolesDTO]
+        self.middleName = data["MiddleName"] as? String
+        self.certificateTypeList = data["CertificateTypeList"] as? [JSONAny]
+        self.tshirtSize = data["TshirtSize"] as? String
+        self.tshirtSizeID = data["TshirtSizeId"] as? Int
+        self.certificateDate = data["CertificateDate"] as? JSONNull
+        self.languageID = data["LanguageId"] as? Int
+        self.siteID = data["SiteId"] as? Int
+        self.isSelected = data["IsSelected"] as? Bool
+        self.firstName = data["FirstName"] as? String
+        self.lastName = data["LastName"] as? String
+        self.hatcheryName = data["HatcheryName"] as? JSONNull
+        self.categoriesList = data["CategoriesList"] as? String
+        self.fromDate = data["FromDate"] as? String
+        self.signatureBase64 = data["SignatureBase64"] as? String
+        self.operatorUniqueID = data["OperatorUniqueId"] as? String
+        self.customerID = data["CustomerId"] as? Int
+        self.signatureFilePath = data["SignatureFilePath"] as? String
+        self.certificateName = data["CertificateName"] as? JSONNull
+        self.id = data["Id"] as? Int
+        self.isRemoved = data["IsRemoved"] as? Bool
+        self.signatureFileName = data["SignatureFileName"] as? String
+        self.toDate = data["ToDate"] as? JSONNull
     }
 }

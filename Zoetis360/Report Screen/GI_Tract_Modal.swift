@@ -338,67 +338,49 @@ class GI_Tract_Modal: NSObject {
             target += 1
         }
     }
-    fileprivate func handleDataParamsAndValidations( _ aArray: NSArray,
-                                                     _ j: Int,
-                                                     _ Foot_Pad_Lesions: inout Float,
-                                                     _ Scratched_Birds: inout Float,
-                                                     _ Corneal_Ulcers: Float,
-                                                     _ Femoral_Head_Necrosis: inout Float,
-                                                     _ Tibial_Dyschondroplasia: inout Float,
-                                                     _ Rickets: inout Float,
-                                                     _ Bone_Strength: inout Float,
-                                                     _ Synovitis: inout Float,
-                                                     _ Infectious_Process: inout Float,
-                                                     _ Breast_Myopathy: inout Float,
-                                                     _ Muscular_Hemorrhages: inout Float) {
-
-        guard let item = aArray[j] as? [String: Any],
-              let refId = item["refId"] as? Int else {
-            return
+    
+    fileprivate func handleDataParamsAndValidations(_ healthDataParams: GITractDataModels.HealthDataParams) -> GITractDataModels.HealthDataParams {
+        var updatedHealthDataParams = healthDataParams
+        let item = updatedHealthDataParams.aArray[updatedHealthDataParams.j] as? [String: Any]
+        
+        guard let item = item, let refId = item["refId"] as? Int else {
+            return updatedHealthDataParams
         }
-
+        
         let obsPoint = (item["obsPoint"] as? NSNumber)?.floatValue ?? 0
         let visibility = (item["objsVisibilty"] as? NSNumber)?.floatValue ?? 0
-
+        
+        // Matching refId with appropriate health data parameters
         switch refId {
-        case 1 where Foot_Pad_Lesions != NOT_EXIST:
-            increment(obsPoint, &Foot_Pad_Lesions)
-
-        case 2 where Scratched_Birds != NOT_EXIST:
-            increment(visibility, &Scratched_Birds)
-
-        case 3 where Corneal_Ulcers != NOT_EXIST:
-            increment(visibility, &Scratched_Birds) // Seems odd - likely a bug?
-
-        case 4 where Femoral_Head_Necrosis != NOT_EXIST:
-            increment(visibility, &Femoral_Head_Necrosis)
-
-        case 5 where Tibial_Dyschondroplasia != NOT_EXIST:
-            increment(obsPoint, &Tibial_Dyschondroplasia)
-
-        case 6 where Rickets != NOT_EXIST:
-            increment(visibility, &Rickets)
-
-        case 7 where Bone_Strength != NOT_EXIST:
-            increment(obsPoint, &Bone_Strength)
-
-        case 8 where Synovitis != NOT_EXIST:
-            increment(visibility, &Synovitis)
-
-        case 9 where Infectious_Process != NOT_EXIST:
-            increment(visibility, &Infectious_Process)
-
-        case 12 where Breast_Myopathy != NOT_EXIST:
-            increment(visibility, &Breast_Myopathy)
-
-        case 14 where Muscular_Hemorrhages != NOT_EXIST:
-            increment(visibility, &Muscular_Hemorrhages)
-
+        case 1 where updatedHealthDataParams.footPadLesions != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.footPadLesions += obsPoint
+        case 2 where updatedHealthDataParams.scratchedBirds != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.scratchedBirds += visibility
+        case 3 where updatedHealthDataParams.cornealUlcers != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.cornealUlcers += visibility // This looks odd - likely a bug
+        case 4 where updatedHealthDataParams.femoralHeadNecrosis != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.femoralHeadNecrosis += visibility
+        case 5 where updatedHealthDataParams.tibialDyschondroplasia != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.tibialDyschondroplasia += obsPoint
+        case 6 where updatedHealthDataParams.rickets != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.rickets += visibility
+        case 7 where updatedHealthDataParams.boneStrength != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.boneStrength += obsPoint
+        case 8 where updatedHealthDataParams.synovitis != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.synovitis += visibility
+        case 9 where updatedHealthDataParams.infectiousProcess != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.infectiousProcess += visibility
+        case 12 where updatedHealthDataParams.breastMyopathy != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.breastMyopathy += visibility
+        case 14 where updatedHealthDataParams.muscularHemorrhages != updatedHealthDataParams.notExistValue:
+            updatedHealthDataParams.muscularHemorrhages += visibility
         default:
             break
         }
+        
+        return updatedHealthDataParams
     }
-    
+
     func forSkeleton(_ aArray: NSArray, birdsCount: Float) {
         let preparedArray = NSMutableArray()
 
@@ -423,15 +405,30 @@ class GI_Tract_Modal: NSObject {
                 let entry = aArray.object(at: j) as? NSDictionary,
                 entry["catName"] as? String == "skeltaMuscular",
                 entry["lngId"] as? Int == Regions.languageID
-            else { continue }
-
-            handleDataParamsAndValidations(
-                aArray, j,
-                &footPadLesions, &scratchedBirds, cornealUlcers,
-                &femoralHeadNecrosis, &tibialDyschondroplasia, &rickets,
-                &boneStrength, &synovitis, &infectiousProcess,
-                &breastMyopathy, &muscularHemorrhages
+            else {
+                continue
+            }
+            
+            let healthDataParams = GITractDataModels.HealthDataParams(
+                aArray: aArray,
+                j: j,
+                footPadLesions: footPadLesions,
+                scratchedBirds: scratchedBirds,
+                cornealUlcers: cornealUlcers,
+                femoralHeadNecrosis: femoralHeadNecrosis,
+                tibialDyschondroplasia: tibialDyschondroplasia,
+                rickets: rickets,
+                boneStrength: boneStrength,
+                synovitis: synovitis,
+                infectiousProcess: infectiousProcess,
+                breastMyopathy: breastMyopathy,
+                muscularHemorrhages: muscularHemorrhages,
+                notExistValue: -1 // assuming NOT_EXIST value is -1
             )
+
+            // Call the function with the struct and get the updated struct back
+            let updatedHealthDataParams = handleDataParamsAndValidations(healthDataParams)
+            
         }
 
         // Append non-NOT_EXIST observations as percentage
@@ -1045,16 +1042,16 @@ class GI_Tract_Modal: NSObject {
         }
     }
     
-    fileprivate func handleDataAsPerEnvioronments(_ dataVar:(String,Int), _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
-        if dataVar.0.contains("stageapi") {
-            handleStageAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
-        } else if dataVar.0.contains("devapi") {
-            handleDevAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+    fileprivate func handleDataAsPerEnvioronments(_ data: inout GITractDataModels.EnvironmentData) {
+        if data.dataVar.0.contains("stageapi") {
+            handleStageAPIDataParams((data.dataVar.1, data.aArray), data.j, &data.pericarditis, &data.septicemia, &data.liverGranuloma, &data.activeBursa, &data.cellulitis)
+        } else if data.dataVar.0.contains("devapi") {
+            handleDevAPIDataParams((data.dataVar.1, data.aArray), data.j, &data.pericarditis, &data.septicemia, &data.liverGranuloma, &data.activeBursa, &data.cellulitis)
         } else {
-            handleElseCaseAPIDataParams((dataVar.1, aArray), j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+            handleElseCaseAPIDataParams((data.dataVar.1, data.aArray), data.j, &data.pericarditis, &data.septicemia, &data.liverGranuloma, &data.activeBursa, &data.cellulitis)
         }
     }
-    
+
     func allSummaryPDF(_ aArray : NSArray , birdsCount : Float)  {
         
         let preparedArray = NSMutableArray()
@@ -1129,7 +1126,21 @@ class GI_Tract_Modal: NSObject {
                 handleEntriesMeanUpdatedData((aArray,j,enterties), &enterties_Mean, &enterties_Updated, &litter_Eater, &proventriculitis, &proventriculitis_Mean, &proventriculitis_Updated)
                 handleRoundWormsTapeWormsData(aArray, j, &roundworms, &tapeworms, &Intestinal_Content, &Thin_Intestine)
                 handleMuscularLesionScoreData(aArray, j, &Muscular_Hemorrhages, &Bursa_Lesion_Score, &Bursa_Lesion_Score_Mean, &Bursa_Lesion_Score_Updated)
-                handleDataAsPerEnvioronments((environmentIs, lngId), aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+                
+                var data = GITractDataModels.EnvironmentData(
+                    dataVar: (environmentIs, lngId),
+                    aArray: aArray,
+                    j: j,
+                    pericarditis: Pericarditis,
+                    septicemia: Septicemia,
+                    liverGranuloma: Liver_Granuloma,
+                    activeBursa: Active_Bursa,
+                    cellulitis: Cellulitis
+                )
+
+                handleDataAsPerEnvioronments(&data)
+                
+                
             }
         }
         

@@ -3380,32 +3380,126 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             if i == 0 {
                 
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule:moleculeFeedType1MyCoxtin.text ?? ""  , dosage: myCoxtinStarterDosage.text ?? "", fromDays: myFromFirstTextField.text ?? "", toDays:myToFirstTextField.text ?? "", index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram:feedProgramTextField.text ?? "" ,formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeOne,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "" )
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init(  loginSessionId: 1,
+                                                                                    postingId: postingId as NSNumber,
+                                                                                    molecule: moleculeFeedType1MyCoxtin.text ?? "",
+                                                                                    dosage: myCoxtinStarterDosage.text ?? "",
+                                                                                    fromDays: myFromFirstTextField.text ?? "",
+                                                                                    toDays: myToFirstTextField.text ?? "",
+                                                                                    feedId: feedId as NSNumber,
+                                                                                    feedProgram: feedProgramTextField.text ?? "",
+                                                                                    formName: addFarmSelectLbl.text ?? "",
+                                                                                    isSync: true,
+                                                                                    feedType: feedTypeOne,
+                                                                                    cocoVacId: CocoiVacId,
+                                                                                    lngId: languageId as NSNumber,
+                                                                                    lblDate: lblDate.text ?? ""
+                )
                 
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)
             }
             else if i == 1 {
                 
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init(    loginSessionId: 1,
+                                                                                      postingId: postingId as NSNumber,
+                                                                                      molecule: moleculeFeedType2MyCoxtin.text ?? "",
+                                                                                      dosage: myCoxtinGrowerDosage.text ?? "",
+                                                                                      fromDays: myFromSecondTextField.text ?? "",
+                                                                                      toDays: myToSecondTextField.text ?? "",
+                                                                                      feedId: feedId as NSNumber,
+                                                                                      feedProgram: feedProgramTextField.text ?? "",
+                                                                                      formName: addFarmSelectLbl.text ?? "",
+                                                                                      isSync: true,
+                                                                                      feedType: feedTypeTwo,
+                                                                                      cocoVacId: CocoiVacId,
+                                                                                      lngId: languageId as NSNumber,
+                                                                                      lblDate: lblDate.text ?? ""
+                )
                 
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType2MyCoxtin.text ?? "", dosage: myCoxtinGrowerDosage.text ?? "", fromDays: myFromSecondTextField.text ?? "", toDays: myToSecondTextField.text ?? "", index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeTwo ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)
+                
                 
             }
             
             else if i == 2 {
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType3MyCoxtin.text ?? "", dosage: myCoxtinFinisherDosge.text ?? "", fromDays: myFromThirdTextField.text!, toDays: myToThirdTextField.text!, index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text!,formName: addFarmSelectLbl.text!,isSync : true,feedType: feedTypeThree,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "" )
+                
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init(loginSessionId: 1,
+                                                                                  postingId: postingId as NSNumber,
+                                                                                  molecule: moleculeFeedType3MyCoxtin.text ?? "",
+                                                                                  dosage: myCoxtinFinisherDosge.text ?? "",
+                                                                                  fromDays: myFromThirdTextField.text ?? "",
+                                                                                  toDays: myToThirdTextField.text ?? "",
+                                                                                  feedId: feedId as NSNumber,
+                                                                                  feedProgram: feedProgramTextField.text ?? "",
+                                                                                  formName: addFarmSelectLbl.text ?? "",
+                                                                                  isSync: true,
+                                                                                   feedType: feedTypeThree,
+                                                                                   cocoVacId: CocoiVacId,
+                                                                                   lngId: languageId as NSNumber,
+                                                                                   lblDate: lblDate.text ?? ""
+                )
+                
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)
+                
                 
             }
             else if i == 3 {
+                                
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init(  loginSessionId: 1,
+                                                                                    postingId: postingId as NSNumber,
+                                                                                    molecule: moleculeFeedType4MyCoxtin.text ?? "",
+                                                                                    dosage: myCoxtinWDDosage.text ?? "",
+                                                                                    fromDays: myFromFourTextField.text ?? "",
+                                                                                    toDays: myToFourTextField.text ?? "",
+                                                                                    feedId: feedId as NSNumber,
+                                                                                    feedProgram: feedProgramTextField.text ?? "",
+                                                                                    formName: addFarmSelectLbl.text ?? "",
+                                                                                    isSync: true,
+                                                                                    feedType: feedTypeFour,
+                                                                                    cocoVacId: CocoiVacId,
+                                                                                    lngId: languageId as NSNumber,
+                                                                                    lblDate: lblDate.text ?? ""
+                )
                 
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType4MyCoxtin.text ?? "", dosage: myCoxtinWDDosage.text ?? "", fromDays: myFromFourTextField.text ?? "", toDays: myToFourTextField.text ?? "", index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFour ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)
             }
             else if i == 4 {
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType5MyCoxtin.text ?? "", dosage: myCoxtin5DosageTextField.text ?? "", fromDays: from5TextFieldMycoxtin.text ?? "", toDays: to5TextFieldMycoxtin.text ?? "", index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeFive ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init( loginSessionId: 1,
+                                                                                   postingId: postingId as NSNumber,
+                                                                                   molecule: moleculeFeedType5MyCoxtin.text ?? "",
+                                                                                   dosage: myCoxtin5DosageTextField.text ?? "",
+                                                                                   fromDays: from5TextFieldMycoxtin.text ?? "",
+                                                                                   toDays: to5TextFieldMycoxtin.text ?? "",
+                                                                                   feedId: feedId as NSNumber,
+                                                                                   feedProgram: feedProgramTextField.text ?? "",
+                                                                                   formName: addFarmSelectLbl.text ?? "",
+                                                                                   isSync: true,
+                                                                                   feedType: feedTypeFive,
+                                                                                   cocoVacId: CocoiVacId,
+                                                                                   lngId: languageId as NSNumber,
+                                                                                   lblDate: lblDate.text ?? ""
+                )
                 
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)
                 
             }
             else if i == 5 {
-                
-                CoreDataHandler().saveMyCoxtinDatabase(1, postingId: postingId as NSNumber, molecule: moleculeFeedType6MyCoxtin.text ?? "", dosage: myCoxtin6DosageTextField.text ?? "", fromDays: from6TextFieldMycoxtin.text ?? "", toDays: to6TextFieldMycoxtin.text ?? "", index: i, dbArray: MyCoxtinBindersArray, feedId: feedId as NSNumber, feedProgram: feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync : true,feedType: feedTypeSix ,cocoVacId: CocoiVacId,lngId:languageId as NSNumber,lblDate: lblDate.text ?? "")
+                let input = chickenCoreDataHandlerModels.MyCoxtinBinderInput.init(    loginSessionId: 1,
+                                                                                      postingId: postingId as NSNumber,
+                                                                                      molecule: moleculeFeedType6MyCoxtin.text ?? "",
+                                                                                      dosage: myCoxtin6DosageTextField.text ?? "",
+                                                                                      fromDays: from6TextFieldMycoxtin.text ?? "",
+                                                                                      toDays: to6TextFieldMycoxtin.text ?? "",
+                                                                                      feedId: feedId as NSNumber,
+                                                                                      feedProgram: feedProgramTextField.text ?? "",
+                                                                                      formName: addFarmSelectLbl.text ?? "",
+                                                                                      isSync: true,
+                                                                                      feedType: feedTypeSix,
+                                                                                      cocoVacId: CocoiVacId,
+                                                                                      lngId: languageId as NSNumber,
+                                                                                      lblDate: lblDate.text ?? ""
+                )
+                CoreDataHandler().saveMyCoxtinDatabase(input: input, index: i, dbArray: MyCoxtinBindersArray)                
             }
         }
         completion (true)

@@ -1491,39 +1491,52 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let measure = obsObj.value(forKey: "Measure") as! String
             let quickLink = obsObj.value(forKey: "DefaultQLink")
             let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
-            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, (quickLink, sessionId, languageId, refId), index: l)
+            
+            let birdsData = chickenCoreDataHandlerModels.chickenBirdDataProcessing(
+                birdArr: birdArr,
+                   catName: catName,
+                   obsName: obsName,
+                   farmName: farmName,
+                   obsId: obsId,
+                   measure: measure,
+                   dataVar: (quickLink, sessionId, languageId, refId),
+                   index: l
+            )
+
+            processBirds(context: birdsData)
+            
         }
     }
-
-    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, _ dataVar:(Any?,Int,NSNumber,NSNumber),index:Int) {
-        guard let birdArr = birdArr as? NSObject else { return }
+    
+    private func processBirds(context: chickenCoreDataHandlerModels.chickenBirdDataProcessing) {
+        guard let birdArr = context.birdArr as? NSObject else { return }
         for m in 0..<10 {
             let keyStr = NSString(format: "BirdNumber%d", m+1)
-            let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
-            if chkKey3 == "NA"
-            {
+            let chkKey3 = birdArr.value(forKey: keyStr as String) as! String
+            if chkKey3 == "NA" {
                 break
             }
             let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
             let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
-            let catstr = mapCategoryName(catName)
+            let catstr = mapCategoryName(context.catName)
+
             let observation = SkeletalObservationData(
                 catName: catstr,
-                obsName: obsName,
-                formName: farmName,
+                obsName: context.obsName,
+                formName: context.farmName,
                 obsVisibility: chkKey!,
-                birdNo: (m+1) as NSNumber,
+                birdNo: NSNumber(value: m + 1),
                 obsPoint: chkKey1!,
-                obsId: obsId,
-                measure: measure,
-                quickLink: (dataVar.0! as AnyObject).integerValue! as NSNumber,
-                necId: dataVar.1 as NSNumber,
+                obsId: context.obsId,
+                measure: context.measure,
+                quickLink: (context.dataVar.0! as AnyObject).integerValue! as NSNumber,
+                necId: context.dataVar.1 as NSNumber,
                 isSync: false,
-                lngId: dataVar.2,
-                refId: dataVar.3,
+                lngId: context.dataVar.2,
+                refId: context.dataVar.3,
                 actualText: chkKey3
             )
-            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: index)
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(observation, index: context.index)
         }
     }
 

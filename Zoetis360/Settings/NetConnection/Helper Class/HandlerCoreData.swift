@@ -7786,7 +7786,105 @@ class CoreDataHandler : NSObject  {
         return AlternativeArray
         
     }
+        
+    func saveMyCoxtinDatabase(input: chickenCoreDataHandlerModels.MyCoxtinBinderInput, index: Int, dbArray: NSArray) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        MyCoxtinBindersArray = dbArray
+
+        if MyCoxtinBindersArray.count > 0 {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MyCotoxinBindersFeed")
+            fetchRequest.returnsObjectsAsFaults = false
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, input.feedId)
+
+            do {
+                let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+                if let fetched = fetchedResult, fetched.count > 0 {
+                    if fetched.count <= index {
+                        let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: managedContext)
+                        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                        person.setValue(input.loginSessionId, forKey: "loginSessionId")
+                        person.setValue(input.postingId, forKey: "postingId")
+                        person.setValue(input.molecule, forKey: "molecule")
+                        person.setValue(input.dosage, forKey: "dosage")
+                        person.setValue(input.fromDays, forKey: "fromDays")
+                        person.setValue(input.toDays, forKey: "toDays")
+                        person.setValue(input.feedId, forKey: "feedId")
+                        person.setValue(input.feedProgram, forKey: "feedProgram")
+                        person.setValue(input.formName, forKey: "formName")
+                        person.setValue(input.isSync, forKey: "isSync")
+                        person.setValue(input.feedType, forKey: "feedType")
+                        person.setValue(input.cocoVacId, forKey: "coccidiosisVaccineId")
+                        person.setValue(input.lngId, forKey: "lngId")
+                        person.setValue(input.lblDate, forKey: "feedDate")
+                        try? managedContext.save()
+                        cocciMyCoxtinBinders.append(person)
+                    } else if let objTable = fetched[index] as? MyCotoxinBindersFeed {
+                        objTable.setValue(input.loginSessionId, forKey: "loginSessionId")
+                        objTable.setValue(input.postingId, forKey: "postingId")
+                        objTable.setValue(input.molecule, forKey: "molecule")
+                        objTable.setValue(input.dosage, forKey: "dosage")
+                        objTable.setValue(input.fromDays, forKey: "fromDays")
+                        objTable.setValue(input.toDays, forKey: "toDays")
+                        objTable.setValue(input.feedId, forKey: "feedId")
+                        objTable.setValue(input.feedProgram, forKey: "feedProgram")
+                        objTable.setValue(input.formName, forKey: "formName")
+                        objTable.setValue(input.isSync, forKey: "isSync")
+                        objTable.setValue(input.feedType, forKey: "feedType")
+                        objTable.setValue(input.cocoVacId, forKey: "coccidiosisVaccineId")
+                        objTable.setValue(input.lngId, forKey: "lngId")
+                        objTable.setValue(input.lblDate, forKey: "feedDate")
+                        try? managedContext.save()
+                    }
+                } else {
+                    let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: managedContext)
+                    let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+                    person.setValue(input.loginSessionId, forKey: "loginSessionId")
+                    person.setValue(input.postingId, forKey: "postingId")
+                    person.setValue(input.molecule, forKey: "molecule")
+                    person.setValue(input.dosage, forKey: "dosage")
+                    person.setValue(input.fromDays, forKey: "fromDays")
+                    person.setValue(input.toDays, forKey: "toDays")
+                    person.setValue(input.feedId, forKey: "feedId")
+                    person.setValue(input.feedProgram, forKey: "feedProgram")
+                    person.setValue(input.formName, forKey: "formName")
+                    person.setValue(input.isSync, forKey: "isSync")
+                    person.setValue(input.feedType, forKey: "feedType")
+                    person.setValue(input.cocoVacId, forKey: "coccidiosisVaccineId")
+                    person.setValue(input.lngId, forKey: "lngId")
+                    person.setValue(input.lblDate, forKey: "feedDate")
+                    try? managedContext.save()
+                    cocciMyCoxtinBinders.append(person)
+                }
+            } catch {
+                print(appDelegateObj.testFuntion())
+            }
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(input.loginSessionId, forKey: "loginSessionId")
+            person.setValue(input.postingId, forKey: "postingId")
+            person.setValue(input.molecule, forKey: "molecule")
+            person.setValue(input.dosage, forKey: "dosage")
+            person.setValue(input.fromDays, forKey: "fromDays")
+            person.setValue(input.toDays, forKey: "toDays")
+            person.setValue(input.feedId, forKey: "feedId")
+            person.setValue(input.feedProgram, forKey: "feedProgram")
+            person.setValue(input.formName, forKey: "formName")
+            person.setValue(input.isSync, forKey: "isSync")
+            person.setValue(input.feedType, forKey: "feedType")
+            person.setValue(input.cocoVacId, forKey: "coccidiosisVaccineId")
+            person.setValue(input.lngId, forKey: "lngId")
+            person.setValue(input.lblDate, forKey: "feedDate")
+            try? managedContext.save()
+            cocciMyCoxtinBinders.append(person)
+        }
+    }
+
+
+
     
+    /*
     func saveMyCoxtinDatabase(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lblDate: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
@@ -7895,6 +7993,7 @@ class CoreDataHandler : NSObject  {
             cocciMyCoxtinBinders.append(person)
         }
     }
+    */
     /************************** Ge api for MycocxoBinder *********************************/
     func getDataFromMyCocotinBinder(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         

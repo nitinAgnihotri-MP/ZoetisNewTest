@@ -3329,8 +3329,21 @@ fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ ass
             }
             headerView.addCompletion =
             {[unowned self] ( error) in
+                                
+                let inovojectData = CoreDataHandlerPEModels.InovojectInfo(
+                       id: 0,
+                       vaccineMan: "",
+                       name: "",
+                       ampuleSize: "",
+                       ampulePerBag: "",
+                       bagSizeType: "",
+                       dosage: "",
+                       dilute: ""
+                                 
+                     )
+
+                let inVoData = InovojectData(info: inovojectData)
                 
-                let inVoData = InovojectData(id: 0,vaccineMan:"",name:"",ampuleSize:"",ampulePerBag:"",bagSizeType:"",dosage:"", dilute: "")
                 let id = self.saveInovojectInPEModule(inovojectData: inVoData)
                 inVoData.id = id
                 if self.inovojectData.count > 0{
@@ -3427,7 +3440,21 @@ fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ ass
                 return
             }
             
-            let inVoData = InovojectData(id: 0,vaccineMan:"",name:"",ampuleSize:"",ampulePerBag:"",bagSizeType:"",dosage:"", dilute: "")
+            
+            let inovojectData = CoreDataHandlerPEModels.InovojectInfo(
+                   id: 0,
+                   vaccineMan: "",
+                   name: "",
+                   ampuleSize: "",
+                   ampulePerBag: "",
+                   bagSizeType: "",
+                   dosage: "",
+                   dilute: ""
+                             
+                 )
+
+            let inVoData = InovojectData(info: inovojectData)
+            
             let id = self.saveDOAInPEModule(inovojectData: inVoData)
             inVoData.id = id
             self.dayOfAgeData.append(inVoData)
@@ -3562,7 +3589,22 @@ fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ ass
                 self.showtoast(message: "Please enter antibiotic")
                 return
             }
-            let inVoData = InovojectData(id: 0,vaccineMan:"",name:"",ampuleSize:"",ampulePerBag:"",bagSizeType:"",dosage:"", dilute: "")
+            
+            let inovojectData = CoreDataHandlerPEModels.InovojectInfo(
+                   id: 0,
+                   vaccineMan: "",
+                   name: "",
+                   ampuleSize: "",
+                   ampulePerBag: "",
+                   bagSizeType: "",
+                   dosage: "",
+                   dilute: ""
+                             
+                 )
+
+            let inVoData = InovojectData(info: inovojectData)
+            
+            
             let id = self.saveDOAInPEModule(inovojectData: inVoData,fromDoaS:true)
             inVoData.id = id
             self.dayOfAgeSData.append(inVoData)

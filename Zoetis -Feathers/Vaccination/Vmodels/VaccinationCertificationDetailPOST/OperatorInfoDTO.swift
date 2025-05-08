@@ -36,16 +36,17 @@ class ShippingAddressDTO: Codable {
         case pincode = "Pincode"
     }
 
-    init(fssName: String?, fssID: Int?, trainingID: Int?, id: Int?, city: String?, address2: String?, stateID: Int?, countryID: Int?, address1: String?, pincode: String?) {
-        self.fssName = fssName
-        self.fssID = fssID
-        self.trainingID = trainingID
-        self.id = id
-        self.city = city
-        self.address2 = address2
-        self.stateID = stateID
-        self.countryID = countryID
-        self.address1 = address1
-        self.pincode = pincode
+    init(config: TraningCertificationDataModels.ShippingAddressConfig) {
+        self.fssName = config.fssName
+        self.fssID = config.fssID
+        self.trainingID = config.trainingID
+        self.id = config.id
+        self.city = config.city
+        self.address2 = config.address2
+        self.stateID = config.stateID
+        self.countryID = config.countryID
+        self.address1 = config.address1
+        self.pincode = config.pincode
     }
 }
+

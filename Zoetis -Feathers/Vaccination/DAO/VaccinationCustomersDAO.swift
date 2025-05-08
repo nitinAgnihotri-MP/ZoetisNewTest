@@ -497,7 +497,23 @@ final  public class VaccinationCustomersDAO{
     }
     
     func fetchShippingInfo(fssId:Int , FsrId:Int = 0) -> ShippingAddressDTO? {
-        var shippingaddressDetailsInfo = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
+        
+        let config = TraningCertificationDataModels.ShippingAddressConfig(
+              fssName: "",
+               fssID: 0,
+               trainingID: 0,
+               id: 0,
+               city: "",
+               address2: "",
+               stateID: 0,
+               countryID: 0,
+               address1: "",
+               pincode: ""
+        )
+
+        let shippingaddressDetailsInfo = ShippingAddressDTO(config: config)
+        
+        
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
               managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
@@ -554,7 +570,24 @@ final  public class VaccinationCustomersDAO{
     }
     
     func fetchShippingInfoByTrainingId(trainingId:Int) -> ShippingAddressDTO? {
-        var shippingInfoByID = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
+        
+        let config = TraningCertificationDataModels.ShippingAddressConfig(
+              fssName: "",
+               fssID: 0,
+               trainingID: 0,
+               id: 0,
+               city: "",
+               address2: "",
+               stateID: 0,
+               countryID: 0,
+               address1: "",
+               pincode: ""
+        )
+
+        let shippingInfoByID = ShippingAddressDTO(config: config)
+        
+        
+        
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
               managedContext = appDelegate.managedObjectContext
         var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")

@@ -4608,9 +4608,28 @@ extension PEDashboardViewController{
             peNewAssessmentInProgress.micro = ""
             peNewAssessmentInProgress.residue = ""
             CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessmentInProgress, fromInvo: true)
-            let inVoDataNew = InovojectData(id: 0, vaccineMan: DiluentMfg, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg, invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation, invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-            let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-            inVoDataNew.id = id
+            
+            let info = CoreDataHandlerPEModels.InovojectInfo(
+                  id: 0,
+                  vaccineMan: DiluentMfg,
+                  name: VName,
+                  ampuleSize: AmpuleSizeStr,
+                  ampulePerBag: String(AmpulePerbag),
+                  bagSizeType: BagSizeType,
+                  dosage: Dosage,
+                  dilute: DiluentMfg,
+                  invoHatchAntibiotic: HatcheryAntibioticsIntVal,
+                  invoHatchAntibioticText: AntibioticInformation,
+                  invoProgramName: ProgramName,
+                  doaDilManOther: DiluentsMfgOtherName
+                          
+              )
+
+              let inovojectData = InovojectData(info: info)
+            
+            let id = self.saveInovojectInPEModule(inovojectData: inovojectData, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+            inovojectData.id = id
+            
         }
     }
 
@@ -4668,9 +4687,30 @@ extension PEDashboardViewController{
             peNewAssessmentInProgress.micro = ""
             peNewAssessmentInProgress.residue = ""
             CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessmentInProgress, fromInvo: true)
-            let inVoDataNew = InovojectData(id: 0, vaccineMan: DiluentMfg, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg, invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: "", invoProgramName: "", doaDilManOther: "")
-            let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-            inVoDataNew.id = id
+          
+            
+            let info = CoreDataHandlerPEModels.InovojectInfo(
+                    id: 0,
+                    vaccineMan: DiluentMfg,
+                    name: VName,
+                    ampuleSize: AmpuleSizeStr,
+                    ampulePerBag: String(AmpulePerbag),
+                    bagSizeType: BagSizeType,
+                    dosage: Dosage,
+                    dilute: DiluentMfg,
+                    invoHatchAntibiotic: HatcheryAntibioticsIntVal,
+                    invoHatchAntibioticText: "",
+                    invoProgramName: "",
+                    doaDilManOther: ""
+            )
+
+            let inovojectData = InovojectData(info: info)
+            
+            let id = self.saveInovojectInPEModule(inovojectData: inovojectData, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+            inovojectData.id = id
+            
+
+            
         }
     }
     // MARK: - Handle PE Posting Assessment images List API Responce

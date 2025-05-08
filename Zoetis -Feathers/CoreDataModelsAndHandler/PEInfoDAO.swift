@@ -83,46 +83,6 @@ class PEInfoDAO {
         }
     }
 
-    
-
-    
-/*
-    func saveData(userId:String, isExtendedPE:Bool, assessmentId:String, date:Date?, override:Bool = true, subcutaneousTxt:String? = "", dayOfAgeTxt:String? = "", hasChlorineStrips:Bool = false, isAutomaticFail:Bool = false) {
-        let vaccinationCertificationArr = fetchInfoMoObj(userId: userId, assessmentId: assessmentId)
-        if vaccinationCertificationArr.count > 0 {
-            if override{
-                let obj = vaccinationCertificationArr[0]
-                obj.subcutaneousAntibioticTxt = subcutaneousTxt
-                obj.dayOfAgeTxtAntibiotic = dayOfAgeTxt
-                obj.isExtendedPE = isExtendedPE as NSNumber
-                obj.hasChlorineStrips = hasChlorineStrips as NSNumber
-                obj.isAutomaticFail = isAutomaticFail as NSNumber
-                if date != nil{
-                    obj.submittedDate = date
-                }
-            }else{
-                
-            }
-        } else{
-            let moObj = getPlateTypeObj()
-            moObj.subcutaneousAntibioticTxt = subcutaneousTxt
-            moObj.dayOfAgeTxtAntibiotic = dayOfAgeTxt
-            moObj.isExtendedPE = isExtendedPE as NSNumber
-            moObj.assesmentId = assessmentId
-            moObj.userId = userId
-            moObj.submittedDate = date
-            moObj.hasChlorineStrips = hasChlorineStrips as NSNumber
-            moObj.isAutomaticFail = isAutomaticFail as NSNumber
-        }
-        
-        do{
-            try managedContext.save()
-        } catch{
-            print("Eror while saving info object")
-            managedContext.rollback()
-        }
-    }
-*/
     func fetchInfoMoObj(userId:String, assessmentId:String)-> [PE_Info]{
         var vaccinationCertificationArr = [PE_Info]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Info")

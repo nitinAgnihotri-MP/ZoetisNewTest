@@ -958,6 +958,41 @@ struct CoreDataHandlerPEModels
         var schAssmentId: Int
     }
     
+    struct InovojectInfo {
+        
+           var id: Int?
+          var vaccineMan: String?
+          var name: String?
+          
+          var ampuleSize: String?
+          var ampulePerBag: String?
+          var bagSizeType: String?
+          var dosage: String?
+          var dilute: String?
+          
+          var invoHatchAntibiotic: Int?
+          var invoHatchAntibioticText: String?
+          var invoProgramName: String?
+          var doaDilManOther: String?
+        
+    }
+
+    struct SubmittedAssessmentConfig {
+        var assessment2: JSONNull?
+        var types: String?
+        var locationPhone: JSONNull?
+        var comments: String?
+        var sequenceNo: Int?
+        var moduleCatID: Int?
+        var recordID: Int?
+        var assessment: String?
+        var answer: Bool?
+        var id: Int?
+    }
+
+    
+    
+    
 }
 
 
@@ -1992,6 +2027,36 @@ struct chickenCoreDataHandlerModels {
         let birdDetails: NSMutableArray
     }
 
+    struct chickenBirdDataProcessing {
+        let birdArr: Any?
+        let catName: String
+        let obsName: String
+        let farmName: String
+        let obsId: Int
+        let measure: String
+        let dataVar: (Any?, Int, NSNumber, NSNumber)
+        let index: Int
+    }
+    
+    
+    struct MyCoxtinBinderInput {
+        let loginSessionId: NSNumber
+        let postingId: NSNumber
+        let molecule: String
+        let dosage: String
+        let fromDays: String
+        let toDays: String
+        let feedId: NSNumber
+        let feedProgram: String
+        let formName: String
+        let isSync: Bool
+        let feedType: String
+        let cocoVacId: NSNumber
+        let lngId: NSNumber
+        let lblDate: String
+    }
+
+
 
 }
 
@@ -2161,4 +2226,78 @@ struct GITractModelDataVars {
     let sessionId: Int
     let languageId: NSNumber
     let refId: NSNumber
+}
+
+
+struct GITractDataModels {
+    
+    struct EnvironmentData {
+        var dataVar: (String, Int)
+        var aArray: NSArray
+        var j: Int
+        var pericarditis: Float
+        var septicemia: Float
+        var liverGranuloma: Float
+        var activeBursa: Float
+        var cellulitis: Float
+    }
+    
+    
+    struct HealthDataParams {
+        var aArray: NSArray
+        var j: Int
+        var footPadLesions: Float
+        var scratchedBirds: Float
+        var cornealUlcers: Float
+        var femoralHeadNecrosis: Float
+        var tibialDyschondroplasia: Float
+        var rickets: Float
+        var boneStrength: Float
+        var synovitis: Float
+        var infectiousProcess: Float
+        var breastMyopathy: Float
+        var muscularHemorrhages: Float
+        var notExistValue: Float  // Assuming NOT_EXIST value, like -1 or something
+    }
+    
+    struct ItemProcessingInput {
+        var dataVar: ([String: Any], Int)
+        var items: [[String: Any]]
+        var meanArray: [[Float]]
+    }
+    
+
+}
+
+struct TraningCertificationDataModels {
+    
+    struct ShippingAddressConfig {
+        var fssName: String?
+        var fssID: Int?
+        var trainingID: Int?
+        var id: Int?
+        var city: String?
+        var address2: String?
+        var stateID: Int?
+        var countryID: Int?
+        var address1: String?
+        var pincode: String?
+    }
+  
+}
+
+
+struct MicrobialDataModels {
+    struct LocationValueConfig {
+        let locatgionTypeId: Int?
+        let std40: Bool?
+        let std20: Bool?
+        let rapNo40: Int?
+        let rapNo20: Int?
+        let standard: Bool?
+        let stnRep: Int?
+        let mediaTypeDefault: String?
+        let samplingMethodDefault: String?
+    }
+
 }

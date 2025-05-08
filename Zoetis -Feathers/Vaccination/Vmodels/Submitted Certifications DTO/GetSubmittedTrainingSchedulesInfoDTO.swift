@@ -1,4 +1,5 @@
 import Foundation
+
 class GetSubmittedTrainingSchedulesInfoDTO: Codable {
     var isDeleted: Bool?
     var isMicrobial: JSONNull?
@@ -38,7 +39,7 @@ class GetSubmittedTrainingSchedulesInfoDTO: Codable {
     var comments, peVisitTypeID: JSONNull?
     var certification_Type_Id : Int?
     var approvedRejectedDate: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case isDeleted = "IsDeleted"
         case isMicrobial = "IsMicrobial"
@@ -93,57 +94,59 @@ class GetSubmittedTrainingSchedulesInfoDTO: Codable {
         case certification_Type_Id = "Cretification_Type_Id"
     }
 
-    init(isDeleted: Bool?, isMicrobial: JSONNull?, trainingStatusID: Int?, schDate: JSONNull?, peApproverID: JSONNull?, operatorCertificate: Bool?, peSaveTypeID: JSONNull?, certificateTypeID: Int?, trainingStatus: Int?, evaluationStatus: JSONNull?, peStatusID: JSONNull?, scheduleDate: String?, hatcheryManagerSignature: String?, approverID: Int?, quarter: JSONNull?, isTshirtPrinted: Bool?, approvedRejectedByID: Int?, id: Int?, hatcheryManagerSignatureBase64: String?, certificateType: String?, fsrSignatureBase64: String?, customerName: String?, assignToName: String?, assingToID: Int?, gpColleagueJobTitle: String?, status: Bool?, existingSite: Bool?, score: JSONNull?, isAcknowledge: Bool?, custShipping: String?, customerID: Int?, siteName: String?, createdBy: Int?, gpSupervisorJobTitle: String?, siteID: Int?, gpSupervisorName: String?, createdDate: String?, trainingType: String?, submitedDate: String?, sanitationEmbrex: Bool?, roleID: Int?, fsrSignature: String?, pEevaluationTypeID: JSONNull?, gpColleagueName: String?, hatcheryManagerName: String?, approverName: String?, deviceID: String?, approvedRejectedDate: String?, comments: JSONNull?, peVisitTypeID: JSONNull?, certification_Type_Id : Int?) {
-        self.isDeleted = isDeleted
-        self.isMicrobial = isMicrobial
-        self.trainingStatusID = trainingStatusID
-        self.schDate = schDate
-        self.peApproverID = peApproverID
-        self.operatorCertificate = operatorCertificate
-        self.peSaveTypeID = peSaveTypeID
-        self.certificateTypeID = certificateTypeID
-        self.trainingStatus = trainingStatus
-        self.evaluationStatus = evaluationStatus
-        self.peStatusID = peStatusID
-        self.scheduleDate = scheduleDate
-        self.hatcheryManagerSignature = hatcheryManagerSignature
-        self.approverID = approverID
-        self.quarter = quarter
-        self.isTshirtPrinted = isTshirtPrinted
-        self.approvedRejectedByID = approvedRejectedByID
-        self.id = id
-        self.hatcheryManagerSignatureBase64 = hatcheryManagerSignatureBase64
-        self.certificateType = certificateType
-        self.fsrSignatureBase64 = fsrSignatureBase64
-        self.customerName = customerName
-        self.assignToName = assignToName
-        self.assingToID = assingToID
-        self.gpColleagueJobTitle = gpColleagueJobTitle
-        self.status = status
-        self.existingSite = existingSite
-        self.score = score
-        self.isAcknowledge = isAcknowledge
-        self.custShipping = custShipping
-        self.customerID = customerID
-        self.siteName = siteName
-        self.createdBy = createdBy
-        self.gpSupervisorJobTitle = gpSupervisorJobTitle
-        self.siteID = siteID
-        self.gpSupervisorName = gpSupervisorName
-        self.createdDate = createdDate
-        self.trainingType = trainingType
-        self.submitedDate = submitedDate
-        self.sanitationEmbrex = sanitationEmbrex
-        self.roleID = roleID
-        self.fsrSignature = fsrSignature
-        self.pEevaluationTypeID = pEevaluationTypeID
-        self.gpColleagueName = gpColleagueName
-        self.hatcheryManagerName = hatcheryManagerName
-        self.approverName = approverName
-        self.deviceID = deviceID
-        self.approvedRejectedDate = approvedRejectedDate
-        self.comments = comments
-        self.peVisitTypeID = peVisitTypeID
-        self.certification_Type_Id = certification_Type_Id
+    // Refactored initializer using a dictionary
+    init(data: [String: Any]) {
+        self.isDeleted = data["IsDeleted"] as? Bool
+        self.isMicrobial = data["IsMicrobial"] as? JSONNull
+        self.trainingStatusID = data["TrainingStatusId"] as? Int
+        self.schDate = data["SchDate"] as? JSONNull
+        self.peApproverID = data["PEApproverId"] as? JSONNull
+        self.operatorCertificate = data["OperatorCertificate"] as? Bool
+        self.peSaveTypeID = data["PeSaveTypeId"] as? JSONNull
+        self.certificateTypeID = data["CertificateTypeId"] as? Int
+        self.trainingStatus = data["TrainingStatus"] as? Int
+        self.evaluationStatus = data["EvaluationStatus"] as? JSONNull
+        self.peStatusID = data["PeStatusId"] as? JSONNull
+        self.scheduleDate = data["ScheduleDate"] as? String
+        self.hatcheryManagerSignature = data["HatcheryManagerSignature"] as? String
+        self.approverID = data["ApproverId"] as? Int
+        self.quarter = data["Quarter"] as? JSONNull
+        self.isTshirtPrinted = data["IsTshirtPrinted"] as? Bool
+        self.approvedRejectedByID = data["ApprovedRejectedById"] as? Int
+        self.id = data["Id"] as? Int
+        self.hatcheryManagerSignatureBase64 = data["HatcheryManagerSignatureBase64"] as? String
+        self.certificateType = data["CertificateType"] as? String
+        self.fsrSignatureBase64 = data["FSRSignatureBase64"] as? String
+        self.customerName = data["CustomerName"] as? String
+        self.assignToName = data["AssignToName"] as? String
+        self.assingToID = data["AssingToId"] as? Int
+        self.gpColleagueJobTitle = data["GpColleagueJobTitle"] as? String
+        self.status = data["Status"] as? Bool
+        self.existingSite = data["ExistingSite"] as? Bool
+        self.score = data["Score"] as? JSONNull
+        self.isAcknowledge = data["IsAcknowledge"] as? Bool
+        self.custShipping = data["CustShipping"] as? String
+        self.customerID = data["CustomerId"] as? Int
+        self.siteName = data["SiteName"] as? String
+        self.createdBy = data["CreatedBy"] as? Int
+        self.gpSupervisorJobTitle = data["GpSupervisorJobTitle"] as? String
+        self.siteID = data["SiteId"] as? Int
+        self.gpSupervisorName = data["GpSupervisorName"] as? String
+        self.createdDate = data["CreatedDate"] as? String
+        self.trainingType = data["TrainingType"] as? String
+        self.submitedDate = data["SubmitedDate"] as? String
+        self.sanitationEmbrex = data["Sanitation_Embrex"] as? Bool
+        self.roleID = data["RoleId"] as? Int
+        self.fsrSignature = data["FSRSignature"] as? String
+        self.pEevaluationTypeID = data["PEevaluationTypeId"] as? JSONNull
+        self.gpColleagueName = data["GpColleagueName"] as? String
+        self.hatcheryManagerName = data["HatcheryManagerName"] as? String
+        self.approverName = data["ApproverName"] as? String
+        self.deviceID = data["DeviceId"] as? String
+        self.approvedRejectedDate = data["ApprovedRejectedDate"] as? String
+        self.comments = data["Comments"] as? JSONNull
+        self.peVisitTypeID = data["PEVisitTypeId"] as? JSONNull
+        self.certification_Type_Id = data["Cretification_Type_Id"] as? Int
     }
 }
+

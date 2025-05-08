@@ -249,16 +249,23 @@ class ReportComposer: NSObject {
         for i in 0..<items.count + 1 {
             var itemHTMLContent: String
             if i < items.count {
-                itemHTMLContent = processSingleItem(
+                
+                let input = GITractDataModels.ItemProcessingInput(
                     dataVar: (items[i], i),
                     items: items,
-                    meanArray: meanArray,
+                    meanArray: meanArray
+                )
+
+                let html = processSingleItem(
+                    input: input,
                     totals: &totals,
                     splitterTotals: &splitterTotals,
                     splitFlags: &splitFlags,
                     indexSplitter: &indexSplitter,
                     indexTotal: &indexTotal
                 )
+                itemHTMLContent = html
+                
             } else {
                 itemHTMLContent = processLastItem(totals: totals, items: items)
             }
@@ -267,7 +274,72 @@ class ReportComposer: NSObject {
 
         return allItems
     }
+    
+    private func processSingleItem(
+        input: GITractDataModels.ItemProcessingInput,
+        totals: inout ReportTotals,
+        splitterTotals: inout ReportTotals,
+        splitFlags: inout SplitFlags,
+        indexSplitter: inout Float,
+        indexTotal: inout Int
+    ) -> String {
+        guard let templatePath = pathToSingleItemHTMLTemplate,
+              let content = try? String(contentsOfFile: templatePath, encoding: .utf8) else {
+            return ""
+        }
 
+        indexSplitter += 1
+        let meanValues = input.meanArray[input.dataVar.1]
+        let isCocciHistory = input.dataVar.0["isCocciHistory"] as? Bool ?? false
+
+        var updatedContent = updateItemContent(
+            content: content,
+            item: input.dataVar.0,
+            meanValues: meanValues,
+            isCocciHistory: isCocciHistory
+        )
+
+        updateTotals(
+            item: input.dataVar.0,
+            meanValues: meanValues,
+            totals: &totals,
+            splitterTotals: &splitterTotals
+        )
+
+        updateSplitFlags(
+            item: input.dataVar.0,
+            index: input.dataVar.1,
+            items: input.items,
+            splitFlags: &splitFlags
+        )
+
+        let shouldSplit = shouldSplitItems(splitFlags: splitFlags, isCocciHistory: isCocciHistory)
+        let isLastItem = input.dataVar.1 == input.items.count - 1 && !isCocciHistory
+
+        if shouldSplit || isLastItem {
+            updatedContent = updateSplitterTotals(
+                content: updatedContent,
+                splitterTotals: splitterTotals,
+                indexSplitter: indexSplitter,
+                isCocciHistory: isCocciHistory
+            )
+
+            handleItemHTMLContextValidations(
+                &updatedContent,
+                items: input.items,
+                index: input.dataVar.1
+            )
+
+            resetSplitter(&splitterTotals, &indexSplitter, &splitFlags)
+            indexTotal += 1
+        } else {
+            updatedContent = updatedContent.replacingOccurrences(of: displayStr, with: "display:none")
+        }
+
+        return updatedContent
+    }
+
+/*
     private func processSingleItem(
         dataVar:([String: Any],Int),
         items: [[String: Any]],
@@ -315,7 +387,7 @@ class ReportComposer: NSObject {
 
         return updatedContent
     }
-
+*/
     private func updateItemContent(
         content: String,
         item: [String: Any],

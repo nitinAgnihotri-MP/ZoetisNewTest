@@ -7335,20 +7335,24 @@ extension CoreDataHandlerPE {
             let invoProgramName = result.value(forKey: "invoProgramName") as? String ?? ""
             let doaDilManOther = result.value(forKey: "doaDilManOther") as? String ?? ""
             
-            return InovojectData(
-                id: doaId,
-                vaccineMan: vaccineMan,
-                name: name,
-                ampuleSize: ampuleSize,
-                ampulePerBag: ampulePerBag,
-                bagSizeType: bagSizeType,
-                dosage: dosage,
-                dilute: dilute,
-                invoHatchAntibiotic: invoHatchAntibiotic,
-                invoHatchAntibioticText: invoHatchAntibioticText,
-                invoProgramName: invoProgramName,
-                doaDilManOther: doaDilManOther
-            )
+            
+            let info = CoreDataHandlerPEModels.InovojectInfo(
+                 id: doaId,
+                 vaccineMan: vaccineMan,
+                 name: name,
+                 ampuleSize: ampuleSize,
+                 ampulePerBag: ampulePerBag,
+                 bagSizeType: bagSizeType,
+                 dosage: dosage,
+                 dilute: dilute,
+                 invoHatchAntibiotic: invoHatchAntibiotic,
+                 invoHatchAntibioticText: invoHatchAntibioticText,
+                 invoProgramName: invoProgramName,
+                 doaDilManOther: doaDilManOther
+                          
+              )
+              let inovojectData = InovojectData(info: info)
+              return inovojectData
             
         } catch {
             print("Fetch error: \(error.localizedDescription)")

@@ -491,28 +491,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                         )
 
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(cocciData, index: j)
-                    } else {
-                        
-                        let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        let cocciData = SkeletalObservationData(
-                            catName: "Coccidiosis",
-                            obsName: cocoiDis.observationField ?? "",
-                            formName: formName,
-                            obsVisibility: false,
-                            birdNo: NSNumber(value: j + 1),
-                            obsPoint: 0,
-                            obsId: Int(truncating: cocoiDis.observationId ?? 0),
-                            measure: trimmed,
-                            quickLink: cocoiDis.quicklinks ?? 0,
-                            necId: necId as NSNumber,
-                            isSync: true,
-                            lngId: lngId as NSNumber,
-                            refId: cocoiDis.refId ?? 0,
-                            actualText: cocoiDis.measure ?? ""
-                        )
-
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(cocciData, index: j)
-                    }
+                    } 
                 }
             }
         }

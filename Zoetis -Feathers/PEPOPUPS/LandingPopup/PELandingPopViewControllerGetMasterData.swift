@@ -524,11 +524,8 @@ extension PELandingPoupViewController {
         )
         
         PEInfoDAO.sharedInstance.saveData(vaccineData: data)
-        
-        
-
-        // Save InovojectData
-        let doaData = InovojectData(
+    
+        let doaData = CoreDataHandlerPEModels.InovojectInfo(
             id: 0,
             vaccineMan: manufacturerName,
             name: vaccineName,
@@ -539,8 +536,10 @@ extension PELandingPoupViewController {
             dilute: diluentMfg
         )
 
-        let id = saveDOAInPEModule(inovojectData: doaData, assessment: assessment)
-        doaData.id = id
+        let inovojectData = InovojectData(info: doaData)
+        
+        let id = saveDOAInPEModule(inovojectData: inovojectData, assessment: assessment)
+        inovojectData.id = id
     }
 
     
@@ -604,9 +603,26 @@ extension PELandingPoupViewController {
         peNewAssessmentInProgress.residue = ""
         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromInvo: true)
         
-        let inVoDataNew = InovojectData(id: 0,vaccineMan:DiluentMfg,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg,invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation,  invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-        let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-        inVoDataNew.id = id
+        let info = CoreDataHandlerPEModels.InovojectInfo(
+            id: 0,
+               vaccineMan: DiluentMfg,
+               name: VName,
+               ampuleSize: AmpuleSizeStr,
+               ampulePerBag: String(AmpulePerbag),
+               bagSizeType: BagSizeType,
+               dosage: Dosage,
+               dilute: DiluentMfg,
+               invoHatchAntibiotic: HatcheryAntibioticsIntVal,
+               invoHatchAntibioticText: AntibioticInformation,
+               invoProgramName: ProgramName,
+               doaDilManOther: DiluentsMfgOtherName
+                      
+          )
+
+          let inovojectData = InovojectData(info: info)
+        let id = self.saveInovojectInPEModule(inovojectData: inovojectData, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+        inovojectData.id = id
+        
     }
     
     //IdenticleImplementation of func: draftSaveDAyOfAgeSubDatainDB()
@@ -674,11 +690,32 @@ extension PELandingPoupViewController {
         peNewAssessmentInProgress.micro  = ""
         peNewAssessmentInProgress.residue = ""
         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromInvo: true)
+   
+        
+        let info = CoreDataHandlerPEModels.InovojectInfo(
+            id: 0,
+            vaccineMan: DiluentMfg,
+            name: VName,
+            ampuleSize: AmpuleSizeStr,
+            ampulePerBag: String(AmpulePerbag),
+            bagSizeType: BagSizeType,
+            dosage: Dosage,
+            dilute: DiluentMfg,
+            invoHatchAntibiotic: HatcheryAntibioticsIntVal,
+            invoHatchAntibioticText: AntibioticInformation,
+            invoProgramName: ProgramName,
+            doaDilManOther: DiluentsMfgOtherName
+                    
+        )
+
+        let inovojectData = InovojectData(info: info)
+        
+        let id = self.saveInovojectInPEModule(inovojectData: inovojectData, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+        inovojectData.id = id
         
         
-        let inVoDataNew = InovojectData(id: 0,vaccineMan:DiluentMfg,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg,invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation,  invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-        let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-        inVoDataNew.id = id
+        
+        
     }
     
     private func processDayOfAgeSubcutaneousData(
@@ -754,8 +791,22 @@ extension PELandingPoupViewController {
         
 
         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: pe, fromDoaS: true)
+        
+        let info = CoreDataHandlerPEModels.InovojectInfo(
+                
+                    id: 0,
+                    vaccineMan: VManufacturerName,
+                    name: VName,
+                    ampuleSize: AmpuleSizeStr,
+                    ampulePerBag: String(AmpulePerbag),
+                    bagSizeType: BagSizeType,
+                    dosage: Dosage,
+                    dilute: DiluentMfg
+                
+        )
 
-        return InovojectData(id: 0, vaccineMan: VManufacturerName, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg)
+        let inovojectData = InovojectData(info: info)
+        return inovojectData
     }
 
     fileprivate func handleAssessmentScoresPostingDataForLoopUpdateLocalDB(_ assessmentScoresPostingData: [[String : Any]], _ filterScoreData: inout [[String : Any]]) {

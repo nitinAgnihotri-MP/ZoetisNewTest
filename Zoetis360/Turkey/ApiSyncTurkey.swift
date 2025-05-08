@@ -703,10 +703,15 @@ class ApiSyncTurkey: NSObject {
     
     fileprivate func necropsyDataApiFailed(_ encodingError: AFError, _ response: AFDataResponse<Any>) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-            self.delegeteSyncApiTurkey.failWithErrorInternal()
+            self.syncFail()
         } else if let data = response.data, let _ = String(data: data, encoding: String.Encoding.utf8) {
-            self.delegeteSyncApiTurkey.failWithErrorInternal()
+            self.syncFail()
         }
+    }
+    
+    func syncFail()
+    {
+        self.delegeteSyncApiTurkey.failWithErrorInternal()
     }
     
     fileprivate func handleSaveMultiplePostingsSyncDataSavePostingData(_ statusCode: Int?, _ response: AFDataResponse<Any>) {
@@ -1128,9 +1133,9 @@ class ApiSyncTurkey: NSObject {
                 // no internet connection
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
                 debugPrint(err)
-            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            } else if let data = response.data{
                 debugPrint (encodingError)
-                debugPrint (responseString)
+                debugPrint (data)
         
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
             }

@@ -69,11 +69,70 @@ public class LocationValues {
         if let object = newZ,let sampling = object["Text"]?.string {
             samplingMethodDefault = sampling
         }
+                
+        let config = MicrobialDataModels.LocationValueConfig(
+              locatgionTypeId: locatgionTypeId,
+              std40: std40,
+              std20: std20,
+              rapNo40: rapNo40,
+              rapNo20: rapNo20,
+              standard: standard,
+              stnRep: stnRep,
+              mediaTypeDefault: mediaTypeDefault,
+              samplingMethodDefault: samplingMethodDefault
+        )
+
+        locationValuesObj = LocationValue(json["LocationValue"], config: config)
         
-        locationValuesObj = LocationValue(json["LocationValue"], locatgionTypeId, std40: std40, std20: std20, rapNo40: rapNo40, rapoNo20: rapNo20, standard: standard, stnRep: stnRep ,mediaTypeDefault : mediaTypeDefault, samplingMethodDefault : samplingMethodDefault)
-    }    
+    }
 }
 
+public class LocationValue {
+    
+    let locatgionTypeId: Int?
+    let id: Int?
+    let text: String?
+    let std40: Bool?
+    let std20: Bool?
+    let rapNo40: Int?
+    let rapNo20: Int?
+    let standard: Bool?
+    let stnRep: Int?
+    let mediaTypeDefault: String?
+    let samplingMethodDefault: String?
+    
+    init(_ json: JSON, config: MicrobialDataModels.LocationValueConfig) {
+        self.locatgionTypeId = config.locatgionTypeId
+        self.std40 = config.std40
+        self.std20 = config.std20
+        self.rapNo40 = config.rapNo40
+        self.rapNo20 = config.rapNo20
+        self.standard = config.standard
+        self.stnRep = config.stnRep
+        self.mediaTypeDefault = config.mediaTypeDefault
+        self.samplingMethodDefault = config.samplingMethodDefault
+        
+        id = json["Id"].intValue
+        text = json["Text"].stringValue
+        
+        let values = CoreDataHandlerMicrodataModels.saveLocationTypeValues(
+            locationId: NSNumber(value: config.locatgionTypeId ?? 0),
+            id: NSNumber(value: id ?? 0),
+            value: text ?? "",
+            std40: config.std40 ?? false,
+            std20: config.std20 ?? false,
+            rep20: config.rapNo20 ?? 0,
+            rep40: config.rapNo40 ?? 0,
+            standard: config.standard ?? false,
+            stnRep: config.stnRep ?? 0,
+            mediaTypeDefault: config.mediaTypeDefault ?? "",
+            samplingMethodDefault: config.samplingMethodDefault ?? ""
+        )
+        CoreDataHandlerMicro().saveLocationTypeValuesInDB(values)
+    }
+}
+
+/*
 public class LocationValue {
     
     let locatgionTypeId: Int?
@@ -119,3 +178,4 @@ public class LocationValue {
 
     }
 }
+*/
